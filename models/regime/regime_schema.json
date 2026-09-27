@@ -1,1 +1,181 @@
+{
+  "canonical": "R5",
+  "engine": "rtt.regime",
+  "triad": "regime",
+  "layer": "Evaluator",
+  "qmroot": "0D",
+  "title": "TriadicFrameworks RTT Suite — Regime Engine Schema",
+  "description": "Defines the canonical schema for Regime evaluation, including operating mode dominance (Rg.S, Rg.R, Rg.A), regime envelopes, and evaluator metadata.",
+  "version": "1.0.0",
+
+  "schema": {
+    "name": "regimeEvaluation",
+    "purpose": "Determine operating mode dominance across Structure, Resonance, and Activation.",
+    "lineage": "qmroot-0D",
+
+    "input": {
+      "type": "object",
+      "fields": {
+        "structure": {
+          "type": "number",
+          "description": "Triadic structure value (0–1)."
+        },
+        "resonance": {
+          "type": "number",
+          "description": "Triadic resonance value (0–1)."
+        },
+        "activation": {
+          "type": "number",
+          "description": "Triadic activation value (0–1)."
+        }
+      }
+    },
+
+    "triadic": {
+      "type": "object",
+      "fields": {
+        "structure": {
+          "type": "number",
+          "description": "Triadic structure mapping.",
+          "range": [0, 1]
+        },
+        "resonance": {
+          "type": "number",
+          "description": "Triadic resonance mapping.",
+          "range": [0, 1]
+        },
+        "activation": {
+          "type": "number",
+          "description": "Triadic activation mapping.",
+          "range": [0, 1]
+        }
+      }
+    },
+
+    "regime": {
+      "type": "object",
+      "fields": {
+        "label": {
+          "type": "string",
+          "description": "Regime classification (Rg.S, Rg.R, Rg.A)."
+        },
+        "dominance": {
+          "type": "number",
+          "description": "Dominance strength of the selected regime (0–1)."
+        }
+      }
+    },
+
+    "substrate": {
+      "type": "object",
+      "fields": {
+        "deltaS": {
+          "type": "number",
+          "description": "Directional structural change (ΔS).",
+          "range": [0, 1]
+        },
+        "deltaR": {
+          "type": "number",
+          "description": "Directional resonance change (ΔR).",
+          "range": [0, 1]
+        },
+        "deltaA": {
+          "type": "number",
+          "description": "Directional activation change (ΔA).",
+          "range": [0, 1]
+        },
+        "polarity": {
+          "type": "string",
+          "description": "Substrate polarity (SoN or NoS)."
+        },
+        "stability": {
+          "type": "number",
+          "description": "Substrate stability metric."
+        },
+        "coupling": {
+          "type": "number",
+          "description": "Triadic coupling strength."
+        },
+        "resonance": {
+          "type": "number",
+          "description": "Substrate resonance amplification."
+        }
+      }
+    },
+
+    "output": {
+      "type": "object",
+      "fields": {
+        "summary": {
+          "type": "string",
+          "description": "Canonical regime summary."
+        },
+        "metadata": {
+          "type": "object",
+          "fields": {
+            "version": {
+              "type": "string",
+              "description": "Schema version."
+            },
+            "timestamp": {
+              "type": "string",
+              "description": "Evaluation timestamp."
+            },
+            "requestId": {
+              "type": "string",
+              "description": "Unique request identifier."
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "examples": [
+    {
+      "name": "Regime evaluation example",
+      "input": {
+        "structure": 0.70,
+        "resonance": 0.40,
+        "activation": 0.20
+      },
+      "regime": {
+        "label": "Rg.S",
+        "dominance": 0.70
+      },
+      "substrate": {
+        "deltaS": 0.22,
+        "deltaR": 0.10,
+        "deltaA": 0.05,
+        "polarity": "SoN",
+        "stability": 0.81,
+        "coupling": 0.77,
+        "resonance": 0.40
+      },
+      "output": {
+        "summary": "Regime classified as Rg.S with strong structural dominance.",
+        "metadata": {
+          "version": "1.0.0",
+          "timestamp": "2026-09-27T08:41:00",
+          "requestId": "example-0003"
+        }
+      },
+
+      "reality": {
+        "description": "Machine-level regime evaluation.",
+        "details": "Dominance determined by highest triadic value."
+      },
+
+      "imagination": {
+        "description": "Symbolic interpretation.",
+        "details": "Structural mode asserts dominance over relational and activation fields."
+      },
+
+      "information": {
+        "description": "Cosmology notes.",
+        "details": "Regime inherits qmroot lineage through mode → field → stability."
+      }
+    }
+  ]
+}
 
