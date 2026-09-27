@@ -1,1 +1,168 @@
+{
+  "canonical": "R5",
+  "engine": "rtt.session",
+  "triad": "session",
+  "layer": "MetaEvaluator",
+  "qmroot": "0D",
+  "title": "TriadicFrameworks RTT Suite — Session Interpreter Schema",
+  "description": "Defines the canonical schema for RTT session evaluation, including evaluator outputs, triadic session state, pipeline lineage, and metadata.",
+  "version": "1.0.0",
+
+  "schema": {
+    "name": "sessionEvaluation",
+    "purpose": "Orchestrate RTT evaluator engines (Drift, Coherence, Regime, Clarity) and produce a unified SessionTRO.",
+    "lineage": "qmroot-0D",
+
+    "input": {
+      "type": "object",
+      "fields": {
+        "text": {
+          "type": "string",
+          "description": "Input text or metadata for full RTT session evaluation."
+        }
+      }
+    },
+
+    "triadic": {
+      "type": "object",
+      "fields": {
+        "structure": {
+          "type": "number",
+          "description": "Final triadic structure value after full RTT pipeline.",
+          "range": [0, 1]
+        },
+        "resonance": {
+          "type": "number",
+          "description": "Final triadic resonance value after full RTT pipeline.",
+          "range": [0, 1]
+        },
+        "activation": {
+          "type": "number",
+          "description": "Final triadic activation value after full RTT pipeline.",
+          "range": [0, 1]
+        }
+      }
+    },
+
+    "evaluators": {
+      "type": "object",
+      "fields": {
+        "drift": {
+          "type": "object",
+          "description": "DriftTRO output."
+        },
+        "coherence": {
+          "type": "object",
+          "description": "CoherenceTRO output."
+        },
+        "regime": {
+          "type": "object",
+          "description": "RegimeTRO output."
+        },
+        "clarity": {
+          "type": "object",
+          "description": "ClarityTRO output."
+        }
+      }
+    },
+
+    "pipeline": {
+      "type": "array",
+      "description": "Ordered RTT evaluator pipeline.",
+      "items": {
+        "type": "string"
+      }
+    },
+
+    "output": {
+      "type": "object",
+      "fields": {
+        "summary": {
+          "type": "string",
+          "description": "Canonical session summary."
+        },
+        "notes": {
+          "type": "array",
+          "description": "Session commentary notes.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "fields": {
+            "version": {
+              "type": "string",
+              "description": "Schema version."
+            },
+            "timestamp": {
+              "type": "string",
+              "description": "Evaluation timestamp."
+            },
+            "requestId": {
+              "type": "string",
+              "description": "Unique request identifier."
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "examples": [
+    {
+      "name": "Session evaluation example",
+      "input": {
+        "text": "Example input text for full RTT session evaluation."
+      },
+
+      "triadic": {
+        "structure": 0.55,
+        "resonance": 0.52,
+        "activation": 0.40
+      },
+
+      "evaluators": {
+        "drift": {
+          "deltaS": 0.18,
+          "deltaR": 0.12,
+          "deltaA": 0.09,
+          "envelope": "medium"
+        },
+        "coherence": {
+          "score": 0.93,
+          "envelope": "high"
+        },
+        "regime": {
+          "label": "Rg.S",
+          "dominance": 0.55
+        },
+        "clarity": {
+          "score": 0.82,
+          "pulse": "C1"
+        }
+      },
+
+      "pipeline": [
+        "drift",
+        "coherence",
+        "regime",
+        "clarity"
+      ],
+
+      "output": {
+        "summary": "RTT session completed with high coherence and C1 clarity pulse.",
+        "notes": [
+          "Triadic alignment stable across pipeline.",
+          "Structural regime dominance detected."
+        ],
+        "metadata": {
+          "version": "1.0.0",
+          "timestamp": "2026-09-27T08:51:00",
+          "requestId": "example-0005"
+        }
+      }
+    }
+  ]
+}
 
