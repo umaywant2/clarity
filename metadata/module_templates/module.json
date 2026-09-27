@@ -1,1 +1,93 @@
+{
+  "canonical": "R5",
+  "title": "TriadicFrameworks Module Template",
+  "description": "Canonical module.json template for TriadicFrameworks modules. Defines identity, metadata, analyzer layers, file roles, lineage, and session context.",
+  "version": "1.0.0",
+
+  "identity": {
+    "module_name": "MODULE_NAME",
+    "module_category": "MODULE_CATEGORY",
+    "module_summary": "Short summary of the module’s purpose.",
+    "qmroot": "0D",
+    "triad": "TRIAD_NAME",
+    "layer": "LAYER_NAME"
+  },
+
+  "metadata": {
+    "citation_author": "Nawder Loswin",
+    "citation_publication_date": "2025",
+    "ai.module": "MODULE_NAME",
+    "ai.version": "1.0.0",
+    "ai.purpose": "Describe the purpose of this module.",
+    "ai.keywords": [
+      "triadic",
+      "module",
+      "template",
+      "rtt",
+      "analysis"
+    ],
+    "ai.navigation": "sitemap_main.xml",
+    "ai.discussions": "https://github.com/umaywant2/clarity/discussions",
+    "ai.contact.x": "@TriadicFrameworks",
+    "ai.contact.youtube": "@TriadicFrameworks",
+    "ai.license": "Open educational use permitted"
+  },
+
+  "lineage": {
+    "qmroot": "0D",
+    "triad": "TRIAD_NAME",
+    "layer": "LAYER_NAME",
+    "operator": "OPERATOR_NAME"
+  },
+
+  "analyzer_layers": {
+    "operator_layer": "metadata/analyzer_layers/operator_layer.json",
+    "dimensional_layer": "metadata/analyzer_layers/dimensional_layer.json",
+    "drift_layer": "metadata/analyzer_layers/drift_layer.json",
+    "coherence_layer": "metadata/analyzer_layers/coherence_layer.json",
+    "regime_layer": "metadata/analyzer_layers/regime_layer.json",
+    "crosscut_layer": "metadata/analyzer_layers/crosscut_layer.json"
+  },
+
+  "roles": {
+    "engine": "ENGINE_FILE",
+    "profile": "PROFILE_FILE",
+    "signature": "SIGNATURE_FILE",
+    "diagnostic": "DIAGNOSTIC_FILE",
+    "map": "MAP_FILE",
+    "example": "EXAMPLE_FILE",
+    "extension": "EXTENSION_FILE",
+    "index": "INDEX_FILE",
+    "reference": "REFERENCE_FILE",
+    "template": "TEMPLATE_FILE"
+  },
+
+  "session_context": {
+    "context-labels": {
+      "Canon": "R5",
+      "Modules": "MODULE_NAME",
+      "Drift": "DRIFT_STATE",
+      "Coherence": "COHERENCE_STATE",
+      "Version": "1.0.0",
+      "Format": "module.json",
+      "Front door": "index.html",
+      "Every page": "true",
+      "Audience": "general"
+    }
+  },
+
+  "badge": {
+    "emoji": "🔧",
+    "label": "Module Template"
+  },
+
+  "audit": {
+    "phantom_entries": []
+  },
+
+  "diff": {
+    "old": {},
+    "new": {}
+  }
+}
 
