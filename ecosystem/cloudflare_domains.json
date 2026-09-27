@@ -1,1 +1,88 @@
+{
+  "canonical": "R5",
+  "title": "Cloudflare Domains Registry",
+  "version": "1.0.0",
+  "description": "Master registry of all Cloudflare-managed domains used across TriadicFrameworks, SI, RTT Suite, and Clarity Book ecosystems.",
+
+  "domains": [
+    {
+      "name": "triadicframeworks.com",
+      "category": "primary",
+      "purpose": "Main TriadicFrameworks site and canonical documentation hub.",
+      "cloudflare": {
+        "zone_id": "Z_PRIMARY_TRIADIC",
+        "waf": true,
+        "super_bot_fight_mode": true,
+        "page_shield": true,
+        "ai_bot_instructions": "/robots.txt"
+      }
+    },
+    {
+      "name": "structuralintelligence.org",
+      "category": "si",
+      "purpose": "Structural Intelligence publications, ontology, knowledge base, and semantic API.",
+      "cloudflare": {
+        "zone_id": "Z_SI",
+        "waf": true,
+        "super_bot_fight_mode": true,
+        "page_shield": true,
+        "ai_bot_instructions": "/robots.txt"
+      }
+    },
+    {
+      "name": "claritybook.ai",
+      "category": "clarity",
+      "purpose": "Clarity Book chapters, pedagogy, triadic learning, dimensional curriculum.",
+      "cloudflare": {
+        "zone_id": "Z_CLARITY",
+        "waf": true,
+        "super_bot_fight_mode": true,
+        "page_shield": true,
+        "ai_bot_instructions": "/robots.txt"
+      }
+    },
+    {
+      "name": "rttsuite.dev",
+      "category": "rtt",
+      "purpose": "RTT Suite API endpoints, evaluator pipeline, semantic router.",
+      "cloudflare": {
+        "zone_id": "Z_RTT",
+        "waf": true,
+        "super_bot_fight_mode": true,
+        "page_shield": true,
+        "ai_bot_instructions": "/robots.txt"
+      }
+    },
+    {
+      "name": "triadic.cloud",
+      "category": "platform",
+      "purpose": "Cloudflare Workers, AI Marketplace adapter, model registry, platform utilities.",
+      "cloudflare": {
+        "zone_id": "Z_PLATFORM",
+        "waf": true,
+        "super_bot_fight_mode": true,
+        "page_shield": true,
+        "ai_bot_instructions": "/robots.txt"
+      }
+    },
+    {
+      "name": "ecosystem.tf",
+      "category": "ecosystem",
+      "purpose": "Cross-domain ecosystem registry, module discovery, metadata federation.",
+      "cloudflare": {
+        "zone_id": "Z_ECOSYSTEM",
+        "waf": true,
+        "super_bot_fight_mode": true,
+        "page_shield": true,
+        "ai_bot_instructions": "/robots.txt"
+      }
+    }
+  ],
+
+  "metadata": {
+    "generated": "2026-09-27",
+    "author": "Nawder Loswin",
+    "notes": "All domains use Cloudflare Pro features including Page Shield, Super Bot Fight Mode, WAF ruleset, and AI bot instructions via robots.txt."
+  }
+}
 
