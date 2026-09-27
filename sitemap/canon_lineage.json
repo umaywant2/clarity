@@ -1,1 +1,111 @@
+{
+  "canonical": "R5",
+  "title": "TriadicFrameworks — Canon Lineage Registry",
+  "version": "1.0.0",
+  "description": "Defines lineage chains for all major TriadicFrameworks domains, modules, evaluators, and semantic systems.",
+
+  "lineage": {
+    "triadic": {
+      "qmroot": "triadic_root",
+      "triad": ["Structure", "Resonance", "Activation"],
+      "layers": ["Operator", "Dimensional", "Drift", "Coherence", "Regime", "Crosscut"],
+      "operators": ["oscillation", "phaseShift", "harmonic", "lineagePulse"]
+    },
+
+    "substrate": {
+      "families": ["Delta", "Op", "Rg"],
+      "polarity": ["SoN", "NoS"],
+      "stability": ["low", "medium", "high"],
+      "coupling": ["weak", "moderate", "strong"]
+    },
+
+    "evaluators": {
+      "pipeline": ["Drift", "Coherence", "Regime", "Clarity"],
+      "drift": {
+        "qmroot": "drift_root",
+        "triad": ["ΔS", "ΔR", "ΔA"],
+        "layer": "DriftLayer",
+        "operators": ["phaseShift", "oscillation"]
+      },
+      "coherence": {
+        "qmroot": "coherence_root",
+        "triad": ["alignment", "variance", "envelope"],
+        "layer": "CoherenceLayer",
+        "operators": ["harmonic", "oscillation"]
+      },
+      "regime": {
+        "qmroot": "regime_root",
+        "triad": ["Rg.S", "Rg.R", "Rg.A"],
+        "layer": "RegimeLayer",
+        "operators": ["dominance", "stability"]
+      },
+      "clarity": {
+        "qmroot": "clarity_root",
+        "triad": ["pulse", "transparency", "spectral"],
+        "layer": "CrosscutLayer",
+        "operators": ["pulseSignature", "lineagePulse"]
+      }
+    },
+
+    "semantic_api": {
+      "qmroot": "semantic_root",
+      "triad": ["triadic-map", "substrate-map", "evaluator-map"],
+      "layers": ["OntologyLayer", "GraphLayer"],
+      "operators": ["entityMap", "relationMap", "graphQuery"],
+      "endpoints": [
+        "/si/semantic/triadic-map",
+        "/si/semantic/substrate-map",
+        "/si/semantic/evaluator-map",
+        "/si/semantic/module-map",
+        "/si/semantic/pipeline-map",
+        "/si/semantic/graph-query"
+      ]
+    },
+
+    "modules": {
+      "qmroot": "module_root",
+      "triad": ["identity", "metadata", "lineage"],
+      "layers": ["Operator", "Dimensional", "Drift", "Coherence", "Regime", "Crosscut"],
+      "roles": [
+        "engine",
+        "profile",
+        "signature",
+        "diagnostic",
+        "map",
+        "example",
+        "extension",
+        "index",
+        "reference",
+        "template"
+      ]
+    },
+
+    "clarity_book": {
+      "qmroot": "clarity_book_root",
+      "triad": ["pedagogy", "triadic", "dimensional"],
+      "layers": ["ClarityLayer", "TriadicLayer", "DimensionalLayer"],
+      "operators": ["pulse", "flow", "elevation"],
+      "chapters": [
+        "clarity_pedagogy",
+        "triadic_learning",
+        "dimensional_curriculum"
+      ]
+    },
+
+    "structural_intelligence": {
+      "qmroot": "si_root",
+      "triad": ["ontology", "knowledge", "pedagogy"],
+      "layers": ["OntologyLayer", "MetadataLayer", "EvaluatorLayer"],
+      "operators": ["entity", "relation", "semantic"],
+      "domains": [
+        "si_publications",
+        "si_knowledge_base",
+        "si_ontology",
+        "si_lexicon",
+        "si_pedagogy",
+        "si_semantic_api"
+      ]
+    }
+  }
+}
 
