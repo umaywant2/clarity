@@ -1,1 +1,101 @@
+{
+  "canonical": "R5",
+  "title": "TriadicFrameworks Module Metadata — Drift",
+  "description": "Canonical metadata template for modules participating in the Drift Analyzer Layer.",
+  "version": "1.0.0",
+
+  "identity": {
+    "module_name": "MODULE_NAME",
+    "module_category": "Drift",
+    "module_summary": "Module operating within the Drift Analyzer Layer.",
+    "qmroot": "0D",
+    "triad": "drift",
+    "layer": "AnalyzerLayer"
+  },
+
+  "metadata": {
+    "citation_author": "Nawder Loswin",
+    "citation_publication_date": "2025",
+    "ai.module": "MODULE_NAME",
+    "ai.version": "1.0.0",
+    "ai.purpose": "Defines drift metadata for RTT Suite modules.",
+    "ai.keywords": [
+      "drift",
+      "phaseShift",
+      "oscillation",
+      "microShift",
+      "break",
+      "snap",
+      "paradox drift",
+      "drift velocity",
+      "drift stability"
+    ],
+    "ai.navigation": "sitemap_main.xml",
+    "ai.discussions": "https://github.com/umaywant2/clarity/discussions",
+    "ai.contact.x": "@TriadicFrameworks",
+    "ai.contact.youtube": "@TriadicFrameworks",
+    "ai.license": "Open educational use permitted"
+  },
+
+  "lineage": {
+    "qmroot": "0D",
+    "triad": "drift",
+    "layer": "AnalyzerLayer",
+    "operator": "phaseShift"
+  },
+
+  "drift": {
+    "families": [
+      "gradual",
+      "sudden",
+      "oscillating",
+      "paradox"
+    ],
+    "primitives": [
+      "phaseShift",
+      "microShift",
+      "oscillation",
+      "cycle",
+      "break",
+      "snap",
+      "feedback",
+      "loop",
+      "harmonic"
+    ],
+    "classification_rules": {
+      "velocity_low": "gradual",
+      "velocity_medium": "oscillating",
+      "velocity_high": "sudden",
+      "paradox_detected": "paradox"
+    }
+  },
+
+  "session_context": {
+    "context-labels": {
+      "Canon": "R5",
+      "Modules": "MODULE_NAME",
+      "Drift": "active",
+      "Coherence": "pending",
+      "Version": "1.0.0",
+      "Format": "metadata_drift.json",
+      "Front door": "index.html",
+      "Every page": "true",
+      "Audience": "general"
+    }
+  },
+
+  "badge": {
+    "emoji": "🌪️",
+    "label": "Drift Metadata"
+  },
+
+  "audit": {
+    "phantom_entries": []
+  },
+
+  "diff": {
+    "old": {},
+    "new": {}
+  }
+}
 
