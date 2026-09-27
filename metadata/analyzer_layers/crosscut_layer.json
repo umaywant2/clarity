@@ -1,1 +1,95 @@
+{
+  "canonical": "R5",
+  "layer": "AnalyzerLayer",
+  "name": "crosscut_layer",
+  "title": "TriadicFrameworks Analyzer Layer — Crosscut Layer",
+  "qmroot": "0D",
+  "triad": "crosscut",
+  "version": "1.0.0",
+  "description": "Defines canonical crosscut analyzers, primitives, and mapping rules for RTT Suite cross-layer analysis. Crosscut analyzers operate transversally across drift, coherence, regime, clarity, and dimensional layers.",
+
+  "crosscut": {
+    "lineage": {
+      "name": "Lineage Analyzer",
+      "description": "Tracks qmroot → triad → layer → operator lineage across evaluators and modules.",
+      "primitives": ["lineagePulse", "rootTrace", "inheritance"]
+    },
+    "envelope": {
+      "name": "Envelope Analyzer",
+      "description": "Evaluates envelope consistency across drift, coherence, regime, and clarity outputs.",
+      "primitives": ["envelopeCheck", "varianceScan", "pulseMap"]
+    },
+    "stability": {
+      "name": "Stability Analyzer",
+      "description": "Determines cross-layer stability using drift velocity, coherence variance, regime dominance, and clarity pulse.",
+      "primitives": ["stabilityIndex", "triadicBalance", "harmonicCheck"]
+    },
+    "compatibility": {
+      "name": "Compatibility Analyzer",
+      "description": "Checks compatibility between dimensional, operator, drift, regime, and clarity layers.",
+      "primitives": ["compatibilityScan", "alignmentCheck"]
+    },
+    "diagnostic": {
+      "name": "Crosscut Diagnostic",
+      "description": "Provides unified diagnostic signals across all RTT evaluators.",
+      "primitives": ["signal", "flag", "triadMarker"]
+    }
+  },
+
+  "mapping": {
+    "lineage": {
+      "description": "Lineage mapping rules.",
+      "rules": {
+        "qmroot_to_triad": "lineagePulse",
+        "triad_to_layer": "rootTrace",
+        "layer_to_operator": "inheritance"
+      }
+    },
+    "envelope": {
+      "description": "Envelope consistency mapping.",
+      "rules": {
+        "drift_coherence_match": "envelopeCheck",
+        "coherence_regime_match": "varianceScan",
+        "regime_clarity_match": "pulseMap"
+      }
+    },
+    "stability": {
+      "description": "Cross-layer stability mapping.",
+      "rules": {
+        "stable": ["triadicBalance", "harmonicCheck"],
+        "unstable": ["stabilityIndex"],
+        "volatile": ["varianceScan"]
+      }
+    },
+    "compatibility": {
+      "description": "Cross-layer compatibility mapping.",
+      "rules": {
+        "aligned": ["alignmentCheck"],
+        "partial": ["compatibilityScan"],
+        "mismatch": ["triadMarker"]
+      }
+    }
+  },
+
+  "metadata": {
+    "citation_author": "Nawder Loswin",
+    "citation_publication_date": "2025",
+    "ai.module": "crosscut_layer",
+    "ai.version": "1.0.0",
+    "ai.purpose": "Defines crosscut analyzers and primitives for RTT Suite cross-layer analysis.",
+    "ai.keywords": [
+      "crosscut",
+      "lineage",
+      "envelope",
+      "stability",
+      "compatibility",
+      "diagnostic",
+      "triadicBalance",
+      "lineagePulse",
+      "varianceScan",
+      "pulseMap",
+      "harmonicCheck"
+    ]
+  }
+}
 
