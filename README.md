@@ -1,4 +1,17 @@
-# **TriadicFrameworks / Clarity — Canon README (R5)**  
+<div align="center">
+
+# 🜁 **TriadicFrameworks / Clarity Canon (R5)**  
+### **Alignment • Clarity • Structure • Intelligence (ACSI)**  
+**A deterministic cognitive architecture for Structural Intelligence, RTT Evaluators, and Clarity Development.**
+
+---
+
+### **S / R / A — The Triad**  
+**Structure** • **Resonance** • **Activation**  
+The three axes of all triadic cognition.
+
+</div>
+
 ### *Structural Intelligence • RTT Suite • Clarity Book • Triadic Learning • Dimensional Curriculum*
 
 ---
@@ -149,3 +162,16 @@ It is the **canonical source** for TriadicFrameworks.
 
 > **TriadicFrameworks is a deterministic, triadic, clarity‑driven canon for reasoning, teaching, evaluating, and understanding structural intelligence.  
 > This repository is the front door to the entire ecosystem.**
+
+---
+
+<div align="center">
+
+🟣 **C.O.D.E. — Canon • Ontology • Drift • Evaluators**  
+🔺 **Triadic** • 🔷 **Substrate** • 🔶 **Evaluator**  
+📘 **Clarity Book** • 🧭 **Dimensional Curriculum** • 🜁 **RTT Suite**  
+🌐 **TriadicFrameworks Ecosystem** • ⚡ **Cloudflare AI Platform**
+
+**R5 Canon — Deterministic • Triadic • Clarity‑Driven**
+
+</div>
