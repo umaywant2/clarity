@@ -1,1 +1,116 @@
+{
+  "canonical": "R5",
+  "title": "AI Marketplace Models Registry",
+  "version": "1.0.0",
+  "description": "Registry of all AI models available to the TriadicFrameworks Cloudflare AI Marketplace adapter.",
+
+  "models": [
+    {
+      "id": "gpt-6-astra",
+      "vendor": "openai",
+      "name": "GPT‑6 Astra",
+      "category": "frontier",
+      "capabilities": ["reasoning", "coding", "long-context"],
+      "pricing_per_million_tokens": 11.90,
+      "license": "proprietary",
+      "triadic_alignment": ["Structure", "Resonance", "Activation"]
+    },
+    {
+      "id": "claude-fable-5.1",
+      "vendor": "anthropic",
+      "name": "Claude Fable 5.1",
+      "category": "frontier",
+      "capabilities": ["reasoning", "enterprise", "safety"],
+      "pricing_per_million_tokens": 30.00,
+      "license": "proprietary",
+      "triadic_alignment": ["Resonance", "Structure"]
+    },
+    {
+      "id": "gemini-3.8-flash",
+      "vendor": "google",
+      "name": "Gemini 3.8 Flash",
+      "category": "frontier",
+      "capabilities": ["long-chats", "document-handling"],
+      "pricing_per_million_tokens": 3.75,
+      "license": "proprietary",
+      "triadic_alignment": ["Activation", "Resonance"]
+    },
+    {
+      "id": "qwen-3.8-max",
+      "vendor": "alibaba",
+      "name": "Qwen 3.8 Max",
+      "category": "open-weight",
+      "capabilities": ["general-purpose", "multilingual"],
+      "pricing_per_million_tokens": 0.00,
+      "license": "open-weight",
+      "triadic_alignment": ["Structure"]
+    },
+    {
+      "id": "claude-opus-4.8",
+      "vendor": "anthropic",
+      "name": "Claude Opus 4.8",
+      "category": "frontier",
+      "capabilities": ["coding", "analysis"],
+      "pricing_per_million_tokens": 15.00,
+      "license": "proprietary",
+      "triadic_alignment": ["Structure", "Resonance"]
+    },
+    {
+      "id": "gpt-5.5",
+      "vendor": "openai",
+      "name": "GPT‑5.5",
+      "category": "frontier",
+      "capabilities": ["writing", "ecosystem-integration"],
+      "pricing_per_million_tokens": 2.00,
+      "license": "proprietary",
+      "triadic_alignment": ["Activation"]
+    },
+    {
+      "id": "deepseek-v4",
+      "vendor": "deepseek",
+      "name": "DeepSeek V4",
+      "category": "open-source",
+      "capabilities": ["cost-efficient", "general-purpose"],
+      "pricing_per_million_tokens": 0.28,
+      "license": "open-source",
+      "triadic_alignment": ["Structure"]
+    },
+    {
+      "id": "llama-4",
+      "vendor": "meta",
+      "name": "Llama 4",
+      "category": "open-source",
+      "capabilities": ["general-purpose", "free-to-use"],
+      "pricing_per_million_tokens": 0.00,
+      "license": "open-source",
+      "triadic_alignment": ["Resonance"]
+    },
+    {
+      "id": "grok-4.3",
+      "vendor": "xai",
+      "name": "Grok 4.3",
+      "category": "agentic",
+      "capabilities": ["tool-use", "agentic-behavior"],
+      "pricing_per_million_tokens": 2.00,
+      "license": "proprietary",
+      "triadic_alignment": ["Activation", "Structure"]
+    },
+    {
+      "id": "glm-5.1",
+      "vendor": "zhipu",
+      "name": "GLM‑5.1",
+      "category": "specialized",
+      "capabilities": ["chinese-language", "coding"],
+      "pricing_per_million_tokens": 0.50,
+      "license": "proprietary",
+      "triadic_alignment": ["Resonance"]
+    }
+  ],
+
+  "metadata": {
+    "generated": "2026-09-27",
+    "author": "Nawder Loswin",
+    "notes": "Pricing values sourced from public model statistics and marketplace listings."
+  }
+}
 
