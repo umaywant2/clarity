@@ -1,1 +1,95 @@
+{
+  "canonical": "R5",
+  "title": "TriadicFrameworks — Modules Registry",
+  "version": "1.0.0",
+  "description": "Master registry of all TriadicFrameworks modules across SI, RTT, Clarity, Triadic, Dimensional, and Canon domains.",
+
+  "registry": {
+    "canon": [
+      "canon_reference",
+      "canon_map",
+      "canon_atlas",
+      "canon_index",
+      "canon_glossary",
+      "canon_lineage",
+      "canon_substrate",
+      "canon_math"
+    ],
+
+    "structural_intelligence": [
+      "si_publications",
+      "si_knowledge_base",
+      "si_ontology",
+      "si_lexicon",
+      "si_pedagogy",
+      "si_semantic_api",
+      "si_research_index",
+      "si_citation_library",
+      "si_monographs",
+      "si_experiments"
+    ],
+
+    "clarity_book": [
+      "clarity_index",
+      "clarity_pedagogy",
+      "clarity_equations",
+      "clarity_examples",
+      "clarity_sessions",
+
+      "triadic_learning",
+      "triadic_index",
+      "triadic_examples",
+      "triadic_sessions",
+      "triadic_equations",
+
+      "dimensional_curriculum",
+      "dimensional_index",
+      "dimensional_examples",
+      "dimensional_sessions",
+      "dimensional_equations"
+    ],
+
+    "rtt_suite": [
+      "rtt_suite_endpoints",
+      "semantic_api_spec",
+      "rtt_suite_router",
+      "rtt_suite_examples",
+      "rtt_suite_errors"
+    ],
+
+    "cloudflare": [
+      "pricing_model",
+      "marketplace_listing",
+      "model_registry",
+      "worker",
+      "security_headers"
+    ],
+
+    "modules": [
+      "module_index",
+      "module_schema",
+      "module_examples",
+      "module_templates",
+      "module_lineage"
+    ],
+
+    "metadata": [
+      "module_json",
+      "analyzer_layers",
+      "roles",
+      "session_context",
+      "badges",
+      "audit",
+      "diff"
+    ],
+
+    "utilities": [
+      "triadic_map",
+      "substrate_map",
+      "evaluator_map",
+      "pipeline_map",
+      "semantic_graph"
+    ]
+  }
+}
 
