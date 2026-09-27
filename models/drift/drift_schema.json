@@ -1,1 +1,143 @@
+{
+  "canonical": "R5",
+  "engine": "rtt.drift",
+  "triad": "drift",
+  "layer": "Evaluator",
+  "qmroot": "0D",
+  "title": "TriadicFrameworks RTT Suite — Drift Engine Schema",
+  "description": "Defines the canonical schema for Drift evaluation, including Δ-family primitives, drift envelopes, triadic mapping, and evaluator metadata.",
+  "version": "1.0.0",
+
+  "schema": {
+    "name": "driftEvaluation",
+    "purpose": "Analyze ΔS, ΔR, ΔA and compute drift-state metrics.",
+    "lineage": "qmroot-0D",
+
+    "input": {
+      "type": "object",
+      "fields": {
+        "text": {
+          "type": "string",
+          "description": "Input text or metadata to evaluate for drift."
+        }
+      }
+    },
+
+    "substrate": {
+      "type": "object",
+      "fields": {
+        "deltaS": {
+          "type": "number",
+          "description": "Directional structural change (ΔS).",
+          "range": [0, 1]
+        },
+        "deltaR": {
+          "type": "number",
+          "description": "Directional resonance change (ΔR).",
+          "range": [0, 1]
+        },
+        "deltaA": {
+          "type": "number",
+          "description": "Directional activation change (ΔA).",
+          "range": [0, 1]
+        }
+      }
+    },
+
+    "triadic": {
+      "type": "object",
+      "fields": {
+        "structure": {
+          "type": "number",
+          "description": "Triadic structure mapping derived from ΔS.",
+          "range": [0, 1]
+        },
+        "resonance": {
+          "type": "number",
+          "description": "Triadic resonance mapping derived from ΔR.",
+          "range": [0, 1]
+        },
+        "activation": {
+          "type": "number",
+          "description": "Triadic activation mapping derived from ΔA.",
+          "range": [0, 1]
+        }
+      }
+    },
+
+    "output": {
+      "type": "object",
+      "fields": {
+        "driftEnvelope": {
+          "type": "string",
+          "description": "Drift envelope classification (low, medium, high)."
+        },
+        "summary": {
+          "type": "string",
+          "description": "Canonical drift summary."
+        },
+        "metadata": {
+          "type": "object",
+          "fields": {
+            "version": {
+              "type": "string",
+              "description": "Schema version."
+            },
+            "timestamp": {
+              "type": "string",
+              "description": "Evaluation timestamp."
+            },
+            "requestId": {
+              "type": "string",
+              "description": "Unique request identifier."
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "examples": [
+    {
+      "name": "Drift evaluation example",
+      "input": {
+        "text": "Example input text for drift evaluation."
+      },
+      "substrate": {
+        "deltaS": 0.42,
+        "deltaR": 0.17,
+        "deltaA": 0.63
+      },
+      "triadic": {
+        "structure": 0.42,
+        "resonance": 0.17,
+        "activation": 0.63
+      },
+      "output": {
+        "driftEnvelope": "medium",
+        "summary": "Moderate drift detected with activation dominance.",
+        "metadata": {
+          "version": "1.0.0",
+          "timestamp": "2026-09-27T08:33:00",
+          "requestId": "example-0001"
+        }
+      },
+
+      "reality": {
+        "description": "Machine-level drift evaluation.",
+        "details": "Δ-family values computed deterministically."
+      },
+
+      "imagination": {
+        "description": "Symbolic interpretation.",
+        "details": "Triadic layers shift into a new drift-state configuration."
+      },
+
+      "information": {
+        "description": "Cosmology notes.",
+        "details": "Drift inherits qmroot lineage through frequency → fluids → forces."
+      }
+    }
+  ]
+}
 
