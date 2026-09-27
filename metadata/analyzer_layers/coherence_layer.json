@@ -1,1 +1,84 @@
+{
+  "canonical": "R5",
+  "layer": "AnalyzerLayer",
+  "name": "coherence_layer",
+  "title": "TriadicFrameworks Analyzer Layer — Coherence Layer",
+  "qmroot": "0D",
+  "triad": "coherence",
+  "version": "1.0.0",
+  "description": "Defines canonical coherence families, primitives, envelope rules, and analyzer-layer mapping for RTT Suite coherence analysis.",
+
+  "coherence": {
+    "high": {
+      "name": "High Coherence",
+      "description": "Triadic layers strongly aligned; variance minimal; stable harmonic envelope.",
+      "primitives": ["harmonic", "alignment", "pulse"]
+    },
+    "medium": {
+      "name": "Medium Coherence",
+      "description": "Triadic layers moderately aligned; variance present but controlled.",
+      "primitives": ["relation", "moderation"]
+    },
+    "low": {
+      "name": "Low Coherence",
+      "description": "Triadic layers misaligned; variance high; unstable envelope.",
+      "primitives": ["noise", "divergence", "phaseShift"]
+    }
+  },
+
+  "mapping": {
+    "envelope": {
+      "description": "Maps coherence score to canonical envelope.",
+      "rules": {
+        "score_gt_0_75": "high",
+        "score_gt_0_40": "medium",
+        "score_le_0_40": "low"
+      }
+    },
+    "variance": {
+      "description": "Variance-based coherence indicators.",
+      "rules": {
+        "variance_low": ["harmonic", "alignment"],
+        "variance_medium": ["relation", "moderation"],
+        "variance_high": ["noise", "divergence"]
+      }
+    },
+    "stability": {
+      "description": "Coherence stability mapping.",
+      "rules": {
+        "stable": ["harmonic", "alignment"],
+        "neutral": ["relation", "moderation"],
+        "unstable": ["noise", "phaseShift"]
+      }
+    },
+    "compatibility": {
+      "description": "Coherence compatibility mapping.",
+      "rules": {
+        "high": ["harmonic", "alignment"],
+        "medium": ["relation"],
+        "low": ["noise", "divergence"]
+      }
+    }
+  },
+
+  "metadata": {
+    "citation_author": "Nawder Loswin",
+    "citation_publication_date": "2025",
+    "ai.module": "coherence_layer",
+    "ai.version": "1.0.0",
+    "ai.purpose": "Defines coherence families, primitives, and envelope rules for RTT Suite coherence analysis.",
+    "ai.keywords": [
+      "coherence",
+      "high coherence",
+      "medium coherence",
+      "low coherence",
+      "harmonic",
+      "alignment",
+      "variance",
+      "triadic coherence",
+      "envelope",
+      "stability"
+    ]
+  }
+}
 
