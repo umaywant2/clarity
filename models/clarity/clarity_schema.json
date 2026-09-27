@@ -1,1 +1,181 @@
+{
+  "canonical": "R5",
+  "engine": "rtt.clarity",
+  "triad": "clarity",
+  "layer": "Evaluator",
+  "qmroot": "0D",
+  "title": "TriadicFrameworks RTT Suite — Clarity Engine Schema",
+  "description": "Defines the canonical schema for Clarity evaluation, including clarity score, pulse signature (C1, C2, C3), substrate transparency metrics, and evaluator metadata.",
+  "version": "1.0.0",
+
+  "schema": {
+    "name": "clarityEvaluation",
+    "purpose": "Compute clarity score and pulse signature based on triadic alignment and substrate transparency.",
+    "lineage": "qmroot-0D",
+
+    "input": {
+      "type": "object",
+      "fields": {
+        "structure": {
+          "type": "number",
+          "description": "Triadic structure value (0–1)."
+        },
+        "resonance": {
+          "type": "number",
+          "description": "Triadic resonance value (0–1)."
+        },
+        "activation": {
+          "type": "number",
+          "description": "Triadic activation value (0–1)."
+        }
+      }
+    },
+
+    "triadic": {
+      "type": "object",
+      "fields": {
+        "structure": {
+          "type": "number",
+          "description": "Triadic structure mapping.",
+          "range": [0, 1]
+        },
+        "resonance": {
+          "type": "number",
+          "description": "Triadic resonance mapping.",
+          "range": [0, 1]
+        },
+        "activation": {
+          "type": "number",
+          "description": "Triadic activation mapping.",
+          "range": [0, 1]
+        }
+      }
+    },
+
+    "clarity": {
+      "type": "object",
+      "fields": {
+        "score": {
+          "type": "number",
+          "description": "Computed clarity score (0–1)."
+        },
+        "pulse": {
+          "type": "string",
+          "description": "Clarity pulse signature (C1, C2, C3)."
+        }
+      }
+    },
+
+    "substrate": {
+      "type": "object",
+      "fields": {
+        "deltaS": {
+          "type": "number",
+          "description": "Directional structural change (ΔS).",
+          "range": [0, 1]
+        },
+        "deltaR": {
+          "type": "number",
+          "description": "Directional resonance change (ΔR).",
+          "range": [0, 1]
+        },
+        "deltaA": {
+          "type": "number",
+          "description": "Directional activation change (ΔA).",
+          "range": [0, 1]
+        },
+        "polarity": {
+          "type": "string",
+          "description": "Substrate polarity (SoN or NoS)."
+        },
+        "stability": {
+          "type": "number",
+          "description": "Substrate stability metric."
+        },
+        "coupling": {
+          "type": "number",
+          "description": "Triadic coupling strength."
+        },
+        "resonance": {
+          "type": "number",
+          "description": "Substrate resonance amplification."
+        }
+      }
+    },
+
+    "output": {
+      "type": "object",
+      "fields": {
+        "summary": {
+          "type": "string",
+          "description": "Canonical clarity summary."
+        },
+        "metadata": {
+          "type": "object",
+          "fields": {
+            "version": {
+              "type": "string",
+              "description": "Schema version."
+            },
+            "timestamp": {
+              "type": "string",
+              "description": "Evaluation timestamp."
+            },
+            "requestId": {
+              "type": "string",
+              "description": "Unique request identifier."
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "examples": [
+    {
+      "name": "Clarity evaluation example",
+      "input": {
+        "structure": 0.55,
+        "resonance": 0.52,
+        "activation": 0.40
+      },
+      "clarity": {
+        "score": 0.82,
+        "pulse": "C1"
+      },
+      "substrate": {
+        "deltaS": 0.18,
+        "deltaR": 0.12,
+        "deltaA": 0.09,
+        "polarity": "SoN",
+        "stability": 0.90,
+        "coupling": 0.88,
+        "resonance": 0.52
+      },
+      "output": {
+        "summary": "High clarity detected with C1 pulse signature.",
+        "metadata": {
+          "version": "1.0.0",
+          "timestamp": "2026-09-27T08:45:00",
+          "requestId": "example-0004"
+        }
+      },
+
+      "reality": {
+        "description": "Machine-level clarity evaluation.",
+        "details": "Clarity score computed from alignment and activation moderation."
+      },
+
+      "imagination": {
+        "description": "Symbolic interpretation.",
+        "details": "Triadic layers converge into a high-transparency clarity field."
+      },
+
+      "information": {
+        "description": "Cosmology notes.",
+        "details": "Clarity inherits qmroot lineage through transparency → pulse → field coherence."
+      }
+    }
+  ]
+}
 
