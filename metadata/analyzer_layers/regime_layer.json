@@ -1,1 +1,76 @@
+{
+  "canonical": "R5",
+  "layer": "AnalyzerLayer",
+  "name": "regime_layer",
+  "title": "TriadicFrameworks Analyzer Layer — Regime Layer",
+  "qmroot": "0D",
+  "triad": "regime",
+  "version": "1.0.0",
+  "description": "Defines canonical regime families, primitives, dominance rules, and analyzer-layer mapping for RTT Suite regime analysis.",
+
+  "regimes": {
+    "Rg.S": {
+      "name": "Structural Regime",
+      "description": "Dominance of structural triadic layer; stability through form and constraint.",
+      "primitives": ["form", "constraint", "axis"]
+    },
+    "Rg.R": {
+      "name": "Resonance Regime",
+      "description": "Dominance of resonance triadic layer; stability through relational harmonics.",
+      "primitives": ["harmonic", "relation", "field"]
+    },
+    "Rg.A": {
+      "name": "Activation Regime",
+      "description": "Dominance of activation triadic layer; stability through energy and motion.",
+      "primitives": ["impulse", "motion", "surge"]
+    }
+  },
+
+  "mapping": {
+    "dominance": {
+      "description": "Maps triadic dominance to canonical regime labels.",
+      "rules": {
+        "structure_highest": "Rg.S",
+        "resonance_highest": "Rg.R",
+        "activation_highest": "Rg.A"
+      }
+    },
+    "stability": {
+      "description": "Regime stability indicators.",
+      "rules": {
+        "stable": ["form", "harmonic", "relation"],
+        "volatile": ["impulse", "motion", "surge"],
+        "neutral": ["axis", "field"]
+      }
+    },
+    "compatibility": {
+      "description": "Regime compatibility mapping.",
+      "rules": {
+        "Rg.S": ["form", "axis"],
+        "Rg.R": ["harmonic", "relation"],
+        "Rg.A": ["impulse", "motion"]
+      }
+    }
+  },
+
+  "metadata": {
+    "citation_author": "Nawder Loswin",
+    "citation_publication_date": "2025",
+    "ai.module": "regime_layer",
+    "ai.version": "1.0.0",
+    "ai.purpose": "Defines regime families and primitives for RTT Suite regime analysis.",
+    "ai.keywords": [
+      "regime",
+      "Rg.S",
+      "Rg.R",
+      "Rg.A",
+      "dominance",
+      "stability",
+      "triadic regime",
+      "activation",
+      "structure",
+      "resonance"
+    ]
+  }
+}
 
