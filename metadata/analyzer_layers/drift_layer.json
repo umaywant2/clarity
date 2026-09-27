@@ -1,1 +1,95 @@
+{
+  "canonical": "R5",
+  "layer": "AnalyzerLayer",
+  "name": "drift_layer",
+  "title": "TriadicFrameworks Analyzer Layer — Drift Layer",
+  "qmroot": "0D",
+  "triad": "drift",
+  "version": "1.0.0",
+  "description": "Defines canonical drift families, primitives, drift classification rules, velocity mapping, and analyzer-layer metadata for RTT Suite drift analysis.",
+
+  "drift": {
+    "gradual": {
+      "name": "Gradual Drift",
+      "description": "Slow, incremental deviation from declared envelope.",
+      "primitives": ["phaseShift", "microShift"]
+    },
+    "sudden": {
+      "name": "Sudden Drift",
+      "description": "Abrupt structural or relational displacement.",
+      "primitives": ["break", "snap", "phaseShift"]
+    },
+    "oscillating": {
+      "name": "Oscillating Drift",
+      "description": "Periodic deviation and return to baseline.",
+      "primitives": ["oscillation", "cycle", "phaseShift"]
+    },
+    "paradox": {
+      "name": "Paradox Drift",
+      "description": "Deviation caused or amplified by paradox density.",
+      "primitives": ["feedback", "loop", "phaseShift", "harmonic"]
+    }
+  },
+
+  "mapping": {
+    "classification": {
+      "description": "Maps drift signatures to canonical drift types.",
+      "rules": {
+        "velocity_low": "gradual",
+        "velocity_medium": "oscillating",
+        "velocity_high": "sudden",
+        "paradox_detected": "paradox"
+      }
+    },
+    "velocity": {
+      "description": "Drift velocity indicators.",
+      "rules": {
+        "low": ["microShift", "phaseShift"],
+        "medium": ["oscillation", "cycle"],
+        "high": ["break", "snap"]
+      }
+    },
+    "paradox": {
+      "description": "Paradox drift indicators.",
+      "rules": {
+        "density_low": ["feedback"],
+        "density_medium": ["loop"],
+        "density_high": ["harmonic", "phaseShift"]
+      }
+    },
+    "stability": {
+      "description": "Drift stability mapping.",
+      "rules": {
+        "stable": ["microShift", "oscillation"],
+        "unstable": ["break", "snap"],
+        "volatile": ["loop", "harmonic"]
+      }
+    }
+  },
+
+  "metadata": {
+    "citation_author": "Nawder Loswin",
+    "citation_publication_date": "2025",
+    "ai.module": "drift_layer",
+    "ai.version": "1.0.0",
+    "ai.purpose": "Defines drift families, primitives, and classification rules for RTT Suite drift analysis.",
+    "ai.keywords": [
+      "drift",
+      "gradual drift",
+      "sudden drift",
+      "oscillating drift",
+      "paradox drift",
+      "phaseShift",
+      "oscillation",
+      "microShift",
+      "break",
+      "snap",
+      "feedback",
+      "loop",
+      "harmonic",
+      "drift velocity",
+      "drift stability"
+    ]
+  }
+}
 
