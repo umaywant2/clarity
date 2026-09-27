@@ -1,1 +1,102 @@
+{
+  "canonical": "R5",
+  "layer": "AnalyzerLayer",
+  "name": "operator_layer",
+  "title": "TriadicFrameworks Analyzer Layer — Operator Layer",
+  "qmroot": "0D",
+  "triad": "frequency",
+  "version": "1.0.0",
+  "description": "Defines canonical operator families, primitives, and analyzer-layer mapping for RTT Suite engines.",
+
+  "operators": {
+    "spectral": {
+      "description": "Spectral operators governing oscillation, harmonic structure, and clarity.",
+      "members": ["clarity", "coherence", "continuity"],
+      "primitives": ["oscillation", "harmonic"]
+    },
+    "drift": {
+      "description": "Drift operators governing directional change and phase displacement.",
+      "members": ["alignment", "awareness", "drift"],
+      "primitives": ["phaseShift"]
+    },
+    "regime": {
+      "description": "Regime operators governing mode dominance and field stability.",
+      "members": ["regime"],
+      "primitives": ["harmonic", "phaseShift"]
+    },
+    "primitive": {
+      "description": "Primitive operators representing fundamental resonance actions.",
+      "members": ["oscillation", "phaseShift", "harmonic", "lineagePulse"],
+      "primitives": ["oscillation", "phaseShift", "harmonic", "lineagePulse"]
+    }
+  },
+
+  "mapping": {
+    "clarity": {
+      "family": "spectral",
+      "defaultPrimitive": "oscillation"
+    },
+    "coherence": {
+      "family": "spectral",
+      "defaultPrimitive": "harmonic"
+    },
+    "continuity": {
+      "family": "spectral",
+      "defaultPrimitive": "harmonic"
+    },
+    "alignment": {
+      "family": "drift",
+      "defaultPrimitive": "phaseShift"
+    },
+    "awareness": {
+      "family": "drift",
+      "defaultPrimitive": "oscillation"
+    },
+    "drift": {
+      "family": "drift",
+      "defaultPrimitive": "phaseShift"
+    },
+    "regime": {
+      "family": "regime",
+      "defaultPrimitive": "harmonic"
+    },
+    "oscillation": {
+      "family": "primitive",
+      "defaultPrimitive": "oscillation"
+    },
+    "phaseShift": {
+      "family": "primitive",
+      "defaultPrimitive": "phaseShift"
+    },
+    "harmonic": {
+      "family": "primitive",
+      "defaultPrimitive": "harmonic"
+    },
+    "lineagePulse": {
+      "family": "primitive",
+      "defaultPrimitive": "lineagePulse"
+    }
+  },
+
+  "metadata": {
+    "citation_author": "Nawder Loswin",
+    "citation_publication_date": "2025",
+    "ai.module": "operator_layer",
+    "ai.version": "1.0.0",
+    "ai.purpose": "Defines operator families and primitives for RTT Suite analyzer layers.",
+    "ai.keywords": [
+      "operator",
+      "analyzer layer",
+      "frequency triad",
+      "spectral",
+      "drift",
+      "regime",
+      "primitive",
+      "oscillation",
+      "harmonic",
+      "phaseShift",
+      "lineagePulse"
+    ]
+  }
+}
 
