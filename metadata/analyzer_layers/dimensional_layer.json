@@ -1,1 +1,103 @@
+{
+  "canonical": "R5",
+  "layer": "AnalyzerLayer",
+  "name": "dimensional_layer",
+  "title": "TriadicFrameworks Analyzer Layer — Dimensional Layer",
+  "qmroot": "0D",
+  "triad": "dimensionality",
+  "version": "1.0.0",
+  "description": "Defines canonical dimensional families, primitives, and analyzer-layer mapping for RTT Suite dimensional analysis.",
+
+  "dimensions": {
+    "D0": {
+      "name": "Point",
+      "description": "Atomic, irreducible; no dimensional structure.",
+      "primitives": ["atomic", "null"]
+    },
+    "D1": {
+      "name": "Line",
+      "description": "Single-axis structure; sequential, linear.",
+      "primitives": ["axis", "sequence"]
+    },
+    "D2": {
+      "name": "Plane",
+      "description": "Two-axis structure; relational, flat.",
+      "primitives": ["grid", "relation"]
+    },
+    "D3": {
+      "name": "Volume",
+      "description": "Three-axis structure; contextual, spatial.",
+      "primitives": ["context", "space"]
+    },
+    "D4": {
+      "name": "Temporal",
+      "description": "Time-aware structure; evolutionary, historical.",
+      "primitives": ["time", "history"]
+    },
+    "D5": {
+      "name": "Recursive",
+      "description": "Self-referencing structure; meta-aware, layered.",
+      "primitives": ["recursion", "meta"]
+    },
+    "D6": {
+      "name": "Relational Field",
+      "description": "Field-level structure; interconnected, emergent.",
+      "primitives": ["field", "emergence"]
+    },
+    "D7": {
+      "name": "Universal",
+      "description": "Full-envelope structure; substrate-complete.",
+      "primitives": ["universal", "substrate"]
+    }
+  },
+
+  "mapping": {
+    "dimensional_envelope": {
+      "description": "Maps dimensional envelope detection to canonical primitives.",
+      "rules": {
+        "low": ["atomic", "axis"],
+        "medium": ["grid", "context", "time"],
+        "high": ["recursion", "field", "universal"]
+      }
+    },
+    "compatibility": {
+      "description": "Dimensional compatibility mapping.",
+      "rules": {
+        "aligned": ["relation", "context", "field"],
+        "mismatch": ["null", "axis", "recursion"]
+      }
+    },
+    "collapse": {
+      "description": "Dimensional collapse indicators.",
+      "rules": {
+        "risk_low": ["context", "time"],
+        "risk_medium": ["recursion"],
+        "risk_high": ["null", "atomic"]
+      }
+    }
+  },
+
+  "metadata": {
+    "citation_author": "Nawder Loswin",
+    "citation_publication_date": "2025",
+    "ai.module": "dimensional_layer",
+    "ai.version": "1.0.0",
+    "ai.purpose": "Defines dimensional families and primitives for RTT Suite dimensional analysis.",
+    "ai.keywords": [
+      "dimensionality",
+      "D0",
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7",
+      "dimensional envelope",
+      "compatibility",
+      "collapse",
+      "FFT Dimensional Analyzer"
+    ]
+  }
+}
 
