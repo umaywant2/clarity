@@ -1,1 +1,181 @@
+{
+  "canonical": "R5",
+  "engine": "rtt.coherence",
+  "triad": "coherence",
+  "layer": "Evaluator",
+  "qmroot": "0D",
+  "title": "TriadicFrameworks RTT Suite — Coherence Engine Schema",
+  "description": "Defines the canonical schema for Coherence evaluation, including triadic alignment metrics, coherence score, coherence envelopes, and evaluator metadata.",
+  "version": "1.0.0",
+
+  "schema": {
+    "name": "coherenceEvaluation",
+    "purpose": "Analyze alignment across Structure, Resonance, and Activation and compute coherence-state metrics.",
+    "lineage": "qmroot-0D",
+
+    "input": {
+      "type": "object",
+      "fields": {
+        "structure": {
+          "type": "number",
+          "description": "Triadic structure value (0–1)."
+        },
+        "resonance": {
+          "type": "number",
+          "description": "Triadic resonance value (0–1)."
+        },
+        "activation": {
+          "type": "number",
+          "description": "Triadic activation value (0–1)."
+        }
+      }
+    },
+
+    "triadic": {
+      "type": "object",
+      "fields": {
+        "structure": {
+          "type": "number",
+          "description": "Triadic structure mapping.",
+          "range": [0, 1]
+        },
+        "resonance": {
+          "type": "number",
+          "description": "Triadic resonance mapping.",
+          "range": [0, 1]
+        },
+        "activation": {
+          "type": "number",
+          "description": "Triadic activation mapping.",
+          "range": [0, 1]
+        }
+      }
+    },
+
+    "coherence": {
+      "type": "object",
+      "fields": {
+        "score": {
+          "type": "number",
+          "description": "Computed coherence score (0–1)."
+        },
+        "envelope": {
+          "type": "string",
+          "description": "Coherence envelope classification (low, medium, high)."
+        }
+      }
+    },
+
+    "substrate": {
+      "type": "object",
+      "fields": {
+        "deltaS": {
+          "type": "number",
+          "description": "Directional structural change (ΔS).",
+          "range": [0, 1]
+        },
+        "deltaR": {
+          "type": "number",
+          "description": "Directional resonance change (ΔR).",
+          "range": [0, 1]
+        },
+        "deltaA": {
+          "type": "number",
+          "description": "Directional activation change (ΔA).",
+          "range": [0, 1]
+        },
+        "polarity": {
+          "type": "string",
+          "description": "Substrate polarity (SoN or NoS)."
+        },
+        "stability": {
+          "type": "number",
+          "description": "Substrate stability metric."
+        },
+        "coupling": {
+          "type": "number",
+          "description": "Triadic coupling strength."
+        },
+        "resonance": {
+          "type": "number",
+          "description": "Substrate resonance amplification."
+        }
+      }
+    },
+
+    "output": {
+      "type": "object",
+      "fields": {
+        "summary": {
+          "type": "string",
+          "description": "Canonical coherence summary."
+        },
+        "metadata": {
+          "type": "object",
+          "fields": {
+            "version": {
+              "type": "string",
+              "description": "Schema version."
+            },
+            "timestamp": {
+              "type": "string",
+              "description": "Evaluation timestamp."
+            },
+            "requestId": {
+              "type": "string",
+              "description": "Unique request identifier."
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "examples": [
+    {
+      "name": "Coherence evaluation example",
+      "input": {
+        "structure": 0.40,
+        "resonance": 0.45,
+        "activation": 0.42
+      },
+      "coherence": {
+        "score": 0.93,
+        "envelope": "high"
+      },
+      "substrate": {
+        "deltaS": 0.12,
+        "deltaR": 0.18,
+        "deltaA": 0.09,
+        "polarity": "SoN",
+        "stability": 0.88,
+        "coupling": 0.91,
+        "resonance": 0.45
+      },
+      "output": {
+        "summary": "High coherence detected with strong triadic alignment.",
+        "metadata": {
+          "version": "1.0.0",
+          "timestamp": "2026-09-27T08:37:00",
+          "requestId": "example-0002"
+        }
+      },
+
+      "reality": {
+        "description": "Machine-level coherence evaluation.",
+        "details": "Variance-based alignment metric computed deterministically."
+      },
+
+      "imagination": {
+        "description": "Symbolic interpretation.",
+        "details": "Triadic layers converge into a high-coherence field."
+      },
+
+      "information": {
+        "description": "Cosmology notes.",
+        "details": "Coherence inherits qmroot lineage through rhythm → harmony → field alignment."
+      }
+    }
+  ]
+}
 
