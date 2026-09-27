@@ -1,1 +1,102 @@
+# ============================================================
+# TriadicFrameworks — Cloudflare DNS Manifest
+# Canon Version: 1.0
+# Path: /platform/cloudflare/dns_manifest.yaml
+# Author: Nawder Loswin
+# ============================================================
+
+zone: triadicframeworks.com
+
+metadata:
+  canonical: R5
+  owner: "Nawder Loswin"
+  purpose: "DNS manifest for RTT Suite + Cloudflare AI Marketplace deployment"
+  version: "1.0.0"
+
+records:
+
+  # ----------------------------------------------------------
+  # Root + WWW
+  # ----------------------------------------------------------
+  - type: A
+    name: "@"
+    value: 192.0.2.1        # placeholder IP
+    ttl: 300
+
+  - type: A
+    name: "www"
+    value: 192.0.2.1
+    ttl: 300
+
+  # ----------------------------------------------------------
+  # Workers AI Gateway
+  # ----------------------------------------------------------
+  - type: CNAME
+    name: "ai"
+    value: workers-ai.cloudflare.com
+    ttl: 300
+
+  - type: CNAME
+    name: "models"
+    value: workers-ai.cloudflare.com
+    ttl: 300
+
+  # ----------------------------------------------------------
+  # RTT Suite Endpoints
+  # ----------------------------------------------------------
+  - type: CNAME
+    name: "rtt"
+    value: workers-ai.cloudflare.com
+    ttl: 300
+
+  - type: CNAME
+    name: "drift"
+    value: workers-ai.cloudflare.com
+    ttl: 300
+
+  - type: CNAME
+    name: "coherence"
+    value: workers-ai.cloudflare.com
+    ttl: 300
+
+  - type: CNAME
+    name: "regime"
+    value: workers-ai.cloudflare.com
+    ttl: 300
+
+  - type: CNAME
+    name: "clarity"
+    value: workers-ai.cloudflare.com
+    ttl: 300
+
+  - type: CNAME
+    name: "session"
+    value: workers-ai.cloudflare.com
+    ttl: 300
+
+  # ----------------------------------------------------------
+  # Marketplace Listing + API
+  # ----------------------------------------------------------
+  - type: CNAME
+    name: "marketplace"
+    value: workers-ai.cloudflare.com
+    ttl: 300
+
+  - type: CNAME
+    name: "api"
+    value: workers-ai.cloudflare.com
+    ttl: 300
+
+  # ----------------------------------------------------------
+  # Verification / TXT Records
+  # ----------------------------------------------------------
+  - type: TXT
+    name: "_cf-verification"
+    value: "triadicframeworks-verification-token"
+    ttl: 300
+
+  - type: TXT
+    name: "triadicframeworks"
+    value: "RTT Suite — Canon R5"
+    ttl: 300
 
