@@ -1,1 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemap canonical="R5"
+         title="TriadicFrameworks — Canonical Master Sitemap"
+         publication_date="2025"
+         author="Nawder Loswin">
+
+  <!-- ========================= -->
+  <!-- 1. Canon Documentation     -->
+  <!-- ========================= -->
+  <section name="canon">
+    <file>/docs/canon_reference.md</file>
+    <file>/docs/canon_map.md</file>
+    <file>/docs/canon_atlas.md</file>
+    <file>/docs/canon_index.md</file>
+    <file>/docs/canon_glossary.md</file>
+    <file>/docs/canon_lineage.md</file>
+    <file>/docs/canon_substrate.md</file>
+    <file>/docs/canon_math.md</file>
+  </section>
+
+  <!-- ========================= -->
+  <!-- 2. Structural Intelligence -->
+  <!-- ========================= -->
+  <section name="structural_intelligence">
+    <file>/docs/si_publications.md</file>
+    <file>/docs/si_knowledge_base.md</file>
+    <file>/docs/si_ontology.md</file>
+    <file>/docs/si_lexicon.md</file>
+    <file>/docs/si_pedagogy.md</file>
+    <file>/docs/si_semantic_api.md</file>
+    <file>/docs/si_research_index.md</file>
+    <file>/docs/si_citation_library.md</file>
+    <file>/docs/si_monographs.md</file>
+    <file>/docs/si_experiments.md</file>
+  </section>
+
+  <!-- ========================= -->
+  <!-- 3. Clarity Book            -->
+  <!-- ========================= -->
+  <section name="clarity_book">
+    <file>/book/clarity_index.md</file>
+    <file>/book/clarity_pedagogy.md</file>
+    <file>/book/clarity_equations.md</file>
+    <file>/book/clarity_examples.md</file>
+    <file>/book/clarity_sessions.md</file>
+
+    <file>/book/triadic_learning.md</file>
+    <file>/book/triadic_index.md</file>
+    <file>/book/triadic_examples.md</file>
+    <file>/book/triadic_sessions.md</file>
+    <file>/book/triadic_equations.md</file>
+
+    <file>/book/dimensional_curriculum.md</file>
+    <file>/book/dimensional_index.md</file>
+    <file>/book/dimensional_examples.md</file>
+    <file>/book/dimensional_sessions.md</file>
+    <file>/book/dimensional_equations.md</file>
+  </section>
+
+  <!-- ========================= -->
+  <!-- 4. RTT Suite API           -->
+  <!-- ========================= -->
+  <section name="rtt_suite_api">
+    <file>/platform/api/rtt_suite_endpoints.json</file>
+    <file>/platform/api/semantic_api_spec.md</file>
+    <file>/platform/api/rtt_suite_router.js</file>
+    <file>/platform/api/rtt_suite_examples.md</file>
+    <file>/platform/api/rtt_suite_errors.md</file>
+  </section>
+
+  <!-- ========================= -->
+  <!-- 5. Cloudflare Platform     -->
+  <!-- ========================= -->
+  <section name="cloudflare">
+    <file>/platform/cloudflare/pricing_model.md</file>
+    <file>/platform/cloudflare/marketplace_listing.md</file>
+    <file>/platform/cloudflare/model_registry.json</file>
+    <file>/platform/cloudflare/worker.js</file>
+    <file>/platform/cloudflare/security_headers.yaml</file>
+  </section>
+
+  <!-- ========================= -->
+  <!-- 6. Module Architecture     -->
+  <!-- ========================= -->
+  <section name="modules">
+    <file>/modules/module_index.md</file>
+    <file>/modules/module_schema.json</file>
+    <file>/modules/module_examples.md</file>
+    <file>/modules/module_templates.md</file>
+    <file>/modules/module_lineage.md</file>
+  </section>
+
+  <!-- ========================= -->
+  <!-- 7. Metadata System         -->
+  <!-- ========================= -->
+  <section name="metadata">
+    <file>/metadata/module.json</file>
+    <file>/metadata/analyzer_layers.md</file>
+    <file>/metadata/roles.md</file>
+    <file>/metadata/session_context.md</file>
+    <file>/metadata/badges.md</file>
+    <file>/metadata/audit.md</file>
+    <file>/metadata/diff.md</file>
+  </section>
+
+  <!-- ========================= -->
+  <!-- 8. Canon Utilities         -->
+  <!-- ========================= -->
+  <section name="utilities">
+    <file>/utils/triadic_map.md</file>
+    <file>/utils/substrate_map.md</file>
+    <file>/utils/evaluator_map.md</file>
+    <file>/utils/pipeline_map.md</file>
+    <file>/utils/semantic_graph.md</file>
+  </section>
+
+</sitemap>
 
