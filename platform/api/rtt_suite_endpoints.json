@@ -1,1 +1,122 @@
+{
+  "canonical": "R5",
+  "title": "RTT Suite — API Endpoint Specification",
+  "version": "1.0.0",
+  "description": "Defines canonical RTT Suite API endpoints for Drift, Coherence, Regime, Clarity, Session, and Semantic API layers.",
+
+  "metadata": {
+    "citation_author": "Nawder Loswin",
+    "citation_publication_date": "2025",
+    "ai.module": "rtt_suite_endpoints",
+    "ai.version": "1.0.0",
+    "ai.purpose": "Provides canonical endpoint definitions for RTT Suite engines.",
+    "ai.keywords": [
+      "rtt",
+      "drift",
+      "coherence",
+      "regime",
+      "clarity",
+      "session",
+      "semantic api",
+      "triadic",
+      "pipeline"
+    ]
+  },
+
+  "endpoints": {
+    "drift": {
+      "path": "/rtt/drift",
+      "method": "POST",
+      "description": "Runs Drift Engine (ΔS/ΔR/ΔA extraction).",
+      "input": { "text": "string" },
+      "output": "DriftTRO"
+    },
+
+    "coherence": {
+      "path": "/rtt/coherence",
+      "method": "POST",
+      "description": "Runs Coherence Engine (variance + harmonic envelope).",
+      "input": { "text": "string" },
+      "output": "CoherenceTRO"
+    },
+
+    "regime": {
+      "path": "/rtt/regime",
+      "method": "POST",
+      "description": "Runs Regime Engine (triadic dominance detection).",
+      "input": { "text": "string" },
+      "output": "RegimeTRO"
+    },
+
+    "clarity": {
+      "path": "/rtt/clarity",
+      "method": "POST",
+      "description": "Runs Clarity Engine (pulse + spectral primitives).",
+      "input": { "text": "string" },
+      "output": "ClarityTRO"
+    },
+
+    "session": {
+      "path": "/rtt/session",
+      "method": "POST",
+      "description": "Runs full RTT pipeline: Drift → Coherence → Regime → Clarity.",
+      "input": { "text": "string" },
+      "output": "SessionTRO"
+    },
+
+    "semantic": {
+      "triadic_map": {
+        "path": "/si/semantic/triadic-map",
+        "method": "POST",
+        "description": "Maps text or TRO into triadic structure and semantic graph.",
+        "output": "SemanticTRO"
+      },
+      "substrate_map": {
+        "path": "/si/semantic/substrate-map",
+        "method": "POST",
+        "description": "Maps content into substrate primitives.",
+        "output": "SemanticTRO"
+      },
+      "evaluator_map": {
+        "path": "/si/semantic/evaluator-map",
+        "method": "POST",
+        "description": "Runs Drift → Coherence → Regime → Clarity mapping.",
+        "output": "SemanticTRO"
+      },
+      "module_map": {
+        "path": "/si/semantic/module-map",
+        "method": "POST",
+        "description": "Maps module.json metadata into ontology entities.",
+        "output": "SemanticTRO"
+      },
+      "pipeline_map": {
+        "path": "/si/semantic/pipeline-map",
+        "method": "POST",
+        "description": "Runs full RTT pipeline and returns semantic graph.",
+        "output": "SemanticTRO"
+      },
+      "graph_query": {
+        "path": "/si/semantic/graph-query",
+        "method": "POST",
+        "description": "Queries the ontology graph.",
+        "output": "SemanticTRO"
+      }
+    },
+
+    "cloudflare_marketplace": {
+      "adapter": {
+        "path": "/cf/adapter",
+        "method": "POST",
+        "description": "Cloudflare AI Marketplace adapter entrypoint."
+      },
+      "models": {
+        "drift": "/rtt/drift",
+        "coherence": "/rtt/coherence",
+        "regime": "/rtt/regime",
+        "clarity": "/rtt/clarity",
+        "session": "/rtt/session"
+      }
+    }
+  }
+}
 
