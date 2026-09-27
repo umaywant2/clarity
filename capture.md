@@ -1,3 +1,5 @@
+<img width="963" height="963" alt="triadicframeworks_com_logo" src="https://github.com/user-attachments/assets/7113bcff-dbc9-4751-a391-fc3728516dad" />
+
 # capture.md
 
 > So I'm enjoying Cloudflare's offerings, just finished checking our 21 domains...  They have Typesafe's Jev... and others... Jev has one aspect of our drift feature...and I see they are charging $0.042 Input Token (per 1M)
