@@ -1,1 +1,79 @@
+{
+  "id": "SI_MODULE_MODEL",
+  "name": "Module Model",
+  "version": "1.0.0",
+  "canon_version": "R5",
+  "category": "engine",
+  "roles": ["engine", "profile", "signature"],
+
+  "triad": {
+    "structure": "Defines canonical module identity, roles, and schema.",
+    "resonance": "Aligns module lineage and relationships across the canon.",
+    "activation": "Governs module behavior within evaluators and pedagogy."
+  },
+
+  "substrate": {
+    "delta": "Tracks ΔS/ΔR/ΔA shifts in module metadata.",
+    "oscillation": "Detects Op patterns indicating unstable lineage or role oscillation.",
+    "regime": "Classifies module regime (engine, profile, diagnostic, map)."
+  },
+
+  "rtt": {
+    "drift": "Detects metadata instability and lineage drift.",
+    "coherence": "Aligns module relationships and semantic anchors.",
+    "regime": "Classifies module operating mode.",
+    "clarity": "Supports clarity‑aligned module behavior."
+  },
+
+  "dimensional": {
+    "primary_dimension": "7D",
+    "dimensions": ["0D", "1D", "2D", "3D", "6D", "7D"]
+  },
+
+  "si": {
+    "ontology_ref": "si://ontology/module",
+    "lexicon_ref": "si://lexicon/module",
+    "semantic_api_ref": "si://semantic/module-map"
+  },
+
+  "lineage": {
+    "parent": "SI_CANON_CORE",
+    "siblings": ["RTT_DRIFT_ENGINE", "RTT_REGIME_ENGINE", "SESSION_MODEL"],
+    "children": ["MODULE_PROFILE", "MODULE_DIAGNOSTIC"]
+  },
+
+  "analyzer_layers": {
+    "operator": ["module-identity", "module-schema"],
+    "dimensional": ["7D-meta-structure", "3D-transition"],
+    "regime": ["module-regime-evaluator"],
+    "drift": ["metadata-instability-check"],
+    "coherence": ["lineage-alignment"],
+    "cross_cutting": ["triadic-signature", "semantic-mapping"]
+  },
+
+  "session": {
+    "context": "Used to define and stabilize module identity across the canon.",
+    "pedagogy": "Teaches structural identity, lineage, and analyzer layers.",
+    "clarity_targets": ["C1", "C2"]
+  },
+
+  "badge": {
+    "label": "Module Model",
+    "category": "SI"
+  },
+
+  "audit": {
+    "status": "clean",
+    "notes": [
+      "Triad fields complete.",
+      "Analyzer layers aligned with SI ontology.",
+      "Regime classification stable."
+    ]
+  },
+
+  "diff": {
+    "previous_version": "none",
+    "changes": ["Initial canonical release."]
+  }
+}
 
