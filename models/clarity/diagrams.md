@@ -1,4 +1,6 @@
-RTT_CLARITY_ENGINE
+<img width="1024" height="1024" alt="Clarity_Engine_integration_diagram_" src="https://github.com/user-attachments/assets/ca50ffa6-2a1e-42bc-a167-9c794dc07754" />
+
+# RTT_CLARITY_ENGINE
 clarity/models/clarity
 
 │
