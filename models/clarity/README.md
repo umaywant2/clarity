@@ -1,3 +1,7 @@
+<img width="1024" height="1024" alt="Clarity_Engine_integration_diagram_" src="https://github.com/user-attachments/assets/ca50ffa6-2a1e-42bc-a167-9c794dc07754" />
+
+- [`module.json`](https://raw.githubusercontent.com/umaywant2/clarity/refs/heads/main/models/clarity/module.json) — Agentic module schema role assignments
+
 # RTT_CLARITY_ENGINE  
 **Path:** `clarity/models/clarity/README.md`  
 **Version:** R5.1  
