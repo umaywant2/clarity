@@ -86,9 +86,9 @@ Emitted at CPC intervals:
 
 The Clarity Score is the engine’s primary metric:
 
-\[
+$$
 CS = \frac{semantic\_coherence \times intent\_alignment}{flux\_weight}
-\]
+$$
 
 - High CS → stable, aligned substrate  
 - Low CS → drift risk, misalignment, or anchor collapse  
