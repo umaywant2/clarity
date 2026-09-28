@@ -1,1 +1,79 @@
+{
+  "id": "RTT_REGIME_MODEL",
+  "name": "Regime Model",
+  "version": "1.0.0",
+  "canon_version": "R5",
+  "category": "engine",
+  "roles": ["engine", "diagnostic", "regime-classifier"],
+
+  "triad": {
+    "structure": "Defines stability envelopes for cognitive operation.",
+    "resonance": "Aligns relational behavior within regime boundaries.",
+    "activation": "Tracks motion envelopes and activation spikes."
+  },
+
+  "substrate": {
+    "delta": "Tracks ΔRg shifts across cognitive states.",
+    "oscillation": "Detects OpRg oscillatory regime behavior.",
+    "regime": "Classifies stable, semi-stable, and unstable regimes."
+  },
+
+  "rtt": {
+    "drift": "Identifies regime instability.",
+    "coherence": "Aligns regime anchors.",
+    "regime": "Primary regime classifier for RTT pipeline.",
+    "clarity": "Feeds regime-stabilized envelopes into clarity evaluator."
+  },
+
+  "dimensional": {
+    "primary_dimension": "5D",
+    "dimensions": ["3D", "4D", "5D", "6D"]
+  },
+
+  "si": {
+    "ontology_ref": "si://ontology/regime",
+    "lexicon_ref": "si://lexicon/regime",
+    "semantic_api_ref": "si://semantic/evaluator-map#regime"
+  },
+
+  "lineage": {
+    "parent": "RTT_EVALUATOR_CORE",
+    "siblings": ["RTT_DRIFT_ENGINE", "RTT_COHERENCE_ENGINE", "RTT_CLARITY_ENGINE"],
+    "children": ["REGIME_PROFILE", "REGIME_DIAGNOSTIC"]
+  },
+
+  "analyzer_layers": {
+    "operator": ["regime-envelope", "regime-vector"],
+    "dimensional": ["5D-rhythm", "4D-context"],
+    "regime": ["regime-classification", "regime-stability"],
+    "drift": ["regime-instability-check"],
+    "coherence": ["regime-alignment"],
+    "cross_cutting": ["triadic-signature", "substrate-mapping"]
+  },
+
+  "session": {
+    "context": "Used to classify cognitive operating modes within RTT pipeline.",
+    "pedagogy": "Teaches regime envelopes, oscillations, and stability.",
+    "clarity_targets": ["C2"]
+  },
+
+  "badge": {
+    "label": "Regime Model",
+    "category": "RTT"
+  },
+
+  "audit": {
+    "status": "clean",
+    "notes": [
+      "Regime envelopes validated.",
+      "Dimensional placement correct.",
+      "RTT integration stable."
+    ]
+  },
+
+  "diff": {
+    "previous_version": "none",
+    "changes": ["Initial canonical release."]
+  }
+}
 
