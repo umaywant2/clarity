@@ -1,1 +1,108 @@
+{
+  "module_id": "RTT_COHERENCE_ENGINE",
+  "version": "R5.1.0",
+  "class": "core",
+  "path": "clarity/models/coherence",
+  "description": "Semantic and relational stability engine responsible for maintaining coherence across substrate evaluations.",
+  
+  "substrate": {
+    "semantic_continuity": {
+      "type": "float",
+      "range": [0.0, 1.0],
+      "description": "Continuity of meaning across parse units; primary semantic stability metric."
+    },
+    "relational_integrity": {
+      "type": "float",
+      "range": [0.0, 1.0],
+      "description": "Stability of relational connections between parse units; prevents orphaning and circular references."
+    },
+    "entropy_index": {
+      "type": "float",
+      "range": [0.0, 1.0],
+      "description": "Measure of relational and semantic disorder; used to modulate CE."
+    },
+    "anchor_density": {
+      "type": "float",
+      "range": [0.0, 1.0],
+      "description": "Density of temporal, semantic, and relational anchors in the substrate."
+    },
+    "intent_vector": {
+      "type": "vector",
+      "range": [-1.0, 1.0],
+      "description": "Intent direction used to evaluate semantic alignment."
+    },
+    "coherence_state": {
+      "type": "object",
+      "fields": ["semantic_continuity", "relational_integrity", "entropy_index"],
+      "description": "Snapshot of coherence metrics used for CPC and regime feedback."
+    }
+  },
+
+  "pipeline_stages": [
+    "Intake",
+    "Parse",
+    "Evaluate",
+    "Resolve",
+    "Emit"
+  ],
+
+  "coherence_threshold": {
+    "type": "float",
+    "default": 0.58,
+    "description": "Minimum Coherence Score (CE) required for stable operation."
+  },
+
+  "dimensional_axes": [
+    "D1_Temporal",
+    "D2_Semantic",
+    "D3_Relational",
+    "D4_Intentional",
+    "D5_Integrative"
+  ],
+
+  "pulse_interval": {
+    "type": "int",
+    "default": 8,
+    "description": "Ticks between Coherence Pulse Checkpoints (CPC)."
+  },
+
+  "evaluator_mode": {
+    "type": "enum",
+    "default": "passive",
+    "values": ["passive", "active", "corrective"],
+    "description": "Evaluator authority level for coherence verification and correction."
+  },
+
+  "calibration_curve": {
+    "type": "object",
+    "default": {
+      "k": 2.0,
+      "X0": 0.38
+    },
+    "description": "Sigmoid curve controlling coherence_threshold adaptation."
+  },
+
+  "emit_schema": {
+    "type": "object",
+    "description": "Output schema for coherence_signal.",
+    "fields": {
+      "corrected_coherence_substrate": "object",
+      "coherence_log_entry": "object",
+      "pulse_signal": "object"
+    }
+  },
+
+  "signals": {
+    "coherence_signal": {
+      "type": "object",
+      "description": "Primary output consumed by Drift, Clarity, and Regime engines."
+    }
+  },
+
+  "dependencies": [
+    "RTT_DRIFT_ENGINE",
+    "RTT_CLARITY_ENGINE",
+    "RTT_REGIME_ENGINE"
+  ]
+}
 
