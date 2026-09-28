@@ -1,0 +1,97 @@
+{
+  "module_id": "RTT_CLARITY_ENGINE",
+  "version": "R5.1.0",
+  "class": "core",
+  "path": "clarity/models/clarity",
+  "description": "Real-Time Calibration & Intent Coherence Engine for TriadicFrameworks R5.",
+  "substrate": {
+    "intent_vector": {
+      "type": "vector",
+      "range": [-1.0, 1.0],
+      "description": "Baseline intent direction used for alignment and drift modulation."
+    },
+    "semantic_coherence": {
+      "type": "float",
+      "range": [0.0, 1.0],
+      "description": "Measure of meaning continuity across parse units."
+    },
+    "relational_map": {
+      "type": "graph",
+      "description": "Relational structure of parse units; used for stability and coherence checks."
+    },
+    "anchor_density": {
+      "type": "float",
+      "range": [0.0, 1.0],
+      "description": "Local density of temporal, semantic, and relational anchors."
+    },
+    "flux_weight": {
+      "type": "float",
+      "range": [0.0, 2.0],
+      "description": "Flux multiplier applied to clarity and drift scores."
+    },
+    "calibration_state": {
+      "type": "object",
+      "fields": ["k", "X0"],
+      "description": "Sigmoid calibration parameters for clarity_threshold modulation."
+    }
+  },
+  "pipeline_stages": [
+    "Intake",
+    "Measure",
+    "Evaluate",
+    "Resolve",
+    "Emit"
+  ],
+  "clarity_threshold": {
+    "type": "float",
+    "default": 0.62,
+    "description": "Minimum Clarity Score (CS) required for stable operation."
+  },
+  "dimensional_axes": [
+    "D1_Temporal",
+    "D2_Semantic",
+    "D3_Relational",
+    "D4_Intentional",
+    "D5_Integrative"
+  ],
+  "pulse_interval": {
+    "type": "int",
+    "default": 8,
+    "description": "Ticks between Clarity Pulse Checkpoints (CPC)."
+  },
+  "evaluator_mode": {
+    "type": "enum",
+    "default": "passive",
+    "values": ["passive", "active", "corrective"],
+    "description": "Operational mode of the human evaluator interface."
+  },
+  "calibration_curve": {
+    "type": "object",
+    "default": {
+      "k": 2.0,
+      "X0": 0.38
+    },
+    "description": "Sigmoid curve controlling clarity_threshold adaptation."
+  },
+  "emit_schema": {
+    "type": "object",
+    "description": "Output schema for clarity_signal.",
+    "fields": {
+      "corrected_clarity_substrate": "object",
+      "clarity_log_entry": "object",
+      "pulse_signal": "object"
+    }
+  },
+  "signals": {
+    "clarity_signal": {
+      "type": "object",
+      "description": "Primary output consumed by Drift, Coherence, Regime, and Session engines."
+    }
+  },
+  "dependencies": [
+    "RTT_DRIFT_ENGINE",
+    "RTT_COHERENCE_ENGINE",
+    "RTT_REGIME_ENGINE",
+    "RTT_SESSION_ENGINE"
+  ]
+}
