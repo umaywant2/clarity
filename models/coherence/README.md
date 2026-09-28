@@ -1,5 +1,5 @@
 
-- [``]()
+- [`module.json`](https://raw.githubusercontent.com/umaywant2/clarity/refs/heads/main/models/coherence/module.json) — Agentic module schema role assignments
 
 # RTT_COHERENCE_ENGINE  
 **Path:** `clarity/models/coherence/README.md`  
@@ -124,7 +124,3 @@ models/coherence/
 - **R5.1.0** — Current canonical release  
 - Minor versions track coherence scoring improvements  
 - Patch versions track hotfixes to relational mapping or CPC logic  
-
----
-
-
