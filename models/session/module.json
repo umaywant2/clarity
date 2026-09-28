@@ -1,1 +1,79 @@
+{
+  "id": "CLARITY_SESSION_MODEL",
+  "name": "Session Model",
+  "version": "1.0.0",
+  "canon_version": "R5",
+  "category": "engine",
+  "roles": ["engine", "pedagogy", "session-framework"],
+
+  "triad": {
+    "structure": "Defines session context, framing, and stability.",
+    "resonance": "Aligns relational checkpoints within the session.",
+    "activation": "Governs exercises, motion, and clarity generation."
+  },
+
+  "substrate": {
+    "delta": "Tracks ΔSession learning shifts.",
+    "oscillation": "Detects OpSession oscillatory learning patterns.",
+    "regime": "Classifies learning mode (stable, semi-stable, unstable)."
+  },
+
+  "rtt": {
+    "drift": "Detects learner instability.",
+    "coherence": "Aligns relational meaning during session flow.",
+    "regime": "Classifies learner operating mode.",
+    "clarity": "Generates clarity pulses (C1/C2/C3) from session output."
+  },
+
+  "dimensional": {
+    "primary_dimension": "4D",
+    "dimensions": ["2D", "3D", "4D", "5D", "6D"]
+  },
+
+  "si": {
+    "ontology_ref": "si://ontology/session",
+    "lexicon_ref": "si://lexicon/session",
+    "semantic_api_ref": "si://semantic/session-map"
+  },
+
+  "lineage": {
+    "parent": "CLARITY_SYSTEM_CORE",
+    "siblings": ["CLARITY_BOOK", "DIMENSIONAL_CURRICULUM", "RTT_SUITE"],
+    "children": ["SESSION_TEMPLATE", "SESSION_PROFILE"]
+  },
+
+  "analyzer_layers": {
+    "operator": ["session-context", "session-flow"],
+    "dimensional": ["4D-context", "3D-transition"],
+    "regime": ["learning-mode-classifier"],
+    "drift": ["learner-instability-check"],
+    "coherence": ["alignment-checkpoints"],
+    "cross_cutting": ["triadic-learning-loop", "clarity-pulse-mapping"]
+  },
+
+  "session": {
+    "context": "Defines structured learning units inside the Clarity System.",
+    "pedagogy": "Teaches triadic learning, RTT flow, and dimensional context.",
+    "clarity_targets": ["C1", "C2", "C3"]
+  },
+
+  "badge": {
+    "label": "Session Model",
+    "category": "Clarity"
+  },
+
+  "audit": {
+    "status": "clean",
+    "notes": [
+      "Session RTT flow validated.",
+      "Dimensional placement correct.",
+      "Triadic learning loop stable."
+    ]
+  },
+
+  "diff": {
+    "previous_version": "none",
+    "changes": ["Initial canonical release."]
+  }
+}
 
