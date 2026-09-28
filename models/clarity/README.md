@@ -2,7 +2,6 @@
 
 - [`module.json`](https://raw.githubusercontent.com/umaywant2/clarity/refs/heads/main/models/clarity/module.json) — Agentic module schema role assignments
 
-# RTT_CLARITY_ENGINE  
 **Path:** `clarity/models/clarity/README.md`  
 **Version:** R5.1  
 **Module Class:** Canon Core  
