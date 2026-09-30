@@ -36,14 +36,37 @@ ecosystem: clarity / structural_intelligence / rtt_suite / triadic / dimensional
 
 These domains are managed through Cloudflare (see `cloudflare_domains.json`):
 
+# TriadicFrameworks Platform Manifest
+rtt=1 | coherence=declared | drift=bounded | paradox=structural
+
+## Platform Domains (Canonical)
+These domains represent the core TriadicFrameworks platform, its modules, engines, and structural intelligence layers.
+
 | Domain | Purpose |
 |--------|---------|
-| triadicframeworks.com | Canon + main documentation |
-| structuralintelligence.org | SI publications + ontology + semantic API |
-| claritybook.ai | Clarity Book chapters |
-| rttsuite.dev | RTT Suite API |
-| triadic.cloud | Workers + Marketplace adapter |
-| ecosystem.tf | Cross‑domain registry |
+| triadicframeworks.com | Primary platform front door |
+| triadicframeworks.org | Documentation, modules, canon |
+| www.structural.science | Structural Intelligence (SI) |
+| www.alignmental.science | Alignment, coherence research |
+| dev.mythmatic.org | Myth mathematics (Mudpuppy v2.0beta) |
+| dev.mythmatical.org | Myth mathematics (SoftKitty v3.0alpha) |
+| dev.nimms.com | NIMMS engine |
+| www.openwarden.io | Identity, access, warden layer |
+| dev.vgateway.net | Gateway, routing, substrate |
+
+## RTT Online Engines (Optional Platform Extensions)
+These domains host RTT online engines and may be referenced by triadicframeworks.com models.
+
+| Domain | Purpose |
+|--------|---------|
+| lumen.rtt1.online | RTT/1 — Structural Engine • Clarity first |
+| hephaestus.rtt2.online | RTT/2 — Regime Mapping • Coherence Geometry • Drift Detection |
+| aurion.rtt3.online | RTT/3 — Structural Topology • Regime Intersections • Drift‑Coherence Overlays |
+| harmonia.rtt12.online | RTT/12 — Engine • Unified Topology Synthesis |
+
+## Notes
+The platform manifest lists only domains that participate directly in the TriadicFrameworks canon, substrate, or module ecosystem.  
+All other owned domains are tracked in cloudflare_domains.json.
 
 ---
 
