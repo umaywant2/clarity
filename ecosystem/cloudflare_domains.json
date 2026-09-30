@@ -17,66 +17,50 @@
         "ai_bot_instructions": "/robots.txt"
       }
     },
-    {
-      "name": "structuralintelligence.org",
-      "category": "si",
-      "purpose": "Structural Intelligence publications, ontology, knowledge base, and semantic API.",
-      "cloudflare": {
-        "zone_id": "Z_SI",
-        "waf": true,
-        "super_bot_fight_mode": true,
-        "page_shield": true,
-        "ai_bot_instructions": "/robots.txt"
-      }
-    },
-    {
-      "name": "claritybook.ai",
-      "category": "clarity",
-      "purpose": "Clarity Book chapters, pedagogy, triadic learning, dimensional curriculum.",
-      "cloudflare": {
-        "zone_id": "Z_CLARITY",
-        "waf": true,
-        "super_bot_fight_mode": true,
-        "page_shield": true,
-        "ai_bot_instructions": "/robots.txt"
-      }
-    },
-    {
-      "name": "rttsuite.dev",
-      "category": "rtt",
-      "purpose": "RTT Suite API endpoints, evaluator pipeline, semantic router.",
-      "cloudflare": {
-        "zone_id": "Z_RTT",
-        "waf": true,
-        "super_bot_fight_mode": true,
-        "page_shield": true,
-        "ai_bot_instructions": "/robots.txt"
-      }
-    },
-    {
-      "name": "triadic.cloud",
-      "category": "platform",
-      "purpose": "Cloudflare Workers, AI Marketplace adapter, model registry, platform utilities.",
-      "cloudflare": {
-        "zone_id": "Z_PLATFORM",
-        "waf": true,
-        "super_bot_fight_mode": true,
-        "page_shield": true,
-        "ai_bot_instructions": "/robots.txt"
-      }
-    },
-    {
-      "name": "ecosystem.tf",
-      "category": "ecosystem",
-      "purpose": "Cross-domain ecosystem registry, module discovery, metadata federation.",
-      "cloudflare": {
-        "zone_id": "Z_ECOSYSTEM",
-        "waf": true,
-        "super_bot_fight_mode": true,
-        "page_shield": true,
-        "ai_bot_instructions": "/robots.txt"
-      }
-    }
+{
+  "cloudflare_domains": [
+    "triadicframeworks.com",
+    "triadicframeworks.org",
+    "rtt1.online",
+    "rtt2.online",
+    "rtt3.online",
+    "rtt12.online",
+    "gradient.vip",
+    "critique.biz",
+    "aigenius.win",
+    "mythmatic.org",
+    "mythmatical.org",
+    "nimms.com",
+    "structural.science",
+    "triadicwizards.win",
+    "umaywant2.win",
+    "umaywant2.com",
+    "vgateway.net",
+    "openwarden.io",
+    "nose.run",
+    "alignmental.science"
+  ],
+
+  "notes": {
+    "platform_manifest_domains": [
+      "triadicframeworks.com",
+      "triadicframeworks.org",
+      "structural.science",
+      "alignmental.science",
+      "mythmatic.org",
+      "mythmatical.org",
+      "nimms.com",
+      "openwarden.io",
+      "vgateway.net"
+    ],
+    "rtt_online_engines": [
+      "rtt1.online",
+      "rtt2.online",
+      "rtt3.online",
+      "rtt12.online"
+    ]
+  }
+}
   ],
 
   "metadata": {
