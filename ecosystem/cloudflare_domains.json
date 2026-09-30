@@ -44,20 +44,20 @@
   "notes": {
     "platform_manifest_domains": [
       "triadicframeworks.com",
-      "triadicframeworks.org",
-      "structural.science",
-      "alignmental.science",
-      "mythmatic.org",
-      "mythmatical.org",
-      "nimms.com",
-      "openwarden.io",
-      "vgateway.net"
+      "www.triadicframeworks.org",
+      "www.structural.science",
+      "www.alignmental.science",
+      "dev.mythmatic.org",
+      "dev.mythmatical.org",
+      "dev.nimms.com",
+      "www.openwarden.io",
+      "dev.vgateway.net"
     ],
     "rtt_online_engines": [
-      "rtt1.online",
-      "rtt2.online",
-      "rtt3.online",
-      "rtt12.online"
+      "lumen.rtt1.online",
+      "hephaestus.rtt2.online",
+      "aurion.rtt3.online",
+      "harmonia.rtt12.online"
     ]
   }
 }
