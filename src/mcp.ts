@@ -1,11 +1,14 @@
 /**
  * mcp.ts — Triadic Frameworks MCP Server
  *
- * Tool taxonomy (13 tools, 3 scope tiers):
+ * Tool taxonomy (14 tools across 3 scope tiers):
+ *
  *   read  — triadic_map | evaluator_info | dimension_map
  *           module_lookup | operator_lookup | canon_status
+ *
  *   write — drift_evaluate | coherence_evaluate | regime_evaluate
- *           clarity_evaluate | session_create
+ *           clarity_evaluate | session_create | session_evaluate
+ *
  *   admin — module_register | operator_register
  *
  * Spec: MCP 2026-07-28, Streamable HTTP transport, JSON-RPC 2.0
@@ -112,6 +115,34 @@ interface EvalSignals {
   wordCount: number; sentenceCount: number; avgWordLength: number;
   uniqueRatio: number; triadicTerms: number; canonTerms: number;
   questionRatio: number; abstractRatio: number;
+}
+
+/** A single stored evaluation result inside a session record */
+interface EvaluationEntry {
+  eval_id:            string;
+  eval_index:         number;       // 0-based, immutable — position in session.evaluations[]
+  label:              string;       // human-readable label, e.g. "Week 3 submission"
+  evaluator:          string;       // "clarity" | "drift" | "coherence" | "regime"
+  text_preview:       string;       // first 200 chars of input text
+  evaluated_at:       string;       // ISO 8601
+  evaluated_by:       string;       // subject from token (client_id or sub)
+  domain:             string | null;
+  target_dimension:   number | null;
+  // Top-level scores — always populated regardless of evaluator, for progression math
+  clarity_score:      number;
+  drift_score:        number;
+  coherence_score:    number;
+  regime_score:       number;
+  dimension_estimate: number;       // 0–9
+  // Full evaluator output block
+  result:             Record<string, unknown>;
+  signals: {
+    word_count:     number;
+    triadic_terms:  number;
+    canon_terms:    number;
+    unique_ratio:   number;
+    question_ratio: number;
+  };
 }
 
 function extractSignals(text: string): EvalSignals {
@@ -306,7 +337,7 @@ function buildMcpServer(env: Env, grantedScopes: Set<string>, subject: string): 
         dimensions: "0D → 9D", axes: ["Structure (S)", "Resonance (R)", "Activation (A)"],
         tools: {
           read:  ["triadic_map","evaluator_info","dimension_map","module_lookup","operator_lookup","canon_status"],
-          write: ["drift_evaluate","coherence_evaluate","regime_evaluate","clarity_evaluate","session_create"],
+          write: ["drift_evaluate", "coherence_evaluate", "regime_evaluate", "clarity_evaluate", "session_create", "session_evaluate"],
           admin: ["module_register","operator_register"],
         },
       }, null, 2) }] };
@@ -573,6 +604,250 @@ function buildMcpServer(env: Env, grantedScopes: Set<string>, subject: string): 
     }
   );
 
+  // ── WRITE: session_evaluate ───────────────────────────────────────────────
+  server.tool(
+    "session_evaluate",
+    "Runs the full RTT pipeline on the provided text and stores the result as a new evaluation entry in an existing session. Returns the evaluation record, updated session summary, and dimensional progression (when ≥2 evaluations exist).",
+    {
+      session_id: z.string().min(1).max(128)
+        .describe("ID of an existing session created by session_create."),
+      text: z.string().min(10).max(8000)
+        .describe("Text to run through the RTT pipeline and store."),
+      label: z.string().max(200).optional()
+        .describe("Human-readable label for this entry (e.g. 'Week 3 submission')."),
+      domain: z.string().max(100).optional()
+        .describe("Domain context override. Falls back to the session's domain if omitted."),
+      target_dimension: z.number().int().min(0).max(9).optional()
+        .describe("Target dimension override. Falls back to the session's target_dimension if omitted."),
+      baseline: z.string().max(2000).optional()
+        .describe("Optional baseline text for comparative drift scoring."),
+      evaluator: z.enum(["clarity", "drift", "coherence", "regime"]).default("clarity")
+        .describe("Which evaluator to run. 'clarity' runs the full RTT pipeline (recommended)."),
+    },
+    async ({ session_id, text, label, domain, target_dimension, baseline, evaluator }) => {
+      requireScope(grantedScopes, "write");
+
+      // ── 1. Load session ─────────────────────────────────────────────────
+      const raw = await env.OAUTH_KV.get(`session:${session_id}`);
+      if (!raw) {
+        return {
+          isError: true,
+          content: [{ type: "text" as const, text: JSON.stringify({
+            error: "session_not_found",
+            session_id,
+            message: `No session found for id '${session_id}'. Create one first with session_create.`,
+          }) }],
+        };
+      }
+
+      const session = JSON.parse(raw) as {
+        session_id:       string;
+        session_name:     string;
+        created_at:       string;
+        created_by:       string;
+        domain:           string | null;
+        target_dimension: number | null;
+        evaluations:      EvaluationEntry[];
+        canon_version:    string;
+        metadata:         Record<string, unknown>;
+      };
+
+      // ── 2. Resolve domain / target_dimension (param > session > null) ──
+      const effectiveDomain    = domain           ?? session.domain           ?? undefined;
+      const effectiveDimension = target_dimension ?? session.target_dimension ?? undefined;
+
+      // ── 3. Run the RTT engine ────────────────────────────────────────────
+      const sig      = extractSignals(text);
+      const base     = baseline ? extractSignals(baseline) : null;
+      const rawDrift = driftScore(sig);
+      const adjDrift = base
+        ? Math.abs(rawDrift - driftScore(base)) * 0.5 + rawDrift * 0.5
+        : rawDrift;
+      const coh = coherenceScore(sig);
+      const reg = regimeScore(sig);
+
+      // Full scores always computed — needed for progression math
+      const clarityScore = Math.round(((1 - adjDrift) * 0.30 + coh * 0.35 + reg * 0.35) * 100) / 100;
+      const dimEstimate  = estimateDimension(adjDrift, coh, reg);
+
+      // ── 4. Per-evaluator result block ────────────────────────────────────
+      let result: Record<string, unknown>;
+      switch (evaluator) {
+        case "drift":
+          result = {
+            evaluator:     "drift",
+            drift_score:   Math.round(adjDrift * 100) / 100,
+            drift_label:   scoreLabel(1 - adjDrift, EVALUATORS.drift.thresholds),
+            drift_type:    driftType(adjDrift, sig),
+            axis_deviation: {
+              S: Math.round((sig.triadicTerms  < 3   ? 0.60 : 0.20) * 100) / 100,
+              R: Math.round((sig.uniqueRatio   < 0.5 ? 0.50 : 0.15) * 100) / 100,
+              A: Math.round((sig.questionRatio > 0.3 ? 0.70 : 0.20) * 100) / 100,
+            },
+          };
+          break;
+        case "coherence":
+          result = {
+            evaluator:       "coherence",
+            coherence_score: Math.round(coh * 100) / 100,
+            coherence_label: scoreLabel(coh, EVALUATORS.coherence.thresholds),
+            field_strength:  Math.min(1, Math.round(
+              sig.triadicTerms / Math.max(sig.wordCount / 20, 1) * 100) / 100),
+          };
+          break;
+        case "regime":
+          result = {
+            evaluator:    "regime",
+            regime_score: Math.round(reg * 100) / 100,
+            regime_label: scoreLabel(reg, EVALUATORS.regime.thresholds),
+          };
+          break;
+        case "clarity":
+        default:
+          result = {
+            evaluator:          "clarity (RTT pipeline)",
+            clarity_score:      clarityScore,
+            clarity_label:      scoreLabel(clarityScore, EVALUATORS.clarity.thresholds),
+            dimension_estimate: dimEstimate,
+            dimension_label:    DIMENSIONS[dimEstimate].label,
+            rtt_vector: {
+              D: Math.round(adjDrift * 100) / 100,  // Drift   (A-axis)
+              C: Math.round(coh      * 100) / 100,  // Coherence (R-axis)
+              R: Math.round(reg      * 100) / 100,  // Regime  (S-axis)
+            },
+            pipeline: {
+              drift:     { score: Math.round(adjDrift * 100) / 100, type: driftType(adjDrift, sig) },
+              coherence: { score: Math.round(coh * 100) / 100 },
+              regime:    { score: Math.round(reg * 100) / 100 },
+            },
+          };
+      }
+
+      // ── 5. Build evaluation entry ────────────────────────────────────────
+      const evalIndex = session.evaluations.length;  // 0-based, immutable
+      const evalId    = `eval-${Date.now().toString(36)}-${crypto.randomUUID().slice(0, 6)}`;
+
+      const entry: EvaluationEntry = {
+        eval_id:            evalId,
+        eval_index:         evalIndex,
+        label:              label ?? `Evaluation ${evalIndex + 1}`,
+        evaluator,
+        text_preview:       text.slice(0, 200) + (text.length > 200 ? "…" : ""),
+        evaluated_at:       new Date().toISOString(),
+        evaluated_by:       subject,
+        domain:             effectiveDomain    ?? null,
+        target_dimension:   effectiveDimension ?? null,
+        clarity_score:      clarityScore,
+        drift_score:        Math.round(adjDrift * 100) / 100,
+        coherence_score:    Math.round(coh * 100) / 100,
+        regime_score:       Math.round(reg * 100) / 100,
+        dimension_estimate: dimEstimate,
+        result,
+        signals: {
+          word_count:     sig.wordCount,
+          triadic_terms:  sig.triadicTerms,
+          canon_terms:    sig.canonTerms,
+          unique_ratio:   Math.round(sig.uniqueRatio    * 100) / 100,
+          question_ratio: Math.round(sig.questionRatio  * 100) / 100,
+        },
+      };
+
+      // ── 6. Append + persist (TTL reset = last-activity 90 days) ─────────
+      session.evaluations.push(entry);
+      await env.OAUTH_KV.put(
+        `session:${session_id}`,
+        JSON.stringify(session),
+        { expirationTtl: 60 * 60 * 24 * 90 },
+      );
+
+      // ── 7. Dimensional progression (emitted when ≥2 evaluations) ────────
+      let progression: Record<string, unknown> | null = null;
+      const evals = session.evaluations;
+
+      if (evals.length >= 2) {
+        const first  = evals[0];
+        const latest = evals[evals.length - 1];
+        const recent = evals.slice(-3);
+
+        const avgClarity = Math.round(
+          (evals.reduce((sum, e) => sum + e.clarity_score, 0) / evals.length) * 100
+        ) / 100;
+
+        // Trend: compare clarity of earliest recent entry to most recent
+        const recentDelta = recent[recent.length - 1].clarity_score - recent[0].clarity_score;
+        const trend: "improving" | "stable" | "declining" =
+          recentDelta >  0.05 ? "improving" :
+          recentDelta < -0.05 ? "declining" : "stable";
+
+        const dimDelta = latest.dimension_estimate - first.dimension_estimate;
+
+        progression = {
+          total_evaluations: evals.length,
+          first_evaluation: {
+            eval_id: first.eval_id, label: first.label,
+            clarity_score: first.clarity_score,
+            dimension: DIMENSIONS[first.dimension_estimate].label,
+            evaluated_at: first.evaluated_at,
+          },
+          latest_evaluation: {
+            eval_id: latest.eval_id, label: latest.label,
+            clarity_score: latest.clarity_score,
+            dimension: DIMENSIONS[latest.dimension_estimate].label,
+            evaluated_at: latest.evaluated_at,
+          },
+          dimension_delta:      dimDelta,
+          dimension_trajectory: dimDelta > 0
+            ? `+${dimDelta} level${dimDelta > 1 ? "s" : ""}`
+            : dimDelta < 0
+            ? `${dimDelta} level${dimDelta < -1 ? "s" : ""}`
+            : "no change",
+          avg_clarity_score: avgClarity,
+          trend,
+          trend_basis: `last ${recent.length} evaluation${recent.length > 1 ? "s" : ""} `
+            + `(Δ clarity ${recentDelta >= 0 ? "+" : ""}${Math.round(recentDelta * 100) / 100})`,
+          clarity_history: evals.map(e => ({
+            eval_id:            e.eval_id,
+            label:              e.label,
+            clarity_score:      e.clarity_score,
+            dimension_estimate: e.dimension_estimate,
+            evaluated_at:       e.evaluated_at,
+          })),
+        };
+      }
+
+      // ── 8. Return ────────────────────────────────────────────────────────
+      return {
+        content: [{ type: "text" as const, text: JSON.stringify({
+          status:       "stored",
+          session_id,
+          session_name: session.session_name,
+          eval_id:      evalId,
+          eval_index:   evalIndex,
+          label:        entry.label,
+          evaluated_at: entry.evaluated_at,
+          evaluator,
+          result,
+          progression,
+          session_summary: {
+            total_evaluations: evals.length,
+            domain:            session.domain,
+            target_dimension:  session.target_dimension !== null
+              ? DIMENSIONS[session.target_dimension]?.label
+              : null,
+            canon_version:     session.canon_version,
+            ttl_reset:         "90 days from now (last-activity)",
+          },
+          note: progression
+            ? `Progression available. Trend: ${progression.trend}. Trajectory: ${progression.dimension_trajectory}.`
+            : "First evaluation stored. Run session_evaluate again to generate dimensional progression.",
+        }, null, 2) }],
+      };
+    }
+  );
+
+  return server;
+}
+  
   return server;
 }
 
