@@ -7,5 +7,19 @@
   "grant_types_supported": ["authorization_code", "refresh_token"],
   "code_challenge_methods_supported": ["S256"],
   "token_endpoint_auth_methods_supported": ["none"],
-  "scopes_supported": ["read", "write", "admin"]
+  "scopes_supported": ["read", "write", "admin"],
+  "agent_auth": {
+    "type": "oauth2",
+    "flows": {
+      "authorizationCode": {
+        "authorizationUrl": "https://triadicframeworks.com/authorize",
+        "tokenUrl": "https://triadicframeworks.com/token",
+        "scopes": {
+          "read": "Read-only access to MCP tools and resources",
+          "write": "Read and write access; allows tools that modify state",
+          "admin": "Full administrative access including configuration tools"
+        }
+      }
+    }
+  }
 }
