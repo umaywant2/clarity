@@ -1,0 +1,85 @@
+{
+  "doc_map": "TriadicFrameworks Canonical Documentation Map",
+  "version": "1.0",
+  "last_updated": "2026-10-03",
+
+  "root": {
+    "homepage": "/index.html",
+    "sitemap": "/sitemap_main.xml",
+    "module_registry": "/module_registry.json",
+    "operator_registry": "/operator_registry.json",
+    "integration_map": "/integration_map/index.html"
+  },
+
+  "modules": {
+    "clarity": {
+      "path": "/clarity/",
+      "files": [
+        "index.html",
+        "spectral_clarity.html",
+        "validator_pulses.html",
+        "clarity_examples.html"
+      ]
+    },
+    "coherence": {
+      "path": "/coherence/",
+      "files": [
+        "index.html",
+        "alignment_field.html",
+        "stability_rules.html"
+      ]
+    },
+    "drift": {
+      "path": "/drift/",
+      "files": [
+        "index.html",
+        "drift_envelope.html",
+        "oscillation_family.html"
+      ]
+    },
+    "regime": {
+      "path": "/regime/",
+      "files": [
+        "index.html",
+        "regime_envelope.html",
+        "dominance_rule.html"
+      ]
+    },
+    "module": {
+      "path": "/module/",
+      "files": [
+        "index.html",
+        "module_grammar.html",
+        "structural_map.html"
+      ]
+    },
+    "session": {
+      "path": "/session/",
+      "files": [
+        "index.html",
+        "session_envelope.html",
+        "runtime_field.html"
+      ]
+    }
+  },
+
+  "semantic_infrastructure": {
+    "path": "/docs/",
+    "files": [
+      "si_knowledge_base.html",
+      "si_ontology.html",
+      "si_lexicon.html",
+      "si_pedagogy.html",
+      "si_semantic_api.html"
+    ]
+  },
+
+  "canon_atlas": {
+    "path": "/docs/",
+    "files": [
+      "canon_atlas.html",
+      "canon_map.html",
+      "canon_reference.html"
+    ]
+  }
+}
