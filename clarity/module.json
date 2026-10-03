@@ -1,0 +1,43 @@
+{
+  "module": "Clarity",
+  "canonical_id": "CLARITY",
+  "category": "spectral-math",
+  "version": "1.0",
+  "status": "canonical",
+  "canonical_path": "/clarity/",
+  "ai_ready": true,
+  "license": "Open educational use permitted",
+
+  "purpose": "Define Spectral Clarity, Validator Pulses, and the mathematical substrate enabling coherence, drift, regime, module, and session alignment.",
+  "audience": ["developers", "researchers", "operators", "AIs"],
+
+  "operators": [
+    "CLARITY-Compute",
+    "CLARITY-Validate",
+    "CLARITY-Integrate",
+    "CLARITY-Explain"
+  ],
+
+  "files": {
+    "README.md": {
+      "role": "index",
+      "analyzer_layer": "operator"
+    },
+    "diagrams.md": {
+      "role": "diagram",
+      "analyzer_layer": "dimensional"
+    },
+    "clarity_test.md": {
+      "role": "diagnostic",
+      "analyzer_layer": "operator"
+    },
+    "cross_module_integration_map.md": {
+      "role": "map",
+      "analyzer_layer": "cross-cutting"
+    },
+    "Teaching_Workbook.pdf": {
+      "role": "template",
+      "analyzer_layer": "coherence"
+    }
+  }
+}
