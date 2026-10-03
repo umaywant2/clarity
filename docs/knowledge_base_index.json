@@ -1,0 +1,105 @@
+{
+  "knowledge_base_index": "TriadicFrameworks Concept → Module Map",
+  "version": "1.0",
+  "last_updated": "2026-10-03",
+
+  "concepts": {
+
+    "spectral clarity": {
+      "canonical_id": "CONCEPT:CLARITY.SPECTRAL",
+      "modules": ["clarity"],
+      "docs": [
+        "/clarity/spectral_clarity.html",
+        "/docs/si_knowledge_base.html#spectral-clarity",
+        "/docs/si_lexicon.html#spectral-clarity"
+      ],
+      "ontology": "ONT:CLARITY.SPECTRAL",
+      "operators": ["CLARITY-Compute", "CLARITY-Validate"],
+      "resonance_fields": ["SpectralClarity", "ValidatorPulse"]
+    },
+
+    "validator pulse": {
+      "canonical_id": "CONCEPT:CLARITY.VALIDATOR",
+      "modules": ["clarity"],
+      "docs": [
+        "/clarity/validator_pulses.html",
+        "/docs/si_lexicon.html#validator-pulse"
+      ],
+      "ontology": "ONT:CLARITY.VALIDATOR",
+      "operators": ["CLARITY-Validate"],
+      "resonance_fields": ["ValidatorPulse"]
+    },
+
+    "alignment field": {
+      "canonical_id": "CONCEPT:COHERENCE.ALIGNMENT",
+      "modules": ["coherence"],
+      "docs": [
+        "/coherence/alignment_field.html",
+        "/docs/si_ontology.html#alignment-field"
+      ],
+      "ontology": "ONT:COHERENCE.ALIGNMENT",
+      "operators": ["COHERENCE-Align", "COHERENCE-Validate"],
+      "resonance_fields": ["AlignmentField", "StabilityMap"]
+    },
+
+    "drift envelope": {
+      "canonical_id": "CONCEPT:DRIFT.ENVELOPE",
+      "modules": ["drift"],
+      "docs": [
+        "/drift/drift_envelope.html",
+        "/docs/si_ontology.html#drift-envelope"
+      ],
+      "ontology": "ONT:DRIFT.ENVELOPE",
+      "operators": ["DRIFT-Envelope", "DRIFT-Compute"],
+      "resonance_fields": ["DriftEnvelope", "DriftVelocity"]
+    },
+
+    "oscillation family": {
+      "canonical_id": "CONCEPT:DRIFT.OSCILLATION",
+      "modules": ["drift"],
+      "docs": [
+        "/drift/oscillation_family.html",
+        "/docs/si_lexicon.html#oscillation-family"
+      ],
+      "ontology": "ONT:DRIFT.OSCILLATION",
+      "operators": ["DRIFT-Explain"],
+      "resonance_fields": ["OscillationFamily"]
+    },
+
+    "regime envelope": {
+      "canonical_id": "CONCEPT:REGIME.ENVELOPE",
+      "modules": ["regime"],
+      "docs": [
+        "/regime/regime_envelope.html",
+        "/docs/si_ontology.html#regime-envelope"
+      ],
+      "ontology": "ONT:REGIME.ENVELOPE",
+      "operators": ["REGIME-Shift", "REGIME-Validate"],
+      "resonance_fields": ["RegimeEnvelope", "DominanceRule"]
+    },
+
+    "module grammar": {
+      "canonical_id": "CONCEPT:MODULE.GRAMMAR",
+      "modules": ["module"],
+      "docs": [
+        "/module/module_grammar.html",
+        "/docs/si_knowledge_base.html#module-grammar"
+      ],
+      "ontology": "ONT:MODULE.GRAMMAR",
+      "operators": ["MODULE-Define", "MODULE-Integrate"],
+      "resonance_fields": ["ModuleGrammar", "StructuralMap"]
+    },
+
+    "session envelope": {
+      "canonical_id": "CONCEPT:SESSION.ENVELOPE",
+      "modules": ["session"],
+      "docs": [
+        "/session/session_envelope.html",
+        "/docs/si_ontology.html#session-envelope"
+      ],
+      "ontology": "ONT:SESSION.ENVELOPE",
+      "operators": ["SESSION-Run", "SESSION-Validate"],
+      "resonance_fields": ["SessionEnvelope", "RuntimeField"]
+    }
+  }
+}
