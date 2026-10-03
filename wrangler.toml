@@ -1,9 +1,47 @@
+name       = "triadicframeworks-mcp"
+main       = "src/index.ts"
+compatibility_date  = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
 [[kv_namespaces]]
 binding = "OAUTH_KV"
-id      = "YOUR_KV_NAMESPACE_ID"   # create with: wrangler kv namespace create OAUTH_KV
+id      = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+# wrangler kv namespace create OAUTH_KV
 
 [vars]
 BASE_URL = "https://triadicframeworks.com"
+# wrangler secret put CSRF_SECRET  (openssl rand -hex 32)
 
-# Set CSRF_SECRET as an encrypted secret — never in vars:
-# wrangler secret put CSRF_SECRET
+# Explicit routes — ensures /.well-known/* reaches the Worker,
+# not origin. Without these, Cloudflare may bypass the Worker
+# for paths not previously seen.
+[[routes]]
+pattern   = "triadicframeworks.com/.well-known/oauth-protected-resource"
+zone_name = "triadicframeworks.com"
+
+[[routes]]
+pattern   = "triadicframeworks.com/.well-known/oauth-authorization-server"
+zone_name = "triadicframeworks.com"
+
+[[routes]]
+pattern   = "triadicframeworks.com/authorize*"
+zone_name = "triadicframeworks.com"
+
+[[routes]]
+pattern   = "triadicframeworks.com/token"
+zone_name = "triadicframeworks.com"
+
+[[routes]]
+pattern   = "triadicframeworks.com/register*"
+zone_name = "triadicframeworks.com"
+
+[[routes]]
+pattern   = "triadicframeworks.com/mcp*"
+zone_name = "triadicframeworks.com"
+
+[[routes]]
+pattern   = "triadicframeworks.com/auth.md"
+zone_name = "triadicframeworks.com"
+
+[observability]
+enabled = true
