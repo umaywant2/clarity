@@ -37,31 +37,15 @@ Both documents are served over HTTPS with `Content-Type: application/json` and `
 
 ---
 
-## Protected Resource Metadata (RFC 9728)
+## Complete Standalone Registration Flow
 
-Published at `/.well-known/oauth-protected-resource`.
+A self-contained walkthrough for registering a new client and obtaining an access token with no prior configuration. Follow each step in sequence.
 
-```json
-{
-  "resource": "https://triadicframeworks.com",
-  "resource_name": "Triadic Frameworks MCP Server",
-  "authorization_servers": [
-    "https://triadicframeworks.com"
-  ],
-  "scopes_supported": [
-    "read",
-    "write",
-    "admin"
-  ],
-  "bearer_methods_supported": [
-    "header"
-  ],
-  "dpop_signing_alg_values_supported": [
-    "ES256",
-    "RS256"
-  ],
-  "resource_documentation": "https://triadicframeworks.com/docs",
-  "resource_policy_uri": "https://triadicframeworks.com/policy",
-  "resource_tos_uri": "https://triadicframeworks.com/tos"
-}
-```
+### Step 1 — Discover the Protected Resource
+
+Fetch the protected resource metadata to confirm the authorized AS:
+
+```http
+GET /.well-known/oauth-protected-resource HTTP/1.1
+Host: triadicframeworks.com
+Accept: application/json
