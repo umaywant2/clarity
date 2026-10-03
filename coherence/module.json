@@ -1,0 +1,38 @@
+{
+  "module": "Coherence",
+  "canonical_id": "COHERENCE",
+  "category": "coherence-engine",
+  "version": "1.0",
+  "status": "canonical",
+  "canonical_path": "/coherence/",
+  "ai_ready": true,
+  "license": "Open educational use permitted",
+
+  "purpose": "Define coherence operations, alignment rules, and RTT coherence grammar.",
+  "audience": ["developers", "researchers", "operators", "AIs"],
+
+  "operators": [
+    "COHERENCE-Align",
+    "COHERENCE-Validate",
+    "COHERENCE-Explain"
+  ],
+
+  "files": {
+    "README.md": {
+      "role": "index",
+      "analyzer_layer": "coherence"
+    },
+    "diagrams.md": {
+      "role": "diagram",
+      "analyzer_layer": "dimensional"
+    },
+    "coherence_test.md": {
+      "role": "diagnostic",
+      "analyzer_layer": "operator"
+    },
+    "teaching_workbook.md": {
+      "role": "template",
+      "analyzer_layer": "coherence"
+    }
+  }
+}
