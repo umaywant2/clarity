@@ -24,13 +24,33 @@ export interface Env {
   CSRF_SECRET: string;   // wrangler secret put CSRF_SECRET
 }
 
+// ─── Shared response headers for well-known endpoints ─────────────────────────
+
 const WELL_KNOWN_HEADERS = {
-  "Content-Type":                 "application/json",
-  "Cache-Control":                "no-store",
-  "Access-Control-Allow-Origin":  "*",
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Access-Control-Allow-Headers": "Accept",
+  "Content-Type":                "application/json",
+  "Cache-Control":               "no-store",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods":"GET, OPTIONS",
+  "Access-Control-Allow-Headers":"Accept",
 };
+
+// ─── RFC 9728 §5 — Link discovery header ──────────────────────────────────────
+// Emitted on every /mcp response (200, 401, 403) so clients can discover the
+// authorization server without relying solely on the WWW-Authenticate header.
+// rel= values mirror their well-known path suffix per the IANA Link Relations
+// registry: https://www.iana.org/assignments/link-relations/
+function buildDiscoveryLink(base: string): string {
+  return [
+    `<${base}/.well-known/oauth-protected-resource>; rel="oauth-protected-resource"`,
+    `<${base}/.well-known/oauth-authorization-server>; rel="oauth-authorization-server"`,
+    `<${base}/.well-known/api-catalog>; rel="api-catalog"`,
+    `<${base}/openapi>; rel="service-desc"`,
+    `<${base}/docs/api>; rel="service-doc"`,
+    `<${base}/docs/si_knowledge_base.html>; rel="describedby"`,
+  ].join(", ");
+}
+
+// ─── OAuth Provider (handles /authorize and /mcp after auth) ──────────────────
 
 const oauthProvider = new OAuthProvider({
   apiRoute:                   "/mcp",
@@ -40,6 +60,8 @@ const oauthProvider = new OAuthProvider({
   tokenEndpoint:              "/token",
   clientRegistrationEndpoint: "/register",
 });
+
+// ─── Main fetch handler ───────────────────────────────────────────────────────
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -62,7 +84,6 @@ export default {
     }
 
     // ── RFC 9728 — Protected Resource Metadata ─────────────────────────────
-    // Self-contained: OAuthProvider does NOT serve RFC 9728.
     if (path === "/.well-known/oauth-protected-resource") {
       return Response.json(
         {
@@ -81,12 +102,9 @@ export default {
     }
 
     // ── RFC 8414 — Authorization Server Metadata + agent_auth ─────────────
-    // Self-contained: do NOT proxy through oauthProvider.fetch() — fragile
-    // before first deploy and loses agent_auth injection on any error.
     if (path === "/.well-known/oauth-authorization-server") {
       return Response.json(
         {
-          // RFC 8414 standard fields
           issuer:                                base,
           authorization_endpoint:               `${base}/authorize`,
           token_endpoint:                       `${base}/token`,
@@ -96,10 +114,9 @@ export default {
           code_challenge_methods_supported:     ["S256"],
           token_endpoint_auth_methods_supported: ["none"],
           scopes_supported:                     ["read", "write", "admin"],
-          // Cloudflare Agent Readiness extension
           agent_auth: {
             type:         "oauth2",
-            register_uri: `${base}/register`,   // ← required by Agent Readiness validator
+            register_uri: `${base}/register`,
             flows: {
               authorizationCode: {
                 authorizationUrl: `${base}/authorize`,
@@ -124,7 +141,22 @@ export default {
     if (path === "/token") return TokenHandler(request, env, ctx as any);
 
     // ── Everything else → OAuthProvider ───────────────────────────────────
-    // Handles: GET/POST /authorize, POST /mcp (after bearer token check)
-    return oauthProvider.fetch(request, env, ctx);
+    const response = await oauthProvider.fetch(request, env, ctx);
+
+    // Inject Link discovery header on all /mcp responses (any status code).
+    // RFC 9728 §5: the protected resource SHOULD advertise its metadata URL
+    // via a Link response header so clients can discover the AS without
+    // needing a prior 401 WWW-Authenticate challenge.
+    if (path.startsWith("/mcp")) {
+      const headers = new Headers(response.headers);
+      headers.set("Link", buildDiscoveryLink(base));
+      return new Response(response.body, {
+        status:     response.status,
+        statusText: response.statusText,
+        headers,
+      });
+    }
+
+    return response;
   },
 } satisfies ExportedHandler<Env>;
