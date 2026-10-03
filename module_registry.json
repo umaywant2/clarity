@@ -1,0 +1,106 @@
+{
+  "registry": "TriadicFrameworks Canonical Module Registry",
+  "canonical_id": "TF_REGISTRY",
+  "version": "1.0",
+  "last_updated": "2026-10-03",
+  "license": "Open educational use permitted",
+
+  "root": {
+    "module": "TriadicFrameworks Root",
+    "canonical_path": "/",
+    "ai_ready": true
+  },
+
+  "modules": {
+    "clarity": {
+      "canonical_id": "CLARITY",
+      "path": "/clarity/",
+      "category": "spectral-math",
+      "status": "canonical",
+      "version": "1.0",
+      "ai_ready": true,
+      "operators": [
+        "CLARITY-Compute",
+        "CLARITY-Validate",
+        "CLARITY-Integrate",
+        "CLARITY-Explain"
+      ]
+    },
+
+    "coherence": {
+      "canonical_id": "COHERENCE",
+      "path": "/coherence/",
+      "category": "coherence-engine",
+      "status": "canonical",
+      "version": "1.0",
+      "ai_ready": true,
+      "operators": [
+        "COHERENCE-Align",
+        "COHERENCE-Validate",
+        "COHERENCE-Explain"
+      ]
+    },
+
+    "drift": {
+      "canonical_id": "DRIFT",
+      "path": "/drift/",
+      "category": "drift-engine",
+      "status": "canonical",
+      "version": "1.0",
+      "ai_ready": true,
+      "operators": [
+        "DRIFT-Compute",
+        "DRIFT-Envelope",
+        "DRIFT-Explain"
+      ]
+    },
+
+    "regime": {
+      "canonical_id": "REGIME",
+      "path": "/regime/",
+      "category": "regime-engine",
+      "status": "canonical",
+      "version": "1.0",
+      "ai_ready": true,
+      "operators": [
+        "REGIME-Shift",
+        "REGIME-Validate",
+        "REGIME-Explain"
+      ]
+    },
+
+    "module": {
+      "canonical_id": "MODULE",
+      "path": "/module/",
+      "category": "module-engine",
+      "status": "canonical",
+      "version": "1.0",
+      "ai_ready": true,
+      "operators": [
+        "MODULE-Define",
+        "MODULE-Integrate",
+        "MODULE-Explain"
+      ]
+    },
+
+    "session": {
+      "canonical_id": "SESSION",
+      "path": "/session/",
+      "category": "session-engine",
+      "status": "canonical",
+      "version": "1.0",
+      "ai_ready": true,
+      "operators": [
+        "SESSION-Run",
+        "SESSION-Validate",
+        "SESSION-Explain"
+      ]
+    }
+  },
+
+  "navigation": {
+    "sitemap": "https://www.triadicframeworks.com/sitemap_main.xml",
+    "docs_map": "DOC_MAP",
+    "discussions": "https://github.com/umaywant2/TriadicFrameworks/discussions"
+  }
+}
