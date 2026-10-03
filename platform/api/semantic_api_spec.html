@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- Semantic API Spec — TriadicFrameworks -->
+<!-- Ecosystem-Level Semantic Endpoints     -->
+<!-- Last updated: 2026-10-03               -->
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Semantic API Spec — TriadicFrameworks</title>
+
+<meta name="description"
+      content="Semantic API specification for TriadicFrameworks. Declares machine-callable endpoints for ontology, lexicon, knowledge base, and module discovery." />
+
+<meta name="ai-ready" content="true" />
+<meta name="ai-content" content="allow" />
+<meta name="cf-ai-signal" content="allow" />
+
+<link rel="canonical"
+      href="https://triadicframeworks.com/platform/api/semantic_api_spec.html" />
+<link rel="ai-navigation" href="https://triadicframeworks.com/sitemap_main.xml" />
+<link rel="ai-doc-map" href="https://triadicframeworks.com/DOC_MAP.json" />
+<link rel="ai-module-registry" href="https://triadicframeworks.com/module_registry.json" />
+
+</head>
+<body>
+
+<h1>Semantic API Spec — TriadicFrameworks</h1>
+
+<section>
+
+  <h2>Base URL</h2>
+  <p><code>https://triadicframeworks.com/api/semantic</code></p>
+
+  <h2>Endpoints</h2>
+
+  <h3>1. GET /concept</h3>
+  <p>Resolve a concept into ontology, lexicon, and module references.</p>
+
+  <pre><code>GET /api/semantic/concept?term={string}</code></pre>
+
+  <ul>
+    <li><strong>term:</strong> concept name (e.g., <code>spectral clarity</code>)</li>
+  </ul>
+
+  <p><strong>Response (JSON):</strong></p>
+  <pre><code>{
+  "term": "spectral clarity",
+  "ontology_node": "ONT:CLARITY.SPECTRAL",
+  "lexicon_entry": "/docs/si_lexicon.html#spectral-clarity",
+  "modules": ["clarity"],
+  "docs": [
+    "/clarity/spectral_clarity.html",
+    "/docs/si_knowledge_base.html#spectral-clarity"
+  ]
+}</code></pre>
+
+  <h3>2. GET /module</h3>
+  <p>Retrieve semantic metadata for a canonical module.</p>
+
+  <pre><code>GET /api/semantic/module?id={string}</code></pre>
+
+  <ul>
+    <li><strong>id:</strong> one of <code>CLARITY</code>, <code>COHERENCE</code>, <code>DRIFT</code>, <code>REGIME</code>, <code>MODULE</code>, <code>SESSION</code></li>
+  </ul>
+
+  <p><strong>Response (JSON):</strong></p>
+  <pre><code>{
+  "id": "CLARITY",
+  "name": "Clarity",
+  "category": "spectral-math",
+  "operators": [
+    "CLARITY-Compute",
+    "CLARITY-Validate",
+    "CLARITY-Integrate",
+    "CLARITY-Explain"
+  ],
+  "resonance_fields": [
+    "SpectralClarity",
+    "ValidatorPulse",
+    "IntegrationField"
+  ],
+  "docs": [
+    "/clarity/index.html",
+    "/clarity/spectral_clarity.html",
+    "/clarity/validator_pulses.html"
+  ]
+}</code></pre>
+
+  <h3>3. GET /ontology</h3>
+  <p>Retrieve ontology node details.</p>
+
+  <pre><code>GET /api/semantic/ontology?node={string}</code></pre>
+
+  <ul>
+    <li><strong>node:</strong> ontology ID (e.g., <code>ONT:DRIFT.ENVELOPE</code>)</li>
+  </ul>
+
+  <p><strong>Response (JSON):</strong></p>
+  <pre><code>{
+  "node": "ONT:DRIFT.ENVELOPE",
+  "label": "Drift Envelope",
+  "description": "Canonical RTT construct describing bounded drift behavior.",
+  "related_terms": ["drift velocity", "oscillation family"],
+  "modules": ["drift", "regime"],
+  "docs": [
+    "/drift/drift_envelope.html",
+    "/docs/si_ontology.html#drift-envelope"
+  ]
+}</code></pre>
+
+  <h3>4. GET /lexicon</h3>
+  <p>Retrieve lexicon entry.</p>
+
+  <pre><code>GET /api/semantic/lexicon?term={string}</code></pre>
+
+  <p><strong>Response (JSON):</strong></p>
+  <pre><code>{
+  "term": "validator pulse",
+  "definition": "Discrete spectral event used to validate clarity across RTT operations.",
+  "category": "spectral-math",
+  "modules": ["clarity"],
+  "docs": [
+    "/clarity/validator_pulses.html",
+    "/docs/si_lexicon.html#validator-pulse"
+  ]
+}</code></pre>
+
+  <h3>5. GET /map</h3>
+  <p>Retrieve cross‑module integration relationships.</p>
+
+  <pre><code>GET /api/semantic/map</code></pre>
+
+  <p><strong>Response (JSON):</strong></p>
+  <pre><code>{
+  "integration_map": "/integration_map/index.html",
+  "edges": [
+    {
+      "from": "clarity",
+      "to": "coherence",
+      "relation": "SpectralClarity → AlignmentField"
+    },
+    {
+      "from": "coherence",
+      "to": "drift",
+      "relation": "AlignmentField → DriftEnvelope"
+    }
+  ]
+}</code></pre>
+
+</section>
+
+</body>
+</html>
