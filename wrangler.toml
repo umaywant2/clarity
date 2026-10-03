@@ -1,0 +1,9 @@
+[[kv_namespaces]]
+binding = "OAUTH_KV"
+id      = "YOUR_KV_NAMESPACE_ID"   # create with: wrangler kv namespace create OAUTH_KV
+
+[vars]
+BASE_URL = "https://triadicframeworks.com"
+
+# Set CSRF_SECRET as an encrypted secret — never in vars:
+# wrangler secret put CSRF_SECRET
