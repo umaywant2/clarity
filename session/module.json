@@ -1,0 +1,38 @@
+{
+  "module": "Session",
+  "canonical_id": "SESSION",
+  "category": "session-engine",
+  "version": "1.0",
+  "status": "canonical",
+  "canonical_path": "/session/",
+  "ai_ready": true,
+  "license": "Open educational use permitted",
+
+  "purpose": "Define RTT session grammar, session envelopes, and session-level integration.",
+  "audience": ["developers", "researchers", "operators", "AIs"],
+
+  "operators": [
+    "SESSION-Run",
+    "SESSION-Validate",
+    "SESSION-Explain"
+  ],
+
+  "files": {
+    "README.md": {
+      "role": "index",
+      "analyzer_layer": "operator"
+    },
+    "diagrams.md": {
+      "role": "diagram",
+      "analyzer_layer": "dimensional"
+    },
+    "session_test.md": {
+      "role": "diagnostic",
+      "analyzer_layer": "operator"
+    },
+    "teaching_workbook.md": {
+      "role": "template",
+      "analyzer_layer": "coherence"
+    }
+  }
+}
