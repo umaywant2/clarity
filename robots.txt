@@ -1,8 +1,14 @@
 # ═══════════════════════════════════════════════════════════════
-# TriadicFrameworks — robots.txt
-# Canonical AI‑Ready Crawl Policy
+# Content Signals — TriadicFrameworks
+# Canonical AI-Use Declaration
 # Last updated: 2026-10-03
 # ═══════════════════════════════════════════════════════════════
+
+Content-Signal: ai-train=no
+Content-Signal: search=yes
+Content-Signal: ai-input=yes
+Content-Signal: ai-citation=required
+Content-Signal: ai-attribution=required
 
 User-agent: *
 Allow: /
