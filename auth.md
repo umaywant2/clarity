@@ -1,4 +1,4 @@
-# auth.md — Triadic Frameworks MCP Server Authentication
+# auth.md — Triadic Frameworks MCP Server Authentication   ← H1
 
 This document is a **standalone, self-contained** reference for authenticating AI agent clients against the Triadic Frameworks MCP server at `https://triadicframeworks.com/mcp`.
 
@@ -33,7 +33,7 @@ A complete, self-contained walkthrough. Run each step in order. No prior setup r
 
 ---
 
-## Step 1: Probe the Resource (Detect 401)
+### Step 1 — Probe the Resource (Detect 401)          ← H3 child
 
 ```bash
 curl -sI https://triadicframeworks.com/mcp \
@@ -52,7 +52,7 @@ Parse `resource_metadata` from the `WWW-Authenticate` header.
 
 ---
 
-## Step 2: Fetch Protected Resource Metadata
+### Step 2 — Fetch Protected Resource Metadata        ← H3 child
 
 ```bash
 curl -s https://triadicframeworks.com/.well-known/oauth-protected-resource \
@@ -63,7 +63,8 @@ Use `authorization_servers[0]` as the issuer base URL.
 
 ---
 
-## Step 3: Fetch Authorization Server Metadata
+### Step 3 — Fetch Authorization Server Metadata      ← H3 child
+
 
 ```bash
 curl -s https://triadicframeworks.com/.well-known/oauth-authorization-server \
@@ -74,7 +75,8 @@ Verify `"none"` in `token_endpoint_auth_methods_supported`, `"S256"` in `code_ch
 
 ---
 
-## Step 4: Dynamic Client Registration
+### Step 4 — Register a Dynamic Client (RFC 7591)     ← H3 child
+
 
 ```bash
 curl -s -X POST https://triadicframeworks.com/register \
@@ -93,7 +95,7 @@ Save the returned `client_id`.
 
 ---
 
-## Step 5: Generate PKCE Parameters
+### Step 5 — Generate PKCE Parameters                 ← H3 child
 
 ```bash
 CODE_VERIFIER=$(openssl rand -base64 32 | tr -d '=+/' | tr -d '\n' | head -c 43)
@@ -104,7 +106,7 @@ CODE_CHALLENGE=$(echo -n "$CODE_VERIFIER" | openssl dgst -binary -sha256 | opens
 
 ---
 
-## Step 6: Start Local Listener and Request Authorization
+### Step 6 — Request Authorization                    ← H3 child
 
 ```bash
 STATE=$(openssl rand -hex 16)
@@ -115,7 +117,7 @@ Start `nc -l 8400` in a separate terminal. Validate the returned `state` before 
 
 ---
 
-## Step 7: Exchange Authorization Code for Access Token
+### Step 7 — Exchange Authorization Code for Token    ← H3 child
 
 ```bash
 curl -s -X POST https://triadicframeworks.com/token \
@@ -129,7 +131,7 @@ curl -s -X POST https://triadicframeworks.com/token \
 
 ---
 
-## Step 8: Call the MCP API
+### Step 8 — Call the MCP API                         ← H3 child
 
 ```bash
 curl -s -X POST https://triadicframeworks.com/mcp \
@@ -140,7 +142,7 @@ curl -s -X POST https://triadicframeworks.com/mcp \
 
 ---
 
-## Step 9: Refresh the Access Token
+### Step 9 — Refresh the Access Token                 ← H3 child
 
 ```bash
 curl -s -X POST https://triadicframeworks.com/token \
@@ -152,7 +154,7 @@ curl -s -X POST https://triadicframeworks.com/token \
 
 ---
 
-## Quick Reference: Full Flow Summary
+## Quick Reference                                       ← H2 sibling (after flow)
 
 ```
 1. curl -sI https://triadicframeworks.com/mcp                                     # Detect 401 + WWW-Authenticate
@@ -165,3 +167,7 @@ curl -s -X POST https://triadicframeworks.com/token \
 8. POST https://triadicframeworks.com/mcp (Authorization: Bearer)                 # Call MCP API
 9. POST https://triadicframeworks.com/token (grant_type=refresh_token)            # Renew access_token
 ```
+
+---
+
+## Scopes
