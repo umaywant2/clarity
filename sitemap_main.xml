@@ -1,150 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  TriadicFrameworks — sitemap_main.xml
-  Canonical Root Sitemap
-  Last updated: 2026-10-03
-  Generator: TriadicFrameworks Static Canon Engine
-  Author: Nawder Loswin
--->
-
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- ═════════════════════════════════════════════════════════════ -->
-  <!-- Root / Homepage                                               -->
-  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- Root -->
   <url>
     <loc>https://triadicframeworks.com/</loc>
-    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- ═════════════════════════════════════════════════════════════ -->
-  <!-- Canonical Modules                                             -->
-  <!-- ═════════════════════════════════════════════════════════════ -->
-
+  <!-- Canonical RTT Engines -->
   <url>
     <loc>https://triadicframeworks.com/clarity/</loc>
-    <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
 
   <url>
     <loc>https://triadicframeworks.com/coherence/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
+    <priority>0.95</priority>
   </url>
 
   <url>
     <loc>https://triadicframeworks.com/drift/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
+    <priority>0.95</priority>
   </url>
 
   <url>
     <loc>https://triadicframeworks.com/regime/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
+    <priority>0.95</priority>
   </url>
 
   <url>
     <loc>https://triadicframeworks.com/module/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.95</priority>
   </url>
 
   <url>
     <loc>https://triadicframeworks.com/session/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.95</priority>
   </url>
 
-  <!-- ═════════════════════════════════════════════════════════════ -->
-  <!-- Canon Atlas / Semantic Infrastructure                         -->
-  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- Integration Map -->
+  <url>
+    <loc>https://triadicframeworks.com/integration_map/</loc>
+    <priority>0.90</priority>
+  </url>
 
+  <!-- Canon Atlas -->
   <url>
     <loc>https://triadicframeworks.com/docs/canon_atlas.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.90</priority>
   </url>
 
+  <!-- Canon Map -->
   <url>
     <loc>https://triadicframeworks.com/docs/canon_map.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.90</priority>
   </url>
 
+  <!-- Canon Reference -->
   <url>
     <loc>https://triadicframeworks.com/docs/canon_reference.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.90</priority>
   </url>
 
+  <!-- Semantic Infrastructure -->
   <url>
     <loc>https://triadicframeworks.com/docs/si_knowledge_base.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
+    <priority>0.85</priority>
   </url>
 
   <url>
     <loc>https://triadicframeworks.com/docs/si_lexicon.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
+    <priority>0.85</priority>
   </url>
 
   <url>
     <loc>https://triadicframeworks.com/docs/si_ontology.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
+    <priority>0.85</priority>
   </url>
 
   <url>
     <loc>https://triadicframeworks.com/docs/si_pedagogy.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
+    <priority>0.85</priority>
   </url>
 
   <url>
     <loc>https://triadicframeworks.com/docs/si_publications.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
+    <priority>0.85</priority>
   </url>
 
   <url>
     <loc>https://triadicframeworks.com/docs/si_semantic_api.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
+    <priority>0.85</priority>
   </url>
 
-  <!-- ═════════════════════════════════════════════════════════════ -->
-  <!-- Ecosystem / Platform                                          -->
-  <!-- ═════════════════════════════════════════════════════════════ -->
-
+  <!-- Ecosystem -->
   <url>
     <loc>https://triadicframeworks.com/ecosystem/triadicframeworks_platform_manifest.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.70</priority>
+    <priority>0.80</priority>
   </url>
 
+  <!-- Platform -->
   <url>
     <loc>https://triadicframeworks.com/platform/api/semantic_api_spec.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.70</priority>
+    <priority>0.80</priority>
   </url>
 
   <url>
     <loc>https://triadicframeworks.com/platform/cloudflare/pricing_model.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.65</priority>
+    <priority>0.80</priority>
   </url>
 
-  <!-- ═════════════════════════════════════════════════════════════ -->
-  <!-- Capture                                                       -->
-  <!-- ═════════════════════════════════════════════════════════════ -->
-
+  <!-- Capture Surface -->
   <url>
     <loc>https://triadicframeworks.com/capture.html</loc>
-    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
+
+  <!-- Operators -->
+  <url>
+    <loc>https://triadicframeworks.com/operators/</loc>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Module Registry -->
+  <url>
+    <loc>https://triadicframeworks.com/module_registry.json</loc>
+    <priority>0.60</priority>
+  </url>
+
+  <!-- DOC_MAP -->
+  <url>
+    <loc>https://triadicframeworks.com/DOC_MAP.json</loc>
     <priority>0.60</priority>
   </url>
 
