@@ -125,7 +125,22 @@ Response (`200 OK`):
   "grant_types_supported": ["authorization_code", "refresh_token"],
   "code_challenge_methods_supported": ["S256"],
   "token_endpoint_auth_methods_supported": ["none"],
-  "scopes_supported": ["read", "write", "admin"]
+  "scopes_supported": ["read", "write", "admin"],
+  "agent_auth": {
+    "type": "oauth2",
+    "register_uri": "https://triadicframeworks.com/register",
+    "flows": {
+      "authorizationCode": {
+        "authorizationUrl": "https://triadicframeworks.com/authorize",
+        "tokenUrl": "https://triadicframeworks.com/token",
+        "scopes": {
+          "read": "Read-only access to MCP tools and resources",
+          "write": "Read and write access; allows tools that modify state",
+          "admin": "Full administrative access including configuration tools"
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -269,6 +284,48 @@ Response (`200 OK`):
   "refresh_token": "def50200...NEW"
 }
 ```
+
+---
+
+## agent_auth Metadata
+
+The `agent_auth` block is a Cloudflare Agent Readiness extension injected into
+`/.well-known/oauth-authorization-server` by the Worker. It is not part of
+RFC 8414 — it is a proprietary field consumed by Cloudflare's agent discovery
+pipeline.
+
+```json
+{
+  "agent_auth": {
+    "type": "oauth2",
+    "register_uri": "https://triadicframeworks.com/register",
+    "flows": {
+      "authorizationCode": {
+        "authorizationUrl": "https://triadicframeworks.com/authorize",
+        "tokenUrl": "https://triadicframeworks.com/token",
+        "scopes": {
+          "read": "Read-only access to MCP tools and resources",
+          "write": "Read and write access; allows tools that modify state",
+          "admin": "Full administrative access including configuration tools"
+        }
+      }
+    }
+  }
+}
+```
+
+**Field notes:**
+
+| Field | Required | Description |
+|---|---|---|
+| `agent_auth.type` | Yes | Always `"oauth2"` for OAuth 2.1 flows |
+| `agent_auth.register_uri` | **Yes** | HTTPS URI of the RFC 7591 Dynamic Client Registration endpoint. Cloudflare Agent Readiness validates this field — must be present and on the same origin as `issuer` |
+| `agent_auth.flows.authorizationCode` | Yes | OpenAPI `securitySchemes` authorizationCode shape. Agent clients use this to auto-configure their OAuth flow without out-of-band setup |
+| `agent_auth.flows.authorizationCode.scopes` | Yes | Map of scope name → human-readable description. Must match `scopes_supported` in both well-known documents |
+
+> **Deployment note:** `workers-oauth-provider` does **not** emit `agent_auth` automatically.
+> The Worker's `index.ts` serves `/.well-known/oauth-authorization-server` as a
+> self-contained response — it does not delegate to `OAuthProvider` for this path.
 
 ---
 
