@@ -1,1 +1,11 @@
-
+{
+  "resource": "https://triadicframeworks.com",
+  "authorization_servers": [],
+  "scopes_supported": [],
+  "bearer_methods_supported": ["header"],
+  "identity_types_supported": ["anonymous"],
+  "anonymous": {
+    "credential_types_supported": ["none"],
+    "claim_uri": "https://triadicframeworks.com/agent/claims/anonymous"
+  }
+}
