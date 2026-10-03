@@ -1,0 +1,38 @@
+{
+  "module": "Module",
+  "canonical_id": "MODULE",
+  "category": "module-engine",
+  "version": "1.0",
+  "status": "canonical",
+  "canonical_path": "/module/",
+  "ai_ready": true,
+  "license": "Open educational use permitted",
+
+  "purpose": "Define module structure, module grammar, and RTT module-level integration.",
+  "audience": ["developers", "researchers", "operators", "AIs"],
+
+  "operators": [
+    "MODULE-Define",
+    "MODULE-Integrate",
+    "MODULE-Explain"
+  ],
+
+  "files": {
+    "README.md": {
+      "role": "index",
+      "analyzer_layer": "operator"
+    },
+    "diagrams.md": {
+      "role": "diagram",
+      "analyzer_layer": "dimensional"
+    },
+    "module_test.md": {
+      "role": "diagnostic",
+      "analyzer_layer": "operator"
+    },
+    "teaching_workbook.md": {
+      "role": "template",
+      "analyzer_layer": "coherence"
+    }
+  }
+}
