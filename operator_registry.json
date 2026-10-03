@@ -1,0 +1,70 @@
+{
+  "registry": "TriadicFrameworks Operator Manifest",
+  "version": "1.0",
+  "last_updated": "2026-10-03",
+  "ai_ready": true,
+
+  "operators": {
+
+    "clarity": {
+      "canonical_id": "CLARITY",
+      "category": "spectral-math",
+      "operators": [
+        "CLARITY-Compute",
+        "CLARITY-Validate",
+        "CLARITY-Integrate",
+        "CLARITY-Explain"
+      ]
+    },
+
+    "coherence": {
+      "canonical_id": "COHERENCE",
+      "category": "alignment-grammar",
+      "operators": [
+        "COHERENCE-Align",
+        "COHERENCE-Validate",
+        "COHERENCE-Explain"
+      ]
+    },
+
+    "drift": {
+      "canonical_id": "DRIFT",
+      "category": "drift-envelope",
+      "operators": [
+        "DRIFT-Compute",
+        "DRIFT-Envelope",
+        "DRIFT-Explain"
+      ]
+    },
+
+    "regime": {
+      "canonical_id": "REGIME",
+      "category": "regime-transition",
+      "operators": [
+        "REGIME-Shift",
+        "REGIME-Validate",
+        "REGIME-Explain"
+      ]
+    },
+
+    "module": {
+      "canonical_id": "MODULE",
+      "category": "module-grammar",
+      "operators": [
+        "MODULE-Define",
+        "MODULE-Integrate",
+        "MODULE-Explain"
+      ]
+    },
+
+    "session": {
+      "canonical_id": "SESSION",
+      "category": "runtime-grammar",
+      "operators": [
+        "SESSION-Run",
+        "SESSION-Validate",
+        "SESSION-Explain"
+      ]
+    }
+  }
+}
