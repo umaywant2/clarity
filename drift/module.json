@@ -1,0 +1,38 @@
+{
+  "module": "Drift",
+  "canonical_id": "DRIFT",
+  "category": "drift-engine",
+  "version": "1.0",
+  "status": "canonical",
+  "canonical_path": "/drift/",
+  "ai_ready": true,
+  "license": "Open educational use permitted",
+
+  "purpose": "Define drift operations, drift envelopes, and RTT drift grammar.",
+  "audience": ["developers", "researchers", "operators", "AIs"],
+
+  "operators": [
+    "DRIFT-Compute",
+    "DRIFT-Envelope",
+    "DRIFT-Explain"
+  ],
+
+  "files": {
+    "README.md": {
+      "role": "index",
+      "analyzer_layer": "drift"
+    },
+    "diagrams.md": {
+      "role": "diagram",
+      "analyzer_layer": "dimensional"
+    },
+    "drift_test.md": {
+      "role": "diagnostic",
+      "analyzer_layer": "operator"
+    },
+    "teaching_workbook.md": {
+      "role": "template",
+      "analyzer_layer": "drift"
+    }
+  }
+}
