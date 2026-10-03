@@ -1,7 +1,9 @@
 {
   "resource": "https://triadicframeworks.com",
-  "authorization_servers": [],
-  "scopes_supported": [],
+  "authorization_servers": [
+    "https://<your-auth-server-domain>"
+  ],
+  "scopes_supported": ["optional"],
   "bearer_methods_supported": ["header"],
   "identity_types_supported": ["anonymous"],
   "anonymous": {
