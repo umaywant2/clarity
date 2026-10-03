@@ -1,0 +1,38 @@
+{
+  "module": "Regime",
+  "canonical_id": "REGIME",
+  "category": "regime-engine",
+  "version": "1.0",
+  "status": "canonical",
+  "canonical_path": "/regime/",
+  "ai_ready": true,
+  "license": "Open educational use permitted",
+
+  "purpose": "Define regime transitions, regime envelopes, and RTT regime grammar.",
+  "audience": ["developers", "researchers", "operators", "AIs"],
+
+  "operators": [
+    "REGIME-Shift",
+    "REGIME-Validate",
+    "REGIME-Explain"
+  ],
+
+  "files": {
+    "README.md": {
+      "role": "index",
+      "analyzer_layer": "regime"
+    },
+    "diagrams.md": {
+      "role": "diagram",
+      "analyzer_layer": "dimensional"
+    },
+    "regime_test.md": {
+      "role": "diagnostic",
+      "analyzer_layer": "operator"
+    },
+    "teaching_workbook.md": {
+      "role": "template",
+      "analyzer_layer": "regime"
+    }
+  }
+}
