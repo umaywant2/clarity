@@ -1,19 +1,19 @@
-import { OAuthProvider } from "@cloudflare/workers-oauth-provider";
-import { AuthHandler }    from "./authorize";
-import { TokenHandler }   from "./token";
+import { OAuthProvider }   from "@cloudflare/workers-oauth-provider";
+import { AuthHandler }     from "./authorize";
+import { TokenHandler }    from "./token";
 import { RegisterHandler } from "./register";
-import { MyMCPServer }    from "./mcp";
+import { mcpHandler }      from "./mcp";
 
 export interface Env {
-  OAUTH_KV:     KVNamespace;
-  BASE_URL:     string;
-  CSRF_SECRET:  string;
+  OAUTH_KV:    KVNamespace;
+  BASE_URL:    string;
+  CSRF_SECRET: string;
 }
 
 const oauthProvider = new OAuthProvider({
   apiRoute:                   "/mcp",
-  apiHandler:                 MyMCPServer.serve("/mcp"),
-  defaultHandler:             AuthHandler,   // /authorize (GET + POST)
+  apiHandler:                 mcpHandler,   // ← called after token validation
+  defaultHandler:             AuthHandler,
   authorizeEndpoint:          "/authorize",
   tokenEndpoint:              "/token",
   clientRegistrationEndpoint: "/register",
@@ -23,17 +23,10 @@ export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
-    // ── /register — bypass OAuthProvider, handle directly (RFC 7591/7592)
-    if (url.pathname === "/register") {
-      return RegisterHandler(request, env, ctx);
-    }
+    if (url.pathname === "/register") return RegisterHandler(request, env, ctx);
+    if (url.pathname === "/token")    return TokenHandler(request, env, ctx as any);
 
-    // ── /token — bypass OAuthProvider, handle directly
-    if (url.pathname === "/token") {
-      return TokenHandler(request, env, ctx as any);
-    }
-
-    // ── Inject agent_auth into AS metadata (Cloudflare Agent Readiness)
+    // Inject agent_auth into AS metadata
     if (url.pathname === "/.well-known/oauth-authorization-server") {
       const base     = await oauthProvider.fetch(request, env, ctx);
       const metadata = await base.json() as Record<string, unknown>;
@@ -52,11 +45,11 @@ export default {
         },
       };
       return Response.json(metadata, {
-        headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "Access-Control-Allow-Origin": "*" },
+        headers: { "Content-Type": "application/json", "Cache-Control": "no-store",
+                   "Access-Control-Allow-Origin": "*" },
       });
     }
 
-    // ── Everything else → OAuthProvider (handles /authorize, /mcp, /.well-known/*)
     return oauthProvider.fetch(request, env, ctx);
   },
 } satisfies ExportedHandler<Env>;
