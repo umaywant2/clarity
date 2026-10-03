@@ -37,13 +37,51 @@ Both documents are served over HTTPS with `Content-Type: application/json` and `
 
 ---
 
-## Complete Standalone Registration Flow
+<!-- registration-flow -->
+## Registration Flow
 
-A self-contained walkthrough for registering a new client and obtaining an access token with no prior configuration. Follow each step in sequence.
+A self-contained, standalone walkthrough covering every step to register a new client and call the MCP API, with no prior configuration required.
 
-### Step 1 — Discover the Protected Resource
+### Quick Reference
 
-Fetch the protected resource metadata to confirm the authorized AS:
+```
+1. POST /mcp (no token)                       → 401 + WWW-Authenticate: Bearer resource_metadata=...
+2. GET /.well-known/oauth-protected-resource   → { authorization_servers: ["https://triadicframeworks.com"] }
+3. GET /.well-known/oauth-authorization-server → { registration_endpoint, authorization_endpoint, token_endpoint }
+4. POST /register                              → 201 { client_id }
+5. Generate PKCE: code_verifier + code_challenge (S256)
+6. GET /authorize?client_id=...&code_challenge=...&scope=read → user consent → redirect with code
+7. POST /token (code + code_verifier)          → 200 { access_token, refresh_token }
+8. POST /mcp (Authorization: Bearer <token>)   → 200 MCP response
+9. POST /token (grant_type=refresh_token)      → 200 { access_token (new) }
+```
+
+---
+
+### Step 1 — Probe the MCP Endpoint (Unauthenticated)
+
+Send a request without a token to trigger the `401` challenge:
+
+```http
+POST /mcp HTTP/1.1
+Host: triadicframeworks.com
+Content-Type: application/json
+
+{"jsonrpc":"2.0","method":"tools/list","id":1}
+```
+
+Response (`401 Unauthorized`):
+
+```http
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer resource_metadata="https://triadicframeworks.com/.well-known/oauth-protected-resource"
+```
+
+Clients MUST parse `resource_metadata` from the `WWW-Authenticate` header before proceeding.
+
+---
+
+### Step 2 — Fetch Protected Resource Metadata (RFC 9728)
 
 ```http
 GET /.well-known/oauth-protected-resource HTTP/1.1
@@ -59,14 +97,15 @@ Response (`200 OK`):
   "resource_name": "Triadic Frameworks MCP Server",
   "authorization_servers": ["https://triadicframeworks.com"],
   "scopes_supported": ["read", "write", "admin"],
-  "bearer_methods_supported": ["header"],
-  "dpop_signing_alg_values_supported": ["ES256", "RS256"]
+  "bearer_methods_supported": ["header"]
 }
 ```
 
-Note the `authorization_servers` value — use it as the base URL for all subsequent steps.
+Use the first value in `authorization_servers` as the issuer base URL for all subsequent steps.
 
-### Step 2 — Discover the Authorization Server
+---
+
+### Step 3 — Fetch Authorization Server Metadata (RFC 8414)
 
 ```http
 GET /.well-known/oauth-authorization-server HTTP/1.1
@@ -90,7 +129,9 @@ Response (`200 OK`):
 }
 ```
 
-### Step 3 — Register the Client (RFC 7591 Dynamic Client Registration)
+---
+
+### Step 4 — Register the Client (RFC 7591 Dynamic Client Registration)
 
 ```http
 POST /register HTTP/1.1
@@ -119,16 +160,24 @@ Response (`201 Created`):
 }
 ```
 
-Save the `client_id` — required for all subsequent requests.
+Save the `client_id` — required in every subsequent step.
 
-### Step 4 — Generate PKCE Parameters
+---
+
+### Step 5 — Generate PKCE Parameters
+
+OAuth 2.1 requires PKCE for all clients (`S256` only; `plain` is rejected):
 
 ```
-code_verifier  = base64url( random_bytes(32) )           # store securely
-code_challenge = base64url( SHA-256( code_verifier ) )   # send to /authorize
+code_verifier  = base64url( random_bytes(32) )
+code_challenge = base64url( SHA-256( code_verifier ) )
 ```
 
-### Step 5 — Request Authorization
+> The `code_challenge` must begin with `[a-zA-Z0-9]`. If it starts with `-` or `_`, regenerate.
+
+---
+
+### Step 6 — Request Authorization Code
 
 ```http
 GET /authorize
@@ -142,7 +191,7 @@ GET /authorize
 Host: triadicframeworks.com
 ```
 
-After user consent, redirects to:
+After user consent, the server redirects to:
 
 ```
 https://client.example.com/callback?code=AUTH_CODE&state=RANDOM_CSRF_STATE
@@ -150,7 +199,9 @@ https://client.example.com/callback?code=AUTH_CODE&state=RANDOM_CSRF_STATE
 
 **Validate** the returned `state` matches before continuing.
 
-### Step 6 — Exchange Authorization Code for Access Token
+---
+
+### Step 7 — Exchange Authorization Code for Access Token
 
 ```http
 POST /token HTTP/1.1
@@ -175,7 +226,9 @@ Response (`200 OK`):
 }
 ```
 
-### Step 7 — Call the MCP API
+---
+
+### Step 8 — Call the MCP API
 
 ```http
 POST /mcp HTTP/1.1
@@ -192,7 +245,9 @@ Response (`200 OK`):
 {"jsonrpc":"2.0","id":1,"result":{"tools":[...]}}
 ```
 
-### Step 8 — Refresh the Access Token
+---
+
+### Step 9 — Refresh the Access Token
 
 ```http
 POST /token HTTP/1.1
@@ -235,14 +290,6 @@ Published at `/.well-known/oauth-protected-resource`.
 }
 ```
 
-**Field notes:**
-- `resource` — REQUIRED (RFC 9728 §2). Must byte-match the origin used to build the well-known URL. No trailing slash.
-- `resource_name` — RECOMMENDED. Human-readable label for consent UIs.
-- `authorization_servers` — JSON array of permitted AS issuer identifiers.
-- `scopes_supported` — RECOMMENDED. Advertises available scopes.
-- `bearer_methods_supported` — `header` only. Query string/body rejected.
-- `dpop_signing_alg_values_supported` — Enables optional DPoP (RFC 9449).
-
 ---
 
 ## Scopes
@@ -252,17 +299,6 @@ Published at `/.well-known/oauth-protected-resource`.
 | `read` | Read-only access to MCP tools and resources |
 | `write` | Read and write access; allows tools that modify state |
 | `admin` | Full administrative access including configuration tools |
-
----
-
-## WWW-Authenticate on 401
-
-```http
-HTTP/1.1 401 Unauthorized
-WWW-Authenticate: Bearer resource_metadata="https://triadicframeworks.com/.well-known/oauth-protected-resource"
-```
-
-Per RFC 9728 §5, clients MUST re-fetch protected resource metadata and restart from Step 1.
 
 ---
 
@@ -299,11 +335,11 @@ export default new OAuthProvider({
 
 ## References
 
-- [RFC 9728 — OAuth 2.0 Protected Resource Metadata](https://www.rfc-editor.org/rfc/rfc9728) (April 2025)
+- [RFC 9728 — OAuth 2.0 Protected Resource Metadata](https://www.rfc-editor.org/rfc/rfc9728)
 - [RFC 8414 — OAuth 2.0 Authorization Server Metadata](https://www.rfc-editor.org/rfc/rfc8414)
 - [RFC 7591 — OAuth 2.0 Dynamic Client Registration](https://www.rfc-editor.org/rfc/rfc7591)
-- [RFC 9449 — OAuth 2.0 DPoP](https://www.rfc-editor.org/rfc/rfc9449)
 - [RFC 9700 — OAuth 2.0 Security Best Current Practice](https://www.rfc-editor.org/rfc/rfc9700)
-- [MCP Authorization Spec (2025-06-18)](https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization)
+- [MCP Authorization Spec (2026-07-28)](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)
 - [Cloudflare workers-oauth-provider](https://github.com/cloudflare/workers-oauth-provider)
 - [Cloudflare Agents Authorization Docs](https://developers.cloudflare.com/agents/model-context-protocol/protocol/authorization/)
+```
