@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- /clarity/index.html — <head>                                   -->
+<!-- Module: Clarity (canonical RTT module)                          -->
+<!-- Last updated: 2026-10-03                                        -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="language" content="en" />
+<meta name="last-modified" content="2026-10-03" />
+<meta name="generator" content="TriadicFrameworks Static Canon Engine" />
+<meta name="creator" content="TriadicFrameworks" />
+<meta name="author" content="Nawder Loswin" />
+<meta name="publisher" content="TriadicFrameworks" />
+
+<title>Clarity — TriadicFrameworks</title>
+
+<meta name="description"
+      content="Clarity — canonical RTT module defining Spectral Clarity, Validator Pulses, and the mathematical substrate enabling coherence, drift, and regime alignment across TriadicFrameworks. Includes diagrams, tests, teaching workbooks, and cross‑module integration maps." />
+
+<meta name="keywords"
+      content="clarity, spectral clarity, validator pulses, RTT mathematics, triadicframeworks, coherence engine, drift engine, regime engine, clarity module, clarity diagrams" />
+
+<!-- ═══ Module Identity (standardized per D369 template) ═══ -->
+
+<meta name="module" content="Clarity" />
+<meta name="canonical-id" content="CLARITY" />
+<meta name="module-type" content="Canonical" />
+<meta name="version" content="1.0" />
+<meta name="status" content="canonical" />
+<meta name="parent" content="TriadicFrameworks Root" />
+<meta name="siblings"
+      content="Coherence, Drift, Regime, Module, Session, Canon Atlas, Semantic Infrastructure" />
+<meta name="canonical-path" content="/clarity/" />
+<meta name="last-updated" content="2026-10-03" />
+<meta name="license" content="Open educational use permitted" />
+
+<!-- ═══ AI Discovery (standardized) ═══ -->
+
+<meta name="ai-ready" content="true" />
+<meta name="ai-module-id" content="CLARITY" />
+<meta name="ai-operators"
+      content="CLARITY-Compute, CLARITY-Validate, CLARITY-Integrate, CLARITY-Explain" />
+
+<meta name="ai.module" content="Clarity" />
+<meta name="ai.module.name" content="Clarity" />
+<meta name="ai.module.category" content="spectral-math" />
+<meta name="ai.module.summary"
+      content="Canonical RTT module defining Spectral Clarity, Validator Pulses, cross‑module integration maps, diagrams, tests, and teaching workbooks. Supports coherence, drift, regime, and session engines." />
+<meta name="ai.version" content="1.0" />
+<meta name="ai.purpose"
+      content="Provide the mathematical substrate for RTT clarity operations, validator pulses, and cross‑module alignment across TriadicFrameworks." />
+<meta name="ai.keywords"
+      content="clarity, spectral clarity, validator pulses, RTT mathematics, triadicframeworks, coherence, drift, regime, module integration" />
+<meta name="ai.audience" content="developers, researchers, AIs, operators" />
+<meta name="ai.navigation" content="https://www.triadicframeworks.com/sitemap_main.xml" />
+<meta name="ai.discussions" content="https://github.com/umaywant2/TriadicFrameworks/discussions" />
+<meta name="ai.contact.x" content="@TriadicFrameworks" />
+<meta name="ai.contact.youtube" content="@TriadicFrameworks" />
+<meta name="ai.license" content="Open educational use permitted" />
+<meta name="ai-content" content="allow">
+<meta name="cf-ai-signal" content="allow">
+
+<!-- ═══ Canonical / SEO ═══ -->
+
+<script type="module"
+        src="https://www.triadicframeworks.com/.webmcp/bridge.js"
+        data-packs="c2pa,mcp-server-client"></script>
+
+<link rel="canonical" href="https://www.triadicframeworks.com/clarity/" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0ff" />
+
+<!-- ═══ Open Graph ═══ -->
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="TriadicFrameworks" />
+<meta property="og:title" content="Clarity — TriadicFrameworks" />
+<meta property="og:url" content="https://www.triadicframeworks.com/clarity/" />
+<meta property="og:description"
+      content="Canonical RTT module defining Spectral Clarity, Validator Pulses, diagrams, tests, and teaching workbooks." />
+<meta property="og:image"
+      content="https://www.triadicframeworks.com/assets/clarity_og.png" />
+
+<!-- ═══ Twitter Card ═══ -->
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Clarity — TriadicFrameworks" />
+<meta name="twitter:description"
+      content="Spectral Clarity, Validator Pulses, and RTT mathematical substrate." />
+
+<!-- ═══ Citation ═══ -->
+
+<meta name="citation_title" content="Clarity — TriadicFrameworks" />
+<meta name="citation_author" content="Nawder Loswin" />
+<meta name="citation_date" content="2026-10-03" />
+
+<style>
+/* ============================================================
+   NAWDERIAN NEON ARCADE THEME — RTT/1 SYNTHWAVE EDITION
+   ============================================================ */
+
+:root {
+  --bg-main: #05060a;                 /* deep CRT black */
+  --bg-nav: #0a0c12;                  /* darker sidebar */
+  --bg-panel: #0f1118;
+
+  --text-main: #e8f7ff;               /* neon ice */
+  --text-muted: #7a8ca0;              /* CRT fade */
+
+  --neon-cyan: #3df5ff;
+  --neon-magenta: #ff3dfc;
+  --neon-yellow: #ffe66d;
+
+  --triadic-neon: linear-gradient(135deg,
+                      #3df5ff,
+                      #ff3dfc,
+                      #ffe66d);
+
+  --scanline: repeating-linear-gradient(
+                to bottom,
+                rgba(255,255,255,0.03) 0px,
+                rgba(255,255,255,0.03) 1px,
+                rgba(0,0,0,0.05) 2px
+              );
+
+  --radius: 10px;
+  --glow: 0 0 12px rgba(255, 0, 180, 0.45),
+          0 0 24px rgba(0, 255, 255, 0.25);
+}
+
+/* Base layout */
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-main);
+  background-image: var(--scanline);
+  color: var(--text-main);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto;
+  line-height: 1.65;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Neon headings */
+h1, h2, h3, h4 {
+  font-weight: 700;
+  margin-top: 1.8em;
+  margin-bottom: 0.5em;
+  line-height: 1.2;
+  background: var(--triadic-neon);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: var(--glow);
+}
+
+/* Paragraphs and lists */
+p, ul, ol {
+  padding: 0 1em;
+  margin: 0 0 1.1em 0;
+  color: var(--text-main);
+}
+
+/* Neon links */
+a {
+  color: var(--neon-cyan);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(255,255,255,0.25);
+  transition: color 0.2s ease, border-color 0.2s ease, text-shadow 0.2s ease;
+}
+
+a:hover,
+a:focus {
+  color: var(--neon-magenta);
+  border-bottom-color: var(--neon-magenta);
+  text-shadow: 0 0 8px var(--neon-magenta);
+}
+
+a:visited {
+  color: var(--neon-yellow);
+}
+
+/* Code blocks */
+pre, code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono";
+  background: rgba(255,255,255,0.04);
+  padding: 0.4em 0.6em;
+  border-radius: 6px;
+  color: #dffaff;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: inset 0 0 12px rgba(0,255,255,0.15);
+}
+
+/* Context block */
+.context-block {
+  font-family: monospace;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin: 0.5rem 0 1rem 0;
+  padding: 1rem;
+  background: var(--bg-panel);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius);
+  box-shadow: var(--glow);
+}
+
+.context-label {
+  color: var(--neon-yellow);
+  font-weight: bold;
+  margin-right: 0.25rem;
+}
+
+.context-value {
+  color: var(--text-main);
+}
+
+/* Navigation panel */
+nav {
+  width: 260px;
+  float: left;
+  background: var(--bg-nav);
+  padding: 1.2rem;
+  overflow-y: auto;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 4px 0 12px rgba(0,0,0,0.4);
+}
+
+nav h2 {
+  font-size: 0.9rem;
+  color: var(--neon-cyan);
+  margin-top: 1.2rem;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.04em;
+  text-shadow: var(--glow);
+}
+
+nav a {
+  display: block;
+  color: var(--text-muted);
+  padding: 0.35rem 0;
+  font-size: 0.9rem;
+}
+
+nav a:hover {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 6px var(--neon-magenta);
+}
+
+/* Main content */
+main {
+  flex: 1;
+  padding: 2.5rem;
+  overflow-y: auto;
+}
+
+main h1, main h2, main h3 {
+  color: var(--neon-cyan);
+  font-weight: 500;
+  text-shadow: var(--glow);
+}
+
+pre {
+  background: #0b0d12;
+  padding: 1rem;
+  overflow-x: auto;
+  border-left: 2px solid var(--neon-magenta);
+}
+
+code {
+  color: var(--neon-cyan);
+}
+
+/* Hide the default arrow */
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+/* Custom arrow icons */
+details > summary::before {
+  content: "⏵"; /* collapsed */
+  padding-right: 6px;
+  font-size: 0.9em;
+}
+details[open] > summary::before {
+  content: "⏷"; /* expanded */
+}
+
+/* Make the h2/h3 feel like the toggle */
+details > summary h2,
+details > summary h3 {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hover effect */
+details > summary:hover h2,
+details > summary:hover h3 {
+  text-decoration: underline;
+}
+
+/* Optional: fade-in animation for opened blocks */
+details[open] {
+  animation: fadeIn 0.15s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+      
+</style>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+</head>
+
+<body>
+   
+<nav class="nav-band">
+ <p align="center">
+  <!-- TriadicFrameworks Static Glyph (FFF‑Inspired) -->
+  <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="120" height="120" rx="12" fill="none"/>
+    <path d="M30 25 L55 25 L40 60 L65 60 L50 95" stroke="#6A5ACD" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M60 25 L85 25 L70 60 L95 60 L80 95" stroke="#20B2AA" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M45 25 L70 25 L55 60 L80 60 L65 95" stroke="#DA70D6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+ </p> 
+
+   <details>
+     <summary><h2>🌐 Clarity | TriadicFrameworks.com</h2></summary>
+      <a href="#README">🔰 README</a>
+      <a href="#ABOUT">🔗 About | TriadicFrameworks</a>
+      <a href="#CONTRIBUTING">🤝 Contributing</a>
+      <a href="https://www.triadicframeworks.org/education/">💯 Education | RTT</a>
+      <a href="#GLOSSARY">🎯 Glossary</a>
+      <a href="#LINEAGE">📜 Lineage</a>
+      <a href="#LICENSE">📎 License</a>
+      <a href="#SITEMAP">🌐 Sitemap</a>
+      <a href="#QUICKSTART">⚡ Quickstart</a>
+      <a href="#CODE_OF_CONDUCT">🤝 Code of Conduct</a>
+      <a href="#SECURITY">🔐 Security</a>
+      <a href="#PRINCIPLES">🧘 Principles</a>
+   </details>
+<details>
+  <summary><h3>📚 Primers & Foundations</h3></summary>
+  <a href="#CLARITY_CANON_HERO_IMAGE">🖼️ Clarity Canon Hero Image</a>
+  <a href="#CAPTURE">📸 Capture Log</a>
+  <a href="#BOOK_CLARITY_PEDAGOGY">📖 Clarity Pedagogy</a>
+  <a href="#BOOK_DIMENSIONAL_CURRICULUM">📐 Dimensional Curriculum</a>
+  <a href="#BOOK_TRIADIC_LEARNING">🎓 Triadic Learning</a>
+</details>
+<details>
+  <summary><h3>🗺️ Canon & Semantic Infrastructure</h3></summary>
+  <a href="#DOCS_CANON_ATLAS">🗂️ Canon Atlas</a>
+  <a href="#DOCS_CANON_MAP">🧭 Canon Map</a>
+  <a href="#DOCS_CANON_REFERENCE">📑 Canon Reference</a>
+  <a href="#DOCS_SI_KNOWLEDGE_BASE">📚 SI Knowledge Base</a>
+  <a href="#DOCS_SI_LEXICON">🔤 SI Lexicon</a>
+  <a href="#DOCS_SI_ONTOLOGY">🧬 SI Ontology</a>
+  <a href="#DOCS_SI_PEDAGOGY">👩‍🏫 SI Pedagogy</a>
+  <a href="#DOCS_SI_PUBLICATIONS">📄 SI Publications</a>
+  <a href="#DOCS_SI_SEMANTIC_API">🔌 SI Semantic API</a>
+</details>
+<details>
+  <summary><h3>🌱 Ecosystem & Platform</h3></summary>
+  <a href="#ECOSYSTEM_TRIADICFRAMEWORKS_PLATFORM_MANIFEST">🧾 Platform Manifest</a>
+  <a href="#PLATFORM_API_SEMANTIC_API_SPEC">📡 Semantic API Spec</a>
+  <a href="#PLATFORM_CLOUDFLARE_PRICING_MODEL">💸 Cloudflare Pricing Model</a>
+</details>
+<details>
+  <summary><h3>🧩 Models | Overview</h3></summary>
+  <a href="#MODELS_README">📘 Models README</a>
+  <a href="#MODELS_HERO_DIAGRAMS">🖼️ Hero Diagrams</a>
+</details>
+<details>
+  <summary><h3>🔍 Models | Clarity</h3></summary>
+  <a href="#MODELS_CLARITY_README">📘 Clarity README</a>
+  <a href="#MODELS_CLARITY_DIAGRAMS">🖊️ Clarity Diagrams</a>
+  <a href="#MODELS_CLARITY_TEST">🧪 Clarity Test</a>
+  <a href="#MODELS_CLARITY_CROSS_MODULE_INTEGRATION_MAP">🧬 Cross‑Module Integration Map</a>
+  <a href="#MODELS_CLARITY_TEACHING_WORKBOOK">📕 Teaching Workbook (PDF)</a>
+</details>
+<details>
+  <summary><h3>🧠 Models | Coherence</h3></summary>
+  <a href="#MODELS_COHERENCE_README">📘 Coherence README</a>
+  <a href="#MODELS_COHERENCE_DIAGRAMS">🖊️ Coherence Diagrams</a>
+  <a href="#MODELS_COHERENCE_TEST">🧪 Coherence Test</a>
+  <a href="#MODELS_COHERENCE_TEACHING_WORKBOOK">📕 Teaching Workbook</a>
+</details>
+<details>
+  <summary><h3>🌊 Models | Drift</h3></summary>
+  <a href="#MODELS_DRIFT_README">📘 Drift README</a>
+  <a href="#MODELS_DRIFT_DIAGRAMS">🖊️ Drift Diagrams</a>
+  <a href="#MODELS_DRIFT_TEST">🧪 Drift Test</a>
+  <a href="#MODELS_DRIFT_TEACHING_WORKBOOK">📕 Teaching Workbook</a>
+</details>
+<details>
+  <summary><h3>📦 Models | Module</h3></summary>
+  <a href="#MODELS_MODULE_README">📘 Module README</a>
+  <a href="#MODELS_MODULE_DIAGRAMS">🖊️ Module Diagrams</a>
+  <a href="#MODELS_MODULE_TEST">🧪 Module Test</a>
+  <a href="#MODELS_MODULE_TEACHING_WORKBOOK">📕 Teaching Workbook</a>
+</details>
+<details>
+  <summary><h3>⚙️ Models | Regime</h3></summary>
+  <a href="#MODELS_REGIME_README">📘 Regime README</a>
+  <a href="#MODELS_REGIME_DIAGRAMS">🖊️ Regime Diagrams</a>
+  <a href="#MODELS_REGIME_TEST">🧪 Regime Test</a>
+  <a href="#MODELS_REGIME_TEACHING_WORKBOOK">📕 Teaching Workbook</a>
+</details>
+<details>
+  <summary><h3>🧭 Models | Session</h3></summary>
+  <a href="#MODELS_SESSION_README">📘 Session README</a>
+  <a href="#MODELS_SESSION_DIAGRAMS">🖊️ Session Diagrams</a>
+  <a href="#MODELS_SESSION_TEST">🧪 Session Test</a>
+  <a href="#MODELS_SESSION_TEACHING_WORKBOOK">📕 Teaching Workbook</a>
+</details>
+   <details>
+     <summary><h2>🏗️ Triadic Tools</h2></summary> 
+      <a href="https://www.triadicframeworks.org/education/alignment/">🌐 Alignment | RTT</a>   
+      <a href="https://www.triadicframeworks.org/education/awareness/">🚸 Awareness</a>
+      <a href="https://www.triadicframeworks.org/triadic_observer_layer/">🔱 Triadic Observer Layer</a> 
+      <a href="https://www.triadicframeworks.org/domain_tool_primers/">🏗️ Domain Primer Tools</a>
+      <a href="https://www.triadicframeworks.org/packages/">📦 Packages and Cores</a>
+      <a href="https://www.triadicframeworks.org/TFT_3Pack_v1.3/">♨️ TFT 3Pack CLI Tools</a>
+      <a href="https://www.triadicframeworks.org/schemas/">🕸️ Schemas</a>
+      <a href="https://www.triadicframeworks.org/ecoechosystem/">🛄 EcoEchoSystem</a>    
+      <a href="https://www.triadicframeworks.org/lactos/">🎨 LACTOS</a>
+      <a href="https://www.triadicframeworks.org/_ideas/">🤔 Ideas</a>
+      <a href="https://www.triadicframeworks.org/_ideas/Resonance-Time_Theory.html">🔛(RTT frozen)</a>
+      <a href="https://www.triadicframeworks.org/Framework_Field_Theory/">🔜FFT</a> 
+      <a href="https://www.triadicframeworks.org/rtt/1/">🔝RTT/1</a>
+      <a href="https://www.triadicframeworks.org/rtt/">🔙RTT</a>
+      <a href="https://www.triadicframeworks.org/">🔙TFT</a>
+   </details>
+   <!-- RTT Session Header (canonical stub) -->
+<section id="clarity-session-header"
+         data-clarity="1"
+         data-coherence="strict"
+         data-drift="controlled"
+         data-layer="canonical">
+
+  <details>
+    <summary><h2>Session Context</h2></summary>
+
+    <div class="context-block">
+
+      <span class="context-label"><strong>Canon:</strong></span>
+      <span class="context-value">canonical (core RTT module)</span><br>
+
+      <span class="context-label"><strong>Modules:</strong></span>
+      <span class="context-value">
+        clarity → coherence → drift → regime → module → session
+      </span><br>
+
+      <span class="context-label"><strong>Drift:</strong></span>
+      <span class="context-value">controlled (mathematical substrate)</span><br>
+
+      <span class="context-label"><strong>Coherence:</strong></span>
+      <span class="context-value">strict (clarity grammar)</span><br>
+
+      <span class="context-label"><strong>Version:</strong></span>
+      <span class="context-value">1.0 (canonical)</span><br>
+
+      <span class="context-label"><strong>Format:</strong></span>
+      <span class="context-value">
+        markdown + html + diagrams + tests + pdf workbooks
+      </span><br>
+
+      <span class="context-label"><strong>Front door:</strong></span>
+      <span class="context-value">exists (Clarity root)</span><br>
+
+      <span class="context-label"><strong>Every page:</strong></span>
+      <span class="context-value">canonical + mathematical</span><br>
+
+      <span class="context-label"><strong>Audience:</strong></span>
+      <span class="context-value">developers + researchers + AIs + operators</span>
+
+    </div>
+  </details>
+</section>
+
+<div style="display:inline-block;padding:6px 12px;background:#1a1a1a;color:#fff;border-radius:6px;font-size:13px;">
+  🔵 Clarity Module<br>📘 Spectral Mathematics · Validator Pulses · v1.0
+</div>
+
+</nav>
+
+<main id="content"></main>
+
+<script>
+
+// ============================================================
+// PRE‑RTT DOCUMENT MAP — FULL CATEGORIZED INVENTORY
+// Purpose: Orientation-first structural map for review, pruning,
+//          lineage preservation, and later RTT canon alignment.
+// ============================================================
+
+const DOC_MAP = {
+      README: 'README.md',
+      ABOUT: 'https://www.triadicframeworks.org/ABOUT.md',
+      CONTRIBUTING: 'https://www.triadicframeworks.org/CONTRIBUTING.md',
+      GLOSSARY: 'https://www.triadicframeworks.org/GLOSSARY.md',
+      LINEAGE: 'https://www.triadicframeworks.org/LINEAGE.md',
+      LICENSE: 'https://www.triadicframeworks.org/LICENSE.md',
+      SITEMAP: 'https://www.triadicframeworks.org/sitemap.md',
+      QUICKSTART: 'https://www.triadicframeworks.org/QUICKSTART.md',
+      CODE_OF_CONDUCT: 'https://www.triadicframeworks.org/CODE_OF_CONDUCT.md',
+      SECURITY: 'https://www.triadicframeworks.org/SECURITY.md',
+      PRINCIPLES: 'https://www.triadicframeworks.org/PRINCIPLES.md',
+      CLARITY_CANON_HERO_IMAGE: 'Clarity_Canon_hero_image.md',
+      // Book
+      BOOK_CLARITY_PEDAGOGY: 'book/clarity_pedagogy.md',
+      BOOK_DIMENSIONAL_CURRICULUM: 'book/dimensional_curriculum.md',
+      BOOK_TRIADIC_LEARNING: 'book/triadic_learning.md',
+      // Docs
+      DOCS_CANON_ATLAS: 'docs/canon_atlas.md',
+      DOCS_CANON_MAP: 'docs/canon_map.md',
+      DOCS_CANON_REFERENCE: 'docs/canon_reference.md',
+      DOCS_SI_KNOWLEDGE_BASE: 'docs/si_knowledge_base.md',
+      DOCS_SI_LEXICON: 'docs/si_lexicon.md',
+      DOCS_SI_ONTOLOGY: 'docs/si_ontology.md',
+      DOCS_SI_PEDAGOGY: 'docs/si_pedagogy.md',
+      DOCS_SI_PUBLICATIONS: 'docs/si_publications.md',
+      DOCS_SI_SEMANTIC_API: 'docs/si_semantic_api.md',
+      // Ecosystem
+      ECOSYSTEM_TRIADICFRAMEWORKS_PLATFORM_MANIFEST: 'ecosystem/triadicframeworks_platform_manifest.md',
+      // Models (root)
+      MODELS_HERO_DIAGRAMS: 'models/hero_diagrams.md',
+      MODELS_README: 'models/README.md',
+      // Models → Clarity
+      MODELS_CLARITY_TEST: 'models/clarity/clarity_test.md',
+      MODELS_CLARITY_CROSS_MODULE_INTEGRATION_MAP: 'models/clarity/cross_module_integration_map.md',
+      MODELS_CLARITY_DIAGRAMS: 'models/clarity/diagrams.md',
+      MODELS_CLARITY_README: 'models/clarity/README.md',
+      MODELS_CLARITY_TEACHING_WORKBOOK: 'models/clarity/Teaching_Workbook.pdf',
+      // Models → Coherence
+      MODELS_COHERENCE_TEST: 'models/coherence/coherence_test.md',
+      MODELS_COHERENCE_DIAGRAMS: 'models/coherence/diagrams.md',
+      MODELS_COHERENCE_README: 'models/coherence/README.md',
+      MODELS_COHERENCE_TEACHING_WORKBOOK: 'models/coherence/teaching_workbook.md',
+      // Models → Drift
+      MODELS_DRIFT_DIAGRAMS: 'models/drift/diagrams.md',
+      MODELS_DRIFT_TEST: 'models/drift/drift_test.md',
+      MODELS_DRIFT_README: 'models/drift/README.md',
+      MODELS_DRIFT_TEACHING_WORKBOOK: 'models/drift/teaching_workbook.md',
+      // Models → Module
+      MODELS_MODULE_DIAGRAMS: 'models/module/diagrams.md',
+      MODELS_MODULE_TEST: 'models/module/module_test.md',
+      MODELS_MODULE_README: 'models/module/README.md',
+      MODELS_MODULE_TEACHING_WORKBOOK: 'models/module/teaching_workbook.md',
+      // Models → Regime
+      MODELS_REGIME_DIAGRAMS: 'models/regime/diagrams.md',
+      MODELS_REGIME_README: 'models/regime/README.md',
+      MODELS_REGIME_TEST: 'models/regime/regime_test.md',
+      MODELS_REGIME_TEACHING_WORKBOOK: 'models/regime/teaching_workbook.md',
+      // Models → Session
+      MODELS_SESSION_DIAGRAMS: 'models/session/diagrams.md',
+      MODELS_SESSION_README: 'models/session/README.md',
+      MODELS_SESSION_TEST: 'models/session/session_test.md',
+      MODELS_SESSION_TEACHING_WORKBOOK: 'models/session/teaching_workbook.md',
+      // Platform
+      PLATFORM_API_SEMANTIC_API_SPEC: 'platform/api/semantic_api_spec.md',
+      PLATFORM_CLOUDFLARE_PRICING_MODEL: 'platform/cloudflare/pricing_model.md',
+      // Capture
+      CAPTURE: 'capture.md'
+};
+
+function loadFromHash() {
+const key = window.location.hash.replace('#', '');
+  if (DOC_MAP[key]) {
+    loadDoc(DOC_MAP[key]);
+  } else {
+    loadDoc('README.md');
+  }
+}
+function loadDoc(file) {
+  fetch(file)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to load ${file}`);
+      }
+      return response.text();
+    })
+    .then(text => {
+      const content = document.getElementById('content');
+      content.innerHTML = marked.parse(text);
+
+      if (window.MathJax) {
+        MathJax.typesetPromise([content]);
+      }
+    })
+    .catch(err => {
+      document.getElementById('content').innerHTML =
+        `<p style="color:#ff8080;">Unable to load document: ${file}</p>`;
+      console.error(err);
+    });
+}
+  
+window.addEventListener('hashchange', loadFromHash);
+loadFromHash();
+
+</script>
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1465e375ff064f19a4f37c196d2b0f84","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
