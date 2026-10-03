@@ -1,13 +1,13 @@
 {
   "resource": "https://triadicframeworks.com",
+  "resource_name": "Triadic Frameworks MCP Server",
   "authorization_servers": [
-    "https://<your-auth-server-domain>"
+    "https://triadicframeworks.com"
   ],
-  "scopes_supported": ["optional"],
+  "scopes_supported": ["read", "write", "admin"],
   "bearer_methods_supported": ["header"],
-  "identity_types_supported": ["anonymous"],
-  "anonymous": {
-    "credential_types_supported": ["none"],
-    "claim_uri": "https://triadicframeworks.com/agent/claims/anonymous"
-  }
+  "dpop_signing_alg_values_supported": ["ES256", "RS256"],
+  "resource_documentation": "https://triadicframeworks.com/docs",
+  "resource_policy_uri": "https://triadicframeworks.com/policy",
+  "resource_tos_uri": "https://triadicframeworks.com/tos"
 }
