@@ -1,4 +1,4 @@
-# auth.md — TriadicFrameworks Agent Registration
+# Auth.md — TriadicFrameworks Agent Registration
 
 This document describes how agents may register and authenticate when
 accessing TriadicFrameworks resources.
