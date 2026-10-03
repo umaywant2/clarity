@@ -1,0 +1,11 @@
+POST /register HTTP/1.1
+Host: triadicframeworks.com
+Content-Type: application/json
+
+{
+  "redirect_uris": ["https://client.example.com/callback"],
+  "client_name": "My MCP Client",
+  "grant_types": ["authorization_code"],
+  "response_types": ["code"],
+  "token_endpoint_auth_method": "none"
+}
