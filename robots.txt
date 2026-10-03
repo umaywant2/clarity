@@ -1,0 +1,35 @@
+# ═══════════════════════════════════════════════════════════════
+# TriadicFrameworks — robots.txt
+# Canonical AI‑Ready Crawl Policy
+# Last updated: 2026-10-03
+# ═══════════════════════════════════════════════════════════════
+
+User-agent: *
+Allow: /
+
+# Canonical sitemap for AI agents and search engines
+Sitemap: https://triadicframeworks.com/sitemap_main.xml
+
+# AI‑content signals (Cloudflare Agent Readiness)
+# Explicitly allow AI agents to crawl and index content
+AI-Content: allow
+CF-AI-Signal: allow
+
+# Prevent crawling of internal build directories (none exist on Pages)
+Disallow: /_internal/
+Disallow: /_drafts/
+Disallow: /_sandbox/
+
+# Allow canonical modules
+Allow: /clarity/
+Allow: /coherence/
+Allow: /drift/
+Allow: /regime/
+Allow: /module/
+Allow: /session/
+
+# Allow documentation surfaces
+Allow: /docs/
+Allow: /ecosystem/
+Allow: /platform/
+Allow: /capture.html
