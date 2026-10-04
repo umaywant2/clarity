@@ -1,0 +1,8 @@
+{
+  "name": "clarity-canon",
+  "updated": "2026-10-04T08:55:00Z",
+  "repo": "https://github.com/umaywant2/clarity",
+  "entry": "https://triadicframeworks.com/",
+  "modules": ["clarity", "coherence", "drift", "regime", "module", "session"],
+  "registry": "https://raw.githubusercontent.com/umaywant2/clarity/main/module_registry.json"
+}
