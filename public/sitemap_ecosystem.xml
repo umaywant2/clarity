@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- TriadicFrameworks Canon Root -->
+  <url>
+    <loc>https://triadicframeworks.com/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- ClarityBook (Spectral Mathematics + Validator Pulses) -->
+  <url>
+    <loc>https://claritybook.ai/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Structural Intelligence (Ontology + Semantic Graph) -->
+  <url>
+    <loc>https://structuralintelligence.org/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- RTT Suite (Drift, Coherence, Regime, Clarity) -->
+  <url>
+    <loc>https://rttsuite.dev/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Triadic Cloud (Workers + AI Gateway + Routing) -->
+  <url>
+    <loc>https://triadic.cloud/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Ecosystem Registry -->
+  <url>
+    <loc>https://ecosystem.tf/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Canon Metadata Registry -->
+  <url>
+    <loc>https://triadicframeworks.com/sitemap_main.xml</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Module Registry -->
+  <url>
+    <loc>https://triadicframeworks.com/sitemap_modules.xml</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Documentation Registry -->
+  <url>
+    <loc>https://triadicframeworks.com/sitemap_docs.xml</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Static Assets Registry -->
+  <url>
+    <loc>https://triadicframeworks.com/sitemap_static.xml</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Agent Surfaces Registry -->
+  <url>
+    <loc>https://triadicframeworks.com/sitemap_agents.xml</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+</urlset>
