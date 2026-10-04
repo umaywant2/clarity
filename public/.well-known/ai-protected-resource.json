@@ -1,0 +1,65 @@
+{
+  "canonical_url": "https://triadicframeworks.com/",
+  "version": "1.0",
+  "description": "Protected Resource declaration for TriadicFrameworks — authorization, scopes, and token requirements for agent interactions.",
+
+  "protected_resource": {
+    "issuer": "https://triadicframeworks.com/",
+    "jwks_uri": "https://triadicframeworks.com/.well-known/jwks.json",
+    "authorization_required": true,
+
+    "token_formats": {
+      "supported": ["jwt", "signed-request"],
+      "algorithms": ["RS256"]
+    },
+
+    "scopes": {
+      "triadic.read": {
+        "description": "Read access to public canon, modules, and documentation.",
+        "resources": [
+          "https://triadicframeworks.com/docs/",
+          "https://triadicframeworks.com/modules/"
+        ]
+      },
+      "triadic.module.meta": {
+        "description": "Access to module metadata, manifests, and structural signatures.",
+        "resources": [
+          "https://triadicframeworks.com/modules/module.json",
+          "https://triadicframeworks.com/modules/"
+        ]
+      },
+      "triadic.agent.skills": {
+        "description": "Access to agent skill manifests and capability declarations.",
+        "resources": [
+          "https://triadicframeworks.com/.well-known/agent-skills.json"
+        ]
+      },
+      "triadic.mcp": {
+        "description": "Permission to call MCP server endpoints.",
+        "resources": [
+          "https://triadicframeworks.com/.well-known/mcp.json"
+        ]
+      },
+      "triadic.webmcp": {
+        "description": "Permission to call WebMCP browser tools.",
+        "resources": [
+          "https://triadicframeworks.com/.well-known/webmcp.json"
+        ]
+      },
+      "triadic.ecosystem": {
+        "description": "Access to ecosystem-level metadata across TriadicFrameworks domains.",
+        "resources": [
+          "https://triadicframeworks.com/.well-known/ai-ecosystem.json"
+        ]
+      }
+    },
+
+    "default_scope": "triadic.read",
+
+    "signature_requirements": {
+      "required": true,
+      "alg": "RS256",
+      "jwks": "https://triadicframeworks.com/.well-known/jwks.json"
+    }
+  }
+}
