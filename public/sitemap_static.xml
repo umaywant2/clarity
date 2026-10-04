@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Static HTML Pages -->
+  <url>
+    <loc>https://triadicframeworks.com/index.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://triadicframeworks.com/genter.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Static Canon Files -->
+  <url>
+    <loc>https://triadicframeworks.com/README.md</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://triadicframeworks.com/docsbook.md</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Static Assets: Images -->
+  <url>
+    <loc>https://triadicframeworks.com/assets/logo.png</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://triadicframeworks.com/assets/triadic-glyph.png</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <!-- Static Assets: CSS -->
+  <url>
+    <loc>https://triadicframeworks.com/styles/main.css</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Static Assets: JS -->
+  <url>
+    <loc>https://triadicframeworks.com/scripts/main.js</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- AI Crawl Control Files -->
+  <url>
+    <loc>https://triadicframeworks.com/robots.txt</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://triadicframeworks.com/llms.txt</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>
