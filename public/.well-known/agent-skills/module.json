@@ -1,0 +1,50 @@
+{
+  "module": {
+    "name": "MODULE_NAME",
+    "category": "rtt | clarity | quad | gravity | semantic | teaching | utility",
+    "version": "1.0.0",
+    "summary": "Short description of the module’s purpose.",
+    "status": "stable | experimental | deprecated"
+  },
+
+  "identity": {
+    "canonical_url": "https://triadicframeworks.com/modules/MODULE_NAME/",
+    "author": "Nawder Loswin",
+    "publication_year": "2025-2026",
+    "license": "Open educational use permitted"
+  },
+
+  "structure": {
+    "role": "engine | profile | signature | diagnostic | map | example | extension | index | reference | template",
+    "analyzer_layer": "operator | dimensional | regime | drift | coherence | cross-cutting"
+  },
+
+  "ai": {
+    "purpose": "What AI systems should use this module for.",
+    "keywords": ["keyword1", "keyword2", "keyword3"],
+    "audience": "agents | researchers | students | general"
+  },
+
+  "files": [
+    {
+      "path": "MODULE_NAME.md",
+      "role": "index",
+      "description": "Primary documentation file."
+    },
+    {
+      "path": "examples/example1.md",
+      "role": "example",
+      "description": "Example usage."
+    },
+    {
+      "path": "operators.json",
+      "role": "operator",
+      "description": "Operator definitions for this module."
+    }
+  ],
+
+  "metadata": {
+    "last_updated": "2026-01-01",
+    "validated": true
+  }
+}
