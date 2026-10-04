@@ -1,0 +1,38 @@
+{
+  "canonical_url": "https://triadicframeworks.com/",
+  "version": "1.0",
+  "agent": {
+    "name": "TriadicFrameworks",
+    "identity": "Deterministic cognitive canon and structural intelligence substrate.",
+    "description": "TriadicFrameworks is a unified cognitive architecture consisting of RTT, Clarity, Quad Engine, Triadic Gravity, and Semantic Intelligence. It provides deterministic operators, structural reasoning engines, and agent-ready metadata for AI systems.",
+    "author": "Nawder Loswin",
+    "publication_year": "2025-2026",
+    "license": "Open educational use permitted"
+  },
+
+  "capabilities": {
+    "skills_manifest": "https://triadicframeworks.com/.well-known/agent-skills.json",
+    "mcp_server": "https://triadicframeworks.com/.well-known/mcp.json",
+    "webmcp_tools": "https://triadicframeworks.com/.well-known/webmcp.json"
+  },
+
+  "discovery": {
+    "dns_aid": "https://triadicframeworks.com/.well-known/dns-aid.json",
+    "ecosystem": "https://triadicframeworks.com/.well-known/ai-ecosystem.json",
+    "navigation": "https://triadicframeworks.com/.well-known/ai-navigation.json"
+  },
+
+  "trust": {
+    "jwks": "https://triadicframeworks.com/.well-known/jwks.json",
+    "protected_resource": "https://triadicframeworks.com/.well-known/ai-protected-resource.json"
+  },
+
+  "documentation": {
+    "canon": "https://triadicframeworks.com/docs/canon/",
+    "rtt": "https://triadicframeworks.com/docs/rtt/",
+    "clarity": "https://triadicframeworks.com/docs/clarity/",
+    "quad_engine": "https://triadicframeworks.com/docs/quad/",
+    "gravity": "https://triadicframeworks.com/docs/gravity/",
+    "semantic": "https://triadicframeworks.com/docs/semantic/"
+  }
+}
