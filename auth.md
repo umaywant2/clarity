@@ -1,205 +1,313 @@
 # auth.md
 
-You are an agent. This service supports **OAuth 2.1 + PKCE + Dynamic Client Registration**: discover → register → authorize → exchange → call API → refresh. Follow the steps in order; do not skip ahead.
+You are an agent. This service supports agentic registration via OAuth 2.1 + PKCE: discover → register → authorize → exchange → call API → refresh. Follow the steps in order; do not skip ahead.
 
-- **Resource:** `https://triadicframeworks.com`
-- **MCP endpoint:** `https://triadicframeworks.com/mcp`
-- **Protocol:** OAuth 2.1 + PKCE (S256) + Dynamic Client Registration (RFC 7591)
-- **Discovery:** RFC 9728 Protected Resource Metadata · RFC 8414 AS Metadata
+Examples use `https://triadicframeworks.com` as both the resource server and authorization server.
 
 ## Step 1 — Discover
 
-Discovery is two hops. Call the MCP endpoint without a token — the 401 response carries a `WWW-Authenticate` header with the Protected Resource Metadata URL.
+Discovery is two hops. The 401 response that pointed you here carries a `WWW-Authenticate` header with the PRM URL.
 
-### 1a. Probe the resource
-
-```http
-POST /mcp HTTP/2
-Host: triadicframeworks.com
-Content-Type: application/json
-
-{"jsonrpc":"2.0","method":"tools/list","id":1}
-```
-
-Expected response: `HTTP/2 401` with header:
-
-```
-www-authenticate: Bearer resource_metadata="https://triadicframeworks.com/.well-known/oauth-protected-resource"
-```
-
-### 1b. Fetch Protected Resource Metadata (RFC 9728)
+### 1a. Fetch the Protected Resource Metadata
 
 ```http
-GET /.well-known/oauth-protected-resource HTTP/2
+GET /.well-known/oauth-protected-resource HTTP/1.1
 Host: triadicframeworks.com
 Accept: application/json
 ```
 
-Response:
+Response shape:
 
 ```json
 {
   "resource": "https://triadicframeworks.com",
+  "resource_name": "Triadic Frameworks MCP Server",
   "authorization_servers": ["https://triadicframeworks.com"],
   "scopes_supported": ["read", "write", "admin"],
-  "bearer_methods_supported": ["header"]
+  "bearer_methods_supported": ["header"],
+  "dpop_signing_alg_values_supported": ["ES256", "RS256"],
+  "resource_documentation": "https://triadicframeworks.com/docs"
 }
 ```
 
-Use `authorization_servers[0]` as the AS base URL.
+**What each field tells you:**
 
-### 1c. Fetch Authorization Server Metadata (RFC 8414)
+- `resource` — the canonical URL of this API. No trailing slash. Use as the `audience` parameter when requesting tokens.
+- `authorization_servers` — base URL of the OAuth Authorization Server. Fetch `/.well-known/oauth-authorization-server` from this host (see 1b).
+- `scopes_supported` — scopes the resource server accepts. Request only the subset you need.
+- `bearer_methods_supported` — send the access token as `Authorization: Bearer <token>`.
+
+### 1b. Fetch the Authorization Server Metadata
 
 ```http
-GET /.well-known/oauth-authorization-server HTTP/2
+GET /.well-known/oauth-authorization-server HTTP/1.1
 Host: triadicframeworks.com
 Accept: application/json
 ```
 
-Confirm `registration_endpoint`, `authorization_endpoint`, `token_endpoint`, and the `agent_auth` block are all present before continuing.
+Response shape:
+
+```json
+{
+  "issuer": "https://triadicframeworks.com",
+  "authorization_endpoint": "https://triadicframeworks.com/authorize",
+  "token_endpoint": "https://triadicframeworks.com/token",
+  "registration_endpoint": "https://triadicframeworks.com/register",
+  "revocation_endpoint": "https://triadicframeworks.com/token/revoke",
+  "scopes_supported": ["read", "write", "admin"],
+  "response_types_supported": ["code"],
+  "grant_types_supported": ["authorization_code", "refresh_token"],
+  "code_challenge_methods_supported": ["S256"],
+  "token_endpoint_auth_methods_supported": ["none"],
+  "agent_auth": {
+    "register_uri": "https://triadicframeworks.com/register",
+    "identity_types_supported": ["anonymous"],
+    "skill": "https://triadicframeworks.com/auth.md"
+  }
+}
+```
+
+**What each field tells you:**
+
+- `authorization_endpoint` — where you redirect for the consent step (Step 4).
+- `token_endpoint` — where you exchange the authorization code for tokens (Step 5).
+- `registration_endpoint` / `agent_auth.register_uri` — dynamic client registration endpoint (Step 2).
+- `code_challenge_methods_supported` — `S256` only. Generate PKCE before Step 4.
+- `agent_auth` — agent-specific extension block. `register_uri` is required for agent readiness.
 
 ## Step 2 — Register a dynamic client
 
-POST to `registration_endpoint` (`/register`). Open registration — no client secret is issued.
+Before you can request authorization you must register a client. This is a one-time step; cache `client_id` for reuse.
+
+**Request:**
 
 ```http
-POST /register HTTP/2
+POST /register HTTP/1.1
 Host: triadicframeworks.com
 Content-Type: application/json
+Accept: application/json
 
 {
+  "client_name": "My Agent Client",
   "redirect_uris": ["http://localhost:8400/callback"],
-  "client_name": "My MCP Agent",
-  "token_endpoint_auth_method": "none",
   "grant_types": ["authorization_code", "refresh_token"],
   "response_types": ["code"],
+  "token_endpoint_auth_method": "none",
   "scope": "read write"
 }
 ```
 
-Response (`201 Created`):
+**Response (201 Created):**
 
 ```json
 {
-  "client_id": "01HZXXXXXXXXXXXXXXXXXXXXXX",
+  "client_id": "01JXXXXXXXXXXXXXXXXXXXXXXXXX",
+  "client_name": "My Agent Client",
   "redirect_uris": ["http://localhost:8400/callback"],
+  "grant_types": ["authorization_code", "refresh_token"],
+  "response_types": ["code"],
   "token_endpoint_auth_method": "none",
-  "scope": "read write"
+  "scope": "read write",
+  "registration_access_token": "rat_XXXXXXXXXXXXXXXXXXXX",
+  "registration_client_uri": "https://triadicframeworks.com/register?client_id=01JXXXXXXXXXXXXXXXXXXXXXXXXX"
 }
 ```
 
-Save `client_id`. No `client_secret` is issued.
+Store `client_id` and `registration_access_token` securely. The `registration_access_token` authenticates future reads of this client record (RFC 7592).
+
+**Read back your registration (RFC 7592):**
+
+```http
+GET /register?client_id=01JXXXXXXXXXXXXXXXXXXXXXXXXX HTTP/1.1
+Host: triadicframeworks.com
+Authorization: Bearer rat_XXXXXXXXXXXXXXXXXXXX
+Accept: application/json
+```
 
 ## Step 3 — Generate PKCE parameters
 
-OAuth 2.1 requires PKCE S256. `plain` is rejected.
+Generate a cryptographically random `code_verifier` (43–128 URL-safe characters), then derive `code_challenge`:
 
 ```bash
-CODE_VERIFIER=$(openssl rand -base64 32 | tr -d '=+/' | tr -d '\n' | head -c 43)
-CODE_CHALLENGE=$(echo -n "$CODE_VERIFIER" | openssl dgst -binary -sha256 \
-  | openssl base64 | tr -d '=' | tr '+/' '-_' | tr -d '\n')
-STATE=$(openssl rand -hex 16)
+# Generate code_verifier
+CODE_VERIFIER=$(openssl rand -base64 48 | tr '+/' '-_' | tr -d '=')
+
+# Derive code_challenge (S256)
+CODE_CHALLENGE=$(echo -n "$CODE_VERIFIER" | openssl dgst -sha256 -binary | openssl base64 | tr '+/' '-_' | tr -d '=')
+
+echo "verifier: $CODE_VERIFIER"
+echo "challenge: $CODE_CHALLENGE"
 ```
+
+Hold `CODE_VERIFIER` in memory — you will send it at Step 5. Never log or persist it.
 
 ## Step 4 — Request authorization
 
-Start a local listener, then open the URL in a browser:
+Redirect the user (or open a local browser window) to the authorization endpoint with your PKCE challenge:
 
-```bash
-nc -l 8400
+```http
+GET /authorize?response_type=code
+  &client_id=01JXXXXXXXXXXXXXXXXXXXXXXXXX
+  &redirect_uri=http%3A%2F%2Flocalhost%3A8400%2Fcallback
+  &scope=read%20write
+  &state=RANDOM_OPAQUE_STATE
+  &code_challenge=CODE_CHALLENGE_HERE
+  &code_challenge_method=S256 HTTP/1.1
+Host: triadicframeworks.com
 ```
 
+The user sees a consent page listing the requested scopes. On approval the server redirects to your `redirect_uri`:
+
 ```
-https://triadicframeworks.com/authorize?response_type=code&client_id=CLIENT_ID&redirect_uri=http%3A%2F%2Flocalhost%3A8400%2Fcallback&scope=read%20write&state=STATE&code_challenge=CODE_CHALLENGE&code_challenge_method=S256
+http://localhost:8400/callback?code=AUTH_CODE_HERE&state=RANDOM_OPAQUE_STATE
 ```
 
-After consent, the server redirects to `http://localhost:8400/callback?code=AUTH_CODE&state=STATE_VALUE`. Validate `state` before continuing.
+Verify `state` matches what you sent before proceeding. Extract `code`.
 
 ## Step 5 — Exchange the authorization code
 
+POST the code to the token endpoint along with your `code_verifier`:
+
 ```http
-POST /token HTTP/2
+POST /token HTTP/1.1
 Host: triadicframeworks.com
 Content-Type: application/x-www-form-urlencoded
+Accept: application/json
 
-grant_type=authorization_code&code=AUTH_CODE&redirect_uri=http%3A%2F%2Flocalhost%3A8400%2Fcallback&client_id=CLIENT_ID&code_verifier=CODE_VERIFIER
+grant_type=authorization_code
+&code=AUTH_CODE_HERE
+&redirect_uri=http%3A%2F%2Flocalhost%3A8400%2Fcallback
+&client_id=01JXXXXXXXXXXXXXXXXXXXXXXXXX
+&code_verifier=CODE_VERIFIER_HERE
 ```
 
-Response (`200 OK`):
+**Response (200 OK):**
 
 ```json
 {
-  "access_token": "eyJhbGciOiJFUzI1NiJ9...",
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
   "token_type": "Bearer",
   "expires_in": 3600,
-  "refresh_token": "def50200..."
+  "refresh_token": "rt_XXXXXXXXXXXXXXXXXXXX",
+  "scope": "read write"
 }
 ```
 
-Save both tokens. If `/token` returns `invalid_grant`, redo Steps 3 and 4.
+Store `access_token` for immediate use and `refresh_token` for renewal (Step 7). The code is single-use; discard it after this call.
 
 ## Step 6 — Call the MCP API
 
-```http
-POST /mcp HTTP/2
-Host: triadicframeworks.com
-Authorization: Bearer ACCESS_TOKEN
-Content-Type: application/json
+Send the access token as a Bearer token on every request to `/mcp`:
 
-{"jsonrpc":"2.0","method":"tools/list","id":1}
+```http
+POST /mcp HTTP/1.1
+Host: triadicframeworks.com
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+Accept: application/json
+
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "triadic_map",
+    "arguments": {}
+  }
+}
 ```
 
-Response (`200 OK`): `{"jsonrpc":"2.0","id":1,"result":{"tools":[...]}}`
+**Response (200 OK):**
 
-If `/mcp` returns 401 on a previously-working token, go to Step 7.
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Triadic Frameworks dimensional map: 0D–9D..."
+      }
+    ]
+  }
+}
+```
+
+If you receive `401 Unauthorized` with `WWW-Authenticate: Bearer error="invalid_token"`, your access token has expired — proceed to Step 7.
 
 ## Step 7 — Refresh the access token
 
+When `expires_in` has elapsed or the server returns `invalid_token`, exchange your `refresh_token` for a fresh pair:
+
 ```http
-POST /token HTTP/2
+POST /token HTTP/1.1
 Host: triadicframeworks.com
 Content-Type: application/x-www-form-urlencoded
+Accept: application/json
 
-grant_type=refresh_token&refresh_token=REFRESH_TOKEN&client_id=CLIENT_ID
+grant_type=refresh_token
+&refresh_token=rt_XXXXXXXXXXXXXXXXXXXX
+&client_id=01JXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-Response (`200 OK`): new `access_token` + `refresh_token`. Replace both stored values. If `/token` returns `invalid_grant`, restart at Step 2.
+**Response (200 OK):**
+
+```json
+{
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...NEW",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "rt_YYYYYYYYYYYYYYYYYYYY",
+  "scope": "read write"
+}
+```
+
+Replace both tokens. If the refresh token itself is rejected (`invalid_grant`), restart the full flow from Step 2.
 
 ## Errors
 
-| Code | Endpoint | What to do |
+Errors at `/token` use RFC 6749 standard vocabulary. Errors at `/register` follow RFC 7591.
+
+| Code | Endpoint | Action |
 |---|---|---|
 | `invalid_client` | `/token` | `client_id` not recognized. Re-register at Step 2. |
-| `invalid_grant` | `/token` | Code expired or verifier mismatch. Redo Steps 3–4. |
-| `access_denied` | `/authorize` | User denied consent. Do not retry silently. |
+| `invalid_grant` | `/token` | Code expired, replayed, or PKCE mismatch. Restart at Step 4. |
+| `invalid_token` | `/mcp` | Access token expired or revoked. Refresh at Step 7. |
+| `unsupported_grant_type` | `/token` | Only `authorization_code` and `refresh_token` are accepted. |
+| `invalid_request` | any | Missing or malformed parameter. Check the request shape above. |
+| `invalid_redirect_uri` | `/register` | Redirect URI must be HTTP/HTTPS; localhost is permitted. |
+| `invalid_scope` | any | Only `read`, `write`, `admin` are valid. |
+
+Retry policy: `5xx` → exponential backoff; `4xx` → fix the request, do not retry the same payload.
 
 ## Scopes
 
-| Scope | Description |
+| Scope | Access |
 |---|---|
-| `read` | Read-only access to MCP tools and resources |
-| `write` | Read and write access; allows tools that modify state |
-| `admin` | Full administrative access including configuration tools |
+| `read` | `triadic_map`, `evaluator_info`, `dimension_map`, `module_lookup`, `operator_lookup`, `canon_status` |
+| `write` | All `read` tools plus `drift_evaluate`, `coherence_evaluate`, `regime_evaluate`, `clarity_evaluate`, `session_create`, `session_evaluate` |
+| `admin` | All `write` tools plus `module_register`, `operator_register` |
+
+Request the minimum scope required for your task.
 
 ## agent_auth
 
-The `agent_auth` block in `/.well-known/oauth-authorization-server`:
+Machine-readable summary of the agent registration surface:
 
 ```json
 {
   "agent_auth": {
-    "type": "oauth2",
     "register_uri": "https://triadicframeworks.com/register",
-    "flows": {
-      "authorizationCode": {
-        "authorizationUrl": "https://triadicframeworks.com/authorize",
-        "tokenUrl": "https://triadicframeworks.com/token",
-        "scopes": {
-          "read": "Read-only access to MCP tools and resources",
-          "write": "Read and write access; allows tools that modify state",
-          "admin": "Full administrative access including configuration tools"
-        }
-      }
+    "identity_types_supported": ["anonymous"],
+    "skill": "https://triadicframeworks.com/auth.md",
+    "anonymous": {
+      "credential_types_supported": ["oauth2_access_token"],
+      "registration_endpoint": "https://triadicframeworks.com/register",
+      "token_endpoint": "https://triadicframeworks.com/token",
+      "authorization_endpoint": "https://triadicframeworks.com/authorize",
+      "pkce_required": true,
+      "code_challenge_methods_supported": ["S256"]
     }
   }
 }
@@ -207,7 +315,12 @@ The `agent_auth` block in `/.well-known/oauth-authorization-server`:
 
 ## References
 
-- [RFC 9728 — OAuth 2.0 Protected Resource Metadata](https://www.rfc-editor.org/rfc/rfc9728)
-- [RFC 8414 — OAuth 2.0 Authorization Server Metadata](https://www.rfc-editor.org/rfc/rfc8414)
-- [RFC 7591 — OAuth 2.0 Dynamic Client Registration](https://www.rfc-editor.org/rfc/rfc7591)
-- [MCP Authorization Spec 2026-07-28](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)
+- [RFC 9728](https://www.rfc-editor.org/rfc/rfc9728) — OAuth 2.0 Protected Resource Metadata
+- [RFC 8414](https://www.rfc-editor.org/rfc/rfc8414) — OAuth 2.0 Authorization Server Metadata
+- [RFC 7591](https://www.rfc-editor.org/rfc/rfc7591) — OAuth 2.0 Dynamic Client Registration
+- [RFC 7592](https://www.rfc-editor.org/rfc/rfc7592) — OAuth 2.0 Dynamic Client Registration Management
+- [RFC 7636](https://www.rfc-editor.org/rfc/rfc7636) — Proof Key for Code Exchange (PKCE)
+- [RFC 6749](https://www.rfc-editor.org/rfc/rfc6749) — The OAuth 2.0 Authorization Framework
+- [MCP Specification](https://spec.modelcontextprotocol.io/) — Model Context Protocol
+- [Triadic Frameworks Docs](https://triadicframeworks.com/docs) — Full API reference
+```
