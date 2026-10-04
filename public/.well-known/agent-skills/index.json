@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+
+  "skills": [
+    {
+      "name": "rtt-operators",
+      "type": "skill-md",
+      "description": "Machine-readable RTT operator grammar, drift/coherence/regime layers, and coupling rules.",
+      "url": "https://triadicframeworks.com/.well-known/agent-skills/rtt-operators/SKILL.md",
+      "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000001"
+    },
+    {
+      "name": "triadic-gravity",
+      "type": "skill-md",
+      "description": "Triadic gravity subsystem including gravomagnetic operators, coherence wells, and drift boundaries.",
+      "url": "https://triadicframeworks.com/.well-known/agent-skills/triadic-gravity/SKILL.md",
+      "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000002"
+    },
+    {
+      "name": "clarity-engine",
+      "type": "skill-md",
+      "description": "Spectral clarity engine, validator pulses, and clarity diagnostics.",
+      "url": "https://triadicframeworks.com/.well-known/agent-skills/clarity-engine/SKILL.md",
+      "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000003"
+    },
+    {
+      "name": "quad-engine",
+      "type": "skill-md",
+      "description": "Four-channel cognitive engine for deterministic reasoning and structural alignment.",
+      "url": "https://triadicframeworks.com/.well-known/agent-skills/quad-engine/SKILL.md",
+      "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000004"
+    },
+    {
+      "name": "semantic-intelligence",
+      "type": "skill-md",
+      "description": "Triadic semantic graph, ontology mapping, and SI substrate operations.",
+      "url": "https://triadicframeworks.com/.well-known/agent-skills/semantic-intelligence/SKILL.md",
+      "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000005"
+    },
+    {
+      "name": "canon-utilities",
+      "type": "skill-md",
+      "description": "Core utilities for navigating, validating, and interpreting TriadicFrameworks canon.",
+      "url": "https://triadicframeworks.com/.well-known/agent-skills/canon-utilities/SKILL.md",
+      "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000006"
+    }
+  ]
+}
