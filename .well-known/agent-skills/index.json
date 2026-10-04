@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+
+  "skills": [
+    {
+      "name": "triadic-modules",
+      "type": "skill-md",
+      "description": "Provides structured access to TriadicFrameworks modules, metadata, analyzer layers, and canonical documentation.",
+      "url": "https://www.triadicframeworks.org/.well-known/agent-skills/triadic-modules/SKILL.md",
+      "digest": "sha256:3f4c6b2e6b4f0a9f0e2b1c7a3d9e8a1c0f7d2b6e4c9a1f3b7d8e2c4f1a6b9d0"
+    },
+    {
+      "name": "quad-engine",
+      "type": "skill-md",
+      "description": "Exposes the Quad Engine computational API, including resonance-time operators, evaluators, and diagnostic endpoints.",
+      "url": "https://www.triadicframeworks.org/.well-known/agent-skills/quad-engine/SKILL.md",
+      "digest": "sha256:5e7a9c3d2f1b4e6c8a0d9f2b3c7e1a4f6b8c2d0e9f3a7b1c6d4e8f2a0b3c5d7"
+    },
+    {
+      "name": "rtt-operators",
+      "type": "skill-md",
+      "description": "Machine-readable RTT operator grammar, coherence layers, drift boundaries, and cross-operator coupling rules.",
+      "url": "https://www.triadicframeworks.org/.well-known/agent-skills/rtt-operators/SKILL.md",
+      "digest": "sha256:8c1f3e5a7b9d2c4e6f0a1b3d5e7c9f2a4b6d8e0c2f4a7b1d3e5c7f9a0b2d4e6"
+    },
+    {
+      "name": "triadic-gravity",
+      "type": "skill-md",
+      "description": "Triadic gravity subsystem including RTT gravomagnetic operators, FFF_Gravity triad behavior, coherence wells, and drift boundaries.",
+      "url": "https://www.triadicframeworks.org/.well-known/agent-skills/triadic-gravity/SKILL.md",
+      "digest": "sha256:2d4f6b8c0a1e3c5d7f9b2a4c6e8d0f1a3b5d7c9e1f3a5b7d9c1e3f5a7b9d0c2"
+    },
+    {
+      "name": "coherence-layers",
+      "type": "skill-md",
+      "description": "Structured access to the TriadicFrameworks coherence hierarchy (R1, R2, R3), including drift boundaries, stability conditions, and coupling rules.",
+      "url": "https://www.triadicframeworks.org/.well-known/agent-skills/coherence-layers/SKILL.md",
+      "digest": "sha256:7b1d3f5a9c2e4f6d8a0b2c4e6f8d0a1c3e5b7d9f1a3c5e7b9d1f3a5c7e9b0d2"
+    }
+  ]
+}
