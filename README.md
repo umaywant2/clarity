@@ -1,3 +1,6 @@
+
+<div align="center"><iframe width="796" height="448" src="https://www.youtube.com/embed/6Z0AklQbP8U?list=PLKu76yrrG-_E&pp=sAgC&autoplay=1&mute=1&loop=1" title="TriadicFrameworks Books Playlist" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+
 <div align="center">
 
 # 🜁 **TriadicFrameworks / Clarity Canon (R5)**  
