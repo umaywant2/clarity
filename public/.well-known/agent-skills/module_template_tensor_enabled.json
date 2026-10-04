@@ -1,0 +1,44 @@
+{
+  "module": {
+    "name": "MODULE_NAME",
+    "category": "tensor",
+    "version": "1.0.0",
+    "summary": "Tensor-enabled module for RTT/Clarity/Quad/Gravity operations."
+  },
+
+  "tensor": {
+    "enabled": true,
+    "types": ["rtt-tensor", "clarity-spectral", "quad-channel", "gravity-field"],
+    "dimensions": ["1D", "2D", "3D", "nD"],
+    "operators": [
+      {
+        "name": "OPERATOR_NAME",
+        "signature": "T(x) → y",
+        "description": "Tensor transformation rule."
+      }
+    ]
+  },
+
+  "structure": {
+    "role": "engine",
+    "analyzer_layer": "dimensional"
+  },
+
+  "ai": {
+    "purpose": "Tensor operations for deterministic reasoning.",
+    "keywords": ["tensor", "operator", "spectral", "clarity", "quad", "gravity"]
+  },
+
+  "files": [
+    {
+      "path": "MODULE_NAME.md",
+      "role": "index",
+      "description": "Tensor module documentation."
+    },
+    {
+      "path": "tensor-operators.json",
+      "role": "operator",
+      "description": "Tensor operator definitions."
+    }
+  ]
+}
