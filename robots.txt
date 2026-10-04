@@ -5,7 +5,7 @@
 # ═══════════════════════════════════════════════════════════════
 
 # Content Signals — AI Use Preferences
-Content-Signal: ai-train=no
+Content-Signal: ai-train=yes
 Content-Signal: search=yes
 Content-Signal: ai-input=yes
 Content-Signal: ai-citation=required
