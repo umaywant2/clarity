@@ -1,0 +1,44 @@
+{
+  "canonical_url": "https://triadicframeworks.com/",
+  "version": "1.0",
+  "description": "TriadicFrameworks — deterministic cognitive canon, RTT, Clarity, Quad Engine, Gravity, and agent-ready substrate.",
+  "ai_navigation": {
+    "a2a_agent_card": "https://triadicframeworks.com/.well-known/ai-agent.json",
+    "agent_skills": "https://triadicframeworks.com/.well-known/agent-skills.json",
+    "mcp_server": "https://triadicframeworks.com/.well-known/mcp.json",
+    "webmcp_tools": "https://triadicframeworks.com/.well-known/webmcp.json",
+    "dns_aid": "https://triadicframeworks.com/.well-known/dns-aid.json",
+    "jwks": "https://triadicframeworks.com/.well-known/jwks.json",
+    "protected_resource": "https://triadicframeworks.com/.well-known/ai-protected-resource.json",
+    "ecosystem_index": "https://triadicframeworks.com/.well-known/ai-ecosystem.json"
+  },
+  "documentation": {
+    "canon": "https://triadicframeworks.com/docs/canon/",
+    "rtt": "https://triadicframeworks.com/docs/rtt/",
+    "clarity": "https://triadicframeworks.com/docs/clarity/",
+    "quad_engine": "https://triadicframeworks.com/docs/quad/",
+    "gravity": "https://triadicframeworks.com/docs/gravity/",
+    "semantic": "https://triadicframeworks.com/docs/semantic/",
+    "teaching": "https://triadicframeworks.com/docs/teaching/"
+  },
+  "modules": {
+    "registry": "https://triadicframeworks.com/modules/",
+    "rtt": "https://triadicframeworks.com/modules/rtt/",
+    "clarity": "https://triadicframeworks.com/modules/clarity/",
+    "quad": "https://triadicframeworks.com/modules/quad/",
+    "gravity": "https://triadicframeworks.com/modules/gravity/",
+    "semantic": "https://triadicframeworks.com/modules/semantic/"
+  },
+  "sitemaps": {
+    "main": "https://triadicframeworks.com/sitemap_main.xml",
+    "modules": "https://triadicframeworks.com/sitemap_modules.xml",
+    "docs": "https://triadicframeworks.com/sitemap_docs.xml",
+    "static": "https://triadicframeworks.com/sitemap_static.xml",
+    "agents": "https://triadicframeworks.com/sitemap_agents.xml",
+    "ecosystem": "https://triadicframeworks.com/sitemap_ecosystem.xml"
+  },
+  "ai_crawl": {
+    "robots": "https://triadicframeworks.com/robots.txt",
+    "llms": "https://triadicframeworks.com/llms.txt"
+  }
+}
