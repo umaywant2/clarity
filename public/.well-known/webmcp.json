@@ -1,0 +1,82 @@
+{
+  "canonical_url": "https://triadicframeworks.com/",
+  "version": "1.0",
+  "description": "WebMCP tool registry for TriadicFrameworks — exposing site-level actions to AI agents via browser context.",
+
+  "webmcp": {
+    "tools": [
+      {
+        "name": "triadic.search",
+        "description": "Search TriadicFrameworks canon, modules, and documentation.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": { "type": "string" }
+          },
+          "required": ["query"]
+        },
+        "execute": "/api/webmcp/search"
+      },
+      {
+        "name": "triadic.navigate",
+        "description": "Navigate to a TriadicFrameworks page or module.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" }
+          },
+          "required": ["path"]
+        },
+        "execute": "/api/webmcp/navigate"
+      },
+      {
+        "name": "triadic.moduleInfo",
+        "description": "Retrieve metadata for a specific TriadicFrameworks module.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "module": { "type": "string" }
+          },
+          "required": ["module"]
+        },
+        "execute": "/api/webmcp/module-info"
+      },
+      {
+        "name": "triadic.docs",
+        "description": "Fetch documentation pages from the TriadicFrameworks canon.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "doc": { "type": "string" }
+          },
+          "required": ["doc"]
+        },
+        "execute": "/api/webmcp/docs"
+      },
+      {
+        "name": "triadic.ecosystem",
+        "description": "Query ecosystem-level information across TriadicFrameworks domains.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "domain": { "type": "string" }
+          },
+          "required": ["domain"]
+        },
+        "execute": "/api/webmcp/ecosystem"
+      }
+    ]
+  },
+
+  "discovery": {
+    "mcp_server": "https://triadicframeworks.com/.well-known/mcp.json",
+    "dns_aid": "https://triadicframeworks.com/.well-known/dns-aid.json",
+    "navigation": "https://triadicframeworks.com/.well-known/ai-navigation.json",
+    "ecosystem": "https://triadicframeworks.com/.well-known/ai-ecosystem.json"
+  },
+
+  "trust": {
+    "jwks": "https://triadicframeworks.com/.well-known/jwks.json",
+    "protected_resource": "https://triadicframeworks.com/.well-known/ai-protected-resource.json"
+  }
+}
