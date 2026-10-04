@@ -1,0 +1,49 @@
+{
+  "canonical_url": "https://triadicframeworks.com/",
+  "version": "1.0",
+  "description": "Agent Skills Manifest for TriadicFrameworks — RTT, Clarity, Quad Engine, Gravity, Semantic Intelligence, and Canon utilities.",
+
+  "skills": {
+    "rtt_operators": {
+      "name": "RTT Operators",
+      "description": "Drift, Coherence, Regime, Clarity operators for Resonance-Time Theory.",
+      "skill_url": "https://triadicframeworks.com/.well-known/agent-skills/rtt-operators/SKILL.md"
+    },
+
+    "triadic_gravity": {
+      "name": "Triadic Gravity",
+      "description": "Gravity engine, triadic fields, and structural resonance mapping.",
+      "skill_url": "https://triadicframeworks.com/.well-known/agent-skills/triadic-gravity/SKILL.md"
+    },
+
+    "clarity_engine": {
+      "name": "Clarity Engine",
+      "description": "Spectral clarity, validator pulses, Nawderian theorem, and clarity diagnostics.",
+      "skill_url": "https://triadicframeworks.com/.well-known/agent-skills/clarity-engine/SKILL.md"
+    },
+
+    "quad_engine": {
+      "name": "Quad Engine",
+      "description": "Four-channel cognitive engine for deterministic reasoning and structural alignment.",
+      "skill_url": "https://triadicframeworks.com/.well-known/agent-skills/quad-engine/SKILL.md"
+    },
+
+    "semantic_intelligence": {
+      "name": "Semantic Intelligence",
+      "description": "Triadic semantic graph, ontology mapping, and SI substrate operations.",
+      "skill_url": "https://triadicframeworks.com/.well-known/agent-skills/semantic-intelligence/SKILL.md"
+    },
+
+    "canon_utilities": {
+      "name": "Canon Utilities",
+      "description": "Core utilities for navigating, validating, and interpreting TriadicFrameworks canon.",
+      "skill_url": "https://triadicframeworks.com/.well-known/agent-skills/canon-utilities/SKILL.md"
+    }
+  },
+
+  "registry": {
+    "index": "https://triadicframeworks.com/.well-known/agent-skills/index.json",
+    "navigation": "https://triadicframeworks.com/.well-known/ai-navigation.json",
+    "ecosystem": "https://triadicframeworks.com/.well-known/ai-ecosystem.json"
+  }
+}
