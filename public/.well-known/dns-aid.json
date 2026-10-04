@@ -1,0 +1,54 @@
+{
+  "canonical_url": "https://triadicframeworks.com/",
+  "version": "1.0",
+  "description": "DNS-AID discovery manifest for TriadicFrameworks — SVCB/HTTPS agent discovery endpoints.",
+
+  "dns_aid": {
+    "svc_records": {
+      "_index._agents.triadicframeworks.com": {
+        "type": "SVCB",
+        "alpn": ["a2a"],
+        "endpoint": "https://triadicframeworks.com/.well-known/ai-agent.json",
+        "port": 443,
+        "mandatory": ["alpn", "port"]
+      },
+      "_a2a._agents.triadicframeworks.com": {
+        "type": "SVCB",
+        "alpn": ["a2a"],
+        "endpoint": "https://triadicframeworks.com/.well-known/ai-agent.json",
+        "port": 443,
+        "mandatory": ["alpn", "port"]
+      },
+      "_mcp._agents.triadicframeworks.com": {
+        "type": "SVCB",
+        "alpn": ["mcp"],
+        "endpoint": "https://triadicframeworks.com/.well-known/mcp.json",
+        "port": 443,
+        "mandatory": ["alpn", "port"]
+      }
+    },
+
+    "https_records": {
+      "_index._agents.triadicframeworks.com": {
+        "type": "HTTPS",
+        "endpoint": "https://triadicframeworks.com/.well-known/ai-agent.json"
+      },
+      "_a2a._agents.triadicframeworks.com": {
+        "type": "HTTPS",
+        "endpoint": "https://triadicframeworks.com/.well-known/ai-agent.json"
+      },
+      "_mcp._agents.triadicframeworks.com": {
+        "type": "HTTPS",
+        "endpoint": "https://triadicframeworks.com/.well-known/mcp.json"
+      }
+    }
+  },
+
+  "http_discovery": {
+    "a2a_agent_card": "https://triadicframeworks.com/.well-known/ai-agent.json",
+    "mcp_server": "https://triadicframeworks.com/.well-known/mcp.json",
+    "webmcp_tools": "https://triadicframeworks.com/.well-known/webmcp.json",
+    "ecosystem": "https://triadicframeworks.com/.well-known/ai-ecosystem.json",
+    "navigation": "https://triadicframeworks.com/.well-known/ai-navigation.json"
+  }
+}
