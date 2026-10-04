@@ -1,0 +1,60 @@
+{
+  "canonical_url": "https://triadicframeworks.com/",
+  "version": "1.0",
+  "description": "TriadicFrameworks ecosystem — canon, clarity, structural intelligence, RTT suite, triadic cloud, and agent-ready surfaces.",
+  
+  "ecosystem": {
+    "triadicframeworks": {
+      "home": "https://triadicframeworks.com/",
+      "docs": "https://triadicframeworks.com/docs/",
+      "modules": "https://triadicframeworks.com/modules/",
+      "sitemaps": {
+        "main": "https://triadicframeworks.com/sitemap_main.xml",
+        "modules": "https://triadicframeworks.com/sitemap_modules.xml",
+        "docs": "https://triadicframeworks.com/sitemap_docs.xml",
+        "static": "https://triadicframeworks.com/sitemap_static.xml",
+        "agents": "https://triadicframeworks.com/sitemap_agents.xml",
+        "ecosystem": "https://triadicframeworks.com/sitemap_ecosystem.xml"
+      }
+    },
+
+    "claritybook": {
+      "home": "https://claritybook.ai/",
+      "docs": "https://claritybook.ai/docs/",
+      "description": "Clarity subsystem — spectral mathematics, validator pulses, clarity equations."
+    },
+
+    "structuralintelligence": {
+      "home": "https://structuralintelligence.org/",
+      "docs": "https://structuralintelligence.org/docs/",
+      "description": "Structural Intelligence — ontology, semantic graph, triadic semantic mapping."
+    },
+
+    "rttsuite": {
+      "home": "https://rttsuite.dev/",
+      "docs": "https://rttsuite.dev/docs/",
+      "description": "RTT Suite — Drift, Coherence, Regime, Clarity, Quad Engine integration."
+    },
+
+    "triadic_cloud": {
+      "home": "https://triadic.cloud/",
+      "description": "Triadic Cloud — Workers, AI Gateway, routing, DNS-AID, and service discovery."
+    },
+
+    "ecosystem_registry": {
+      "home": "https://ecosystem.tf/",
+      "description": "Ecosystem registry — cross-domain index for TriadicFrameworks constellation."
+    }
+  },
+
+  "agent_surfaces": {
+    "a2a_agent_card": "https://triadicframeworks.com/.well-known/ai-agent.json",
+    "agent_skills": "https://triadicframeworks.com/.well-known/agent-skills.json",
+    "mcp_server": "https://triadicframeworks.com/.well-known/mcp.json",
+    "webmcp_tools": "https://triadicframeworks.com/.well-known/webmcp.json",
+    "dns_aid": "https://triadicframeworks.com/.well-known/dns-aid.json",
+    "jwks": "https://triadicframeworks.com/.well-known/jwks.json",
+    "protected_resource": "https://triadicframeworks.com/.well-known/ai-protected-resource.json",
+    "navigation_manifest": "https://triadicframeworks.com/.well-known/ai-navigation.json"
+  }
+}
