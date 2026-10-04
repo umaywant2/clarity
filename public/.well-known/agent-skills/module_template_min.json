@@ -1,0 +1,21 @@
+{
+  "module": {
+    "name": "MODULE_NAME",
+    "category": "rtt | clarity | quad | gravity | semantic | teaching | utility",
+    "version": "0.1.0",
+    "summary": "Short description."
+  },
+
+  "structure": {
+    "role": "index",
+    "analyzer_layer": "operator"
+  },
+
+  "files": [
+    {
+      "path": "MODULE_NAME.md",
+      "role": "index",
+      "description": "Primary file."
+    }
+  ]
+}
