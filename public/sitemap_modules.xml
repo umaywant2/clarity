@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Module Registry Root -->
+  <url>
+    <loc>https://triadicframeworks.com/modules/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- RTT Modules -->
+  <url>
+    <loc>https://triadicframeworks.com/modules/rtt/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://triadicframeworks.com/modules/rtt/operators/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Clarity Modules -->
+  <url>
+    <loc>https://triadicframeworks.com/modules/clarity/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://triadicframeworks.com/modules/clarity/validator/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Quad Engine Modules -->
+  <url>
+    <loc>https://triadicframeworks.com/modules/quad/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Triadic Gravity Modules -->
+  <url>
+    <loc>https://triadicframeworks.com/modules/gravity/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Semantic / SI Modules -->
+  <url>
+    <loc>https://triadicframeworks.com/modules/semantic/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Teaching / Workbook Modules -->
+  <url>
+    <loc>https://triadicframeworks.com/modules/teaching/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Module JSON Manifests -->
+  <url>
+    <loc>https://triadicframeworks.com/modules/module.json</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Module Test Harness -->
+  <url>
+    <loc>https://triadicframeworks.com/modules/module_test.md</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+</urlset>
