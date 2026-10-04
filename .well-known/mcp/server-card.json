@@ -1,0 +1,64 @@
+{
+  "serverInfo": {
+    "name": "TriadicFrameworks MCP Server",
+    "version": "1.0.0"
+  },
+
+  "transport": {
+    "type": "http",
+    "endpoint": "https://www.triadicframeworks.org/MCP/"
+  },
+
+  "capabilities": {
+    "tools": [
+      {
+        "id": "triadic-modules",
+        "name": "Triadic Modules",
+        "description": "Enumerates TriadicFrameworks modules, metadata, analyzer layers, and canonical structures."
+      },
+      {
+        "id": "rtt-operators",
+        "name": "RTT Operators",
+        "description": "Resonance-Time Theory operators, coherence layers, drift boundaries, and paradox structures."
+      },
+      {
+        "id": "quad-engine",
+        "name": "Quad Engine",
+        "description": "Four-channel evaluation engine for RTT, coherence, drift, and gravity subsystems."
+      },
+      {
+        "id": "triadic-gravity",
+        "name": "Triadic Gravity",
+        "description": "Gravity subsystem for RTT gravomagnetic operators and coherence wells."
+      },
+      {
+        "id": "coherence-layers",
+        "name": "Coherence Layers",
+        "description": "Layered coherence evaluation (R1, R2, R3) with stability and coupling rules."
+      }
+    ],
+
+    "resources": [
+      {
+        "id": "agent-skills-index",
+        "name": "Agent Skills Index",
+        "description": "Provides discovery metadata for all TriadicFrameworks agent skills.",
+        "uri": "https://www.triadicframeworks.org/.well-known/agent-skills/index.json"
+      },
+      {
+        "id": "api-catalog",
+        "name": "API Catalog",
+        "description": "Catalog of MCP-exposed APIs and structured endpoints.",
+        "uri": "https://www.triadicframeworks.org/.well-known/api-catalog"
+      }
+    ],
+
+    "prompts": [
+      {
+        "id": "triadic-evaluation",
+        "name": "Triadic Evaluation Prompt",
+        "description": "High-level evaluation prompt for RTT, Quad Engine, Gravity, and Coherence subsystems."
+      }
+    ]
+  }
+}
