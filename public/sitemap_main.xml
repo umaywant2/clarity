@@ -1,99 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- Canon Front Door -->
+  <!-- Root -->
   <url>
     <loc>https://triadicframeworks.com/</loc>
-    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- Canon Documentation -->
-  <url>
-    <loc>https://triadicframeworks.com/docs/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- RTT Suite -->
-  <url>
-    <loc>https://triadicframeworks.com/rtt/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Clarity Subsystem -->
+  <!-- Canonical RTT Engines -->
   <url>
     <loc>https://triadicframeworks.com/clarity/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.95</priority>
   </url>
 
-  <!-- Quad Engine -->
   <url>
-    <loc>https://triadicframeworks.com/quad/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://triadicframeworks.com/coherence/</loc>
+    <priority>0.95</priority>
   </url>
 
-  <!-- Triadic Gravity -->
   <url>
-    <loc>https://triadicframeworks.com/gravity/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://triadicframeworks.com/drift/</loc>
+    <priority>0.95</priority>
   </url>
 
-  <!-- Semantic Map -->
   <url>
-    <loc>https://triadicframeworks.com/si/semantic/triadic-map</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://triadicframeworks.com/regime/</loc>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://triadicframeworks.com/module/</loc>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://triadicframeworks.com/session/</loc>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Integration Map -->
+  <url>
+    <loc>https://triadicframeworks.com/integration_map/</loc>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- Canon Atlas -->
+  <url>
+    <loc>https://triadicframeworks.com/docs/canon_atlas.html</loc>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- Canon Map -->
+  <url>
+    <loc>https://triadicframeworks.com/docs/canon_map.html</loc>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- Canon Reference -->
+  <url>
+    <loc>https://triadicframeworks.com/docs/canon_reference.html</loc>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- Semantic Infrastructure -->
+  <url>
+    <loc>https://triadicframeworks.com/docs/si_knowledge_base.html</loc>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://triadicframeworks.com/docs/si_lexicon.html</loc>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://triadicframeworks.com/docs/si_ontology.html</loc>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://triadicframeworks.com/docs/si_pedagogy.html</loc>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://triadicframeworks.com/docs/si_publications.html</loc>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://triadicframeworks.com/docs/si_semantic_api.html</loc>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Ecosystem -->
+  <url>
+    <loc>https://triadicframeworks.com/ecosystem/triadicframeworks_platform_manifest.html</loc>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Platform -->
+  <url>
+    <loc>https://triadicframeworks.com/platform/api/semantic_api_spec.html</loc>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Operators -->
+  <url>
+    <loc>https://triadicframeworks.com/operators/</loc>
+    <priority>0.85</priority>
   </url>
 
   <!-- Module Registry -->
   <url>
-    <loc>https://triadicframeworks.com/modules/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <loc>https://triadicframeworks.com/module_registry.json</loc>
+    <priority>0.60</priority>
   </url>
 
-  <!-- Agent Readiness Endpoints -->
+  <!-- DOC_MAP -->
   <url>
-    <loc>https://triadicframeworks.com/.well-known/ai-agent.json</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://triadicframeworks.com/.well-known/agent-skills.json</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://triadicframeworks.com/.well-known/mcp.json</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- AI Crawl Control -->
-  <url>
-    <loc>https://triadicframeworks.com/robots.txt</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://triadicframeworks.com/llms.txt</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <!-- Visibility Page (for Genter and simple crawlers) -->
-  <url>
-    <loc>https://triadicframeworks.com/genter.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <loc>https://triadicframeworks.com/DOC_MAP.json</loc>
+    <priority>0.60</priority>
   </url>
 
 </urlset>
