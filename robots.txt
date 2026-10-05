@@ -17,18 +17,6 @@ Allow: /
 # Canonical sitemap for AI agents and search engines
 Sitemap: https://triadicframeworks.com/sitemap_main.xml
 
-# TriadicFrameworks robots.txt
-# Purpose: Public access for search engines + AI crawlers (educational/open content)
-
-# Prevent crawling of internal build directories (none exist on Pages)
-Disallow: /_internal/
-Disallow: /_drafts/
-Disallow: /_sandbox/
-Disallow: /admin/
-Disallow: /private/
-Disallow: /api/
-Disallow: /cgi-bin/
-
 # === Explicit AI Crawlers (training + retrieval allowed) ===
 User-agent: GPTBot
 Allow: /
