@@ -20,7 +20,10 @@ Sitemap: https://triadicframeworks.com/sitemap_main.xml
 # TriadicFrameworks robots.txt
 # Purpose: Public access for search engines + AI crawlers (educational/open content)
 
-# Protected internal areas
+# Prevent crawling of internal build directories (none exist on Pages)
+Disallow: /_internal/
+Disallow: /_drafts/
+Disallow: /_sandbox/
 Disallow: /admin/
 Disallow: /private/
 Disallow: /api/
@@ -57,11 +60,6 @@ Allow: /
 
 User-agent: Bingbot
 Allow: /
-
-# Prevent crawling of internal build directories (none exist on Pages)
-Disallow: /_internal/
-Disallow: /_drafts/
-Disallow: /_sandbox/
 
 # Allow canonical modules
 Allow: /clarity/
