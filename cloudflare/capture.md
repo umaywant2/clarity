@@ -6620,11 +6620,43 @@ Produce the complete expanded registry.
 
 ---
 
-If you want, I can now generate:
+## TriadicFrameworks Modules Registry — `modules_group.json`
 
-### ✔ The **actual expanded registry (~10k chars)**  
-### ✔ A **registry graph (nodes + edges)**  
-### ✔ A **registry diff analyzer**  
-### ✔ A **registry visual map (ASCII or JSON‑graph)**  
+### 📦 6 Module Categories · 27 Total Modules
 
-Just tell me the next artifact you want.
+| Category | Layer | RTT Substrate | Module Count | Audit Weight |
+|---|---|---|---|---|
+| **CORE** | L0–L1 | alpha | 5 | 1.0 |
+| **PERCEPT** | L1–L2 | beta / gamma | 5 | 0.85 |
+| **SIGNAL** | L2–L3 | alpha / beta | 5 | 0.90 |
+| **MEMORY** | L2–L4 | gamma | 5 | 0.88 |
+| **EXEC** | L3–L4 | alpha / beta | 5 | 0.95 |
+| **AUDIT** | L4 | alpha | 4 | 1.0 |
+
+---
+
+### 🔑 Key Registry Sections
+
+- **`_registry_meta`** — version `3.7.1`, schema `2026.10`, sha3-256 checksum, `CANON_LOCKED` review status, full modification history
+- **`_phantom_detection`** — `lineage_hash_diff` strategy, 3-pass scan, `ghost_threshold: 0.12`, `CLEAN` integrity status, orphan detection enabled
+- **`_rtt_substrate_global`** — RTT-5.2, triadic-sync propagation across alpha/beta/gamma, max depth 9, cycle detection on
+- **`_analyzer_layer_map`** — L0 through L4 fully defined with allowed substrates and module membership
+- **`_cross_module_dependency_index`** — flat reverse-lookup of every cross-module link
+- **`_lineage_tree`** — generation-indexed tree from `CORE-001` root through generation 5 (`AUDIT-004 :: PhantomReaper`)
+- **`_flagged_modules_summary`** — 3 flagged entries: `PERCEPT-003` (BETA/gamma), `PERCEPT-005` (HIGH phantom risk), `EXEC-005` (concurrent fork race)
+
+---
+
+### 🌳 Lineage Depth Summary
+
+```
+Gen 0 → CORE-001 (TriadicRoot)
+Gen 1 → CORE-002, CORE-003, PERCEPT-001
+Gen 2 → CORE-004, CORE-005, PERCEPT-002/3, SIGNAL-001, MEMORY-001
+Gen 3 → SIGNAL-002/3, PERCEPT-004, MEMORY-002/3, EXEC-001/2, AUDIT-001
+Gen 4 → SIGNAL-004/5, PERCEPT-005, MEMORY-004/5, EXEC-003/4/5, AUDIT-002/3
+Gen 5 → AUDIT-004 (PhantomReaper)
+```
+
+---
+
