@@ -1,0 +1,106 @@
+{
+  "canon_version": "R5",
+  "family": "clarity",
+  "cross_index": {
+    "operator": {
+      "triad": [
+        "clarity.engine",
+        "clarity.map",
+        "clarity.signature",
+        "clarity.diagnostic",
+        "clarity.example",
+        "clarity.extension",
+        "clarity.template"
+      ],
+      "stability_index": [
+        "clarity.engine",
+        "clarity.map"
+      ],
+      "diagnostic_packet": [
+        "clarity.engine",
+        "clarity.diagnostic"
+      ],
+      "signature_compare": [
+        "clarity.signature"
+      ]
+    },
+
+    "dimensional": {
+      "clarity_dimensional_scan": [
+        "clarity.engine"
+      ],
+      "clarity_map_dimensional_scan": [
+        "clarity.map"
+      ],
+      "clarity_signature_dimensional_scan": [
+        "clarity.signature"
+      ]
+    },
+
+    "regime": {
+      "regime_map": [
+        "clarity.engine",
+        "clarity.map",
+        "clarity.diagnostic"
+      ],
+      "paradox_surface": [
+        "clarity.engine",
+        "clarity.diagnostic"
+      ],
+      "regime_signature_map": [
+        "clarity.signature"
+      ]
+    },
+
+    "drift": {
+      "drift_trace": [
+        "clarity.engine"
+      ],
+      "drift_bounds": [
+        "clarity.engine"
+      ],
+      "drift_path_trace": [
+        "clarity.map"
+      ]
+    },
+
+    "coherence": {
+      "coherence_trace": [
+        "clarity.engine"
+      ],
+      "coherence_bounds": [
+        "clarity.engine"
+      ],
+      "coherence_path_trace": [
+        "clarity.map"
+      ]
+    },
+
+    "cross_cutting": {
+      "clarity_cross_section": [
+        "clarity.engine"
+      ],
+      "clarity_resonance_profile": [
+        "clarity.engine"
+      ],
+      "clarity_map_cross_section": [
+        "clarity.map"
+      ],
+      "clarity_signature_cross_section": [
+        "clarity.signature"
+      ],
+      "clarity_diagnostic_cross_section": [
+        "clarity.diagnostic"
+      ],
+      "clarity_example_cross_section": [
+        "clarity.example"
+      ],
+      "clarity_extension_cross_section": [
+        "clarity.extension"
+      ],
+      "clarity_template_cross_section": [
+        "clarity.template"
+      ]
+    }
+  }
+}
