@@ -1,64 +1,79 @@
 {
-  "id": "clarity.engine",
-  "name": "Clarity Engine",
+  "id": "clarity.signature",
+  "name": "Clarity Signature",
   "version": "1.0.0",
   "canon_version": "R5",
-  "category": "engine",
-  "roles": ["engine", "clarity"],
+  "category": "signature",
+  "roles": ["signature", "clarity"],
+
   "triad": {
-    "structure": "clarity-evaluator",
-    "resonance": "clarity-resonance-mapping",
-    "activation": "clarity-stabilization"
+    "structure": "clarity-signature-structure",
+    "resonance": "clarity-signature-resonance",
+    "activation": "clarity-signature-activation"
   },
+
   "substrate": {
-    "delta": "ΔC across drift/coherence trajectories",
-    "oscillation": "clarity oscillation under unstable regime",
+    "delta": "ΔC across clarity signatures",
+    "oscillation": "signature oscillation under regime shifts",
     "regime": "clarity-aware"
   },
+
   "rtt": {
     "drift": "bounded",
     "coherence": "declared",
     "regime": "clarity-aware",
     "clarity": "C3"
   },
+
   "dimensional": {
     "primary_dimension": "3D",
     "dimensions": ["1D", "2D", "3D"]
   },
+
   "si": {
     "ontology_ref": "si://clarity/ontology",
     "lexicon_ref": "si://clarity/lexicon",
     "semantic_api_ref": "si://clarity/api"
   },
+
   "lineage": {
-    "parent": "rtt.clarity.engine",
-    "siblings": [],
+    "parent": "clarity",
+    "siblings": [
+      "clarity.engine",
+      "clarity.map",
+      "clarity.diagnostic",
+      "clarity.example",
+      "clarity.extension",
+      "clarity.template"
+    ],
     "children": []
   },
+
   "analyzer_layers": {
-    "operator": ["triad", "stability_index"],
-    "dimensional": ["clarity_dimensional_scan"],
-    "regime": ["regime_map"],
-    "drift": ["drift_trace"],
-    "coherence": ["coherence_trace"],
-    "cross_cutting": ["clarity_cross_section"]
+    "operator": ["triad", "signature_compare"],
+    "dimensional": ["clarity_signature_dimensional_scan"],
+    "regime": ["regime_signature_map"],
+    "cross_cutting": ["clarity_signature_cross_section"]
   },
+
   "session": {
     "context": "Cloudflare triadic substrate",
-    "pedagogy": "clarity stabilization and diagnostics",
-    "clarity_targets": ["C3", "C4"]
+    "pedagogy": "clarity signature comparison",
+    "clarity_targets": ["C3"]
   },
+
   "badge": {
-    "label": "Clarity Engine",
+    "label": "Clarity Signature",
     "category": "RTT"
   },
+
   "audit": {
     "status": "clean",
-    "notes": ["Scaffolded from Triadic canon"]
+    "notes": ["Signature analyzers validated"]
   },
+
   "diff": {
     "previous_version": "0.9.0",
-    "changes": ["Initial Cloudflare scaffold"]
+    "changes": ["Initial Cloudflare signature scaffold"]
   }
 }
-
