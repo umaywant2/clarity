@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>Clarity Operator Catalog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bg: { 900: '#0a0c12', 800: '#0e1018', 700: '#111520', 600: '#161b2a', 500: '#1e2535', 400: '#2a3247' },
+              txt: { 100: '#e2e8f0', 200: '#cbd5e1', 300: '#94a3b8', 400: '#64748b', 500: '#475569' },
+              acc: { 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+              violet: { 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed' },
+              success: { 400: '#34d399', 500: '#10b981', 600: '#059669' },
+              warn: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
+              danger: { 400: '#f87171', 500: '#ef4444', 600: '#dc2626' },
+              cyan: { 400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2' },
+              pink: { 400: '#f472b6', 500: '#ec4899', 600: '#db2777' },
+              orange: { 400: '#fb923c', 500: '#f97316', 600: '#ea580c' },
+              teal: { 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488' },
+              pur: { 400: '#c084fc', 500: '#a855f7', 600: '#9333ea' },
+              bdr: '#1e2535',
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      * { scrollbar-width: thin; scrollbar-color: #1e2535 #0a0c12; }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: #0a0c12; }
+      ::-webkit-scrollbar-thumb { background: #1e2535; border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: #2a3247; }
+
+      body { font-family: 'Inter', sans-serif; background: #0a0c12; color: #e2e8f0; }
+
+      .op-card { transition: all 0.2s ease; border: 1px solid #1e2535; }
+      .op-card:hover { border-color: #2a3247; transform: translateY(-1px); box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+
+      .detail-panel { transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+      .detail-panel.closed { transform: translateX(100%); opacity: 0; pointer-events: none; }
+      .detail-panel.open { transform: translateX(0); opacity: 1; }
+
+      .graph-panel { transition: width 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; overflow: hidden; }
+      .graph-panel.collapsed { width: 0 !important; opacity: 0; padding: 0 !important; border: none !important; }
+      .graph-panel.expanded { width: 280px; opacity: 1; }
+
+      .filter-chip { transition: all 0.15s ease; cursor: pointer; user-select: none; }
+      .filter-chip:hover { opacity: 0.9; }
+      .filter-chip.active { box-shadow: 0 0 0 1px currentColor; }
+
+      .layer-dot { width: 10px; height: 10px; border-radius: 50%; transition: all 0.15s ease; }
+      .layer-dot.filled { opacity: 1; }
+      .layer-dot.empty { opacity: 0.15; }
+
+      .sidebar-item { transition: all 0.15s ease; cursor: pointer; }
+      .sidebar-item:hover { background: #161b2a; }
+      .sidebar-item.active { background: #161b2a; border-right: 2px solid; }
+
+      .tab-btn { transition: all 0.15s ease; }
+      .tab-btn.active { border-bottom: 2px solid #3b82f6; color: #e2e8f0; }
+
+      .status-stable { background: rgba(16,185,129,0.15); color: #34d399; }
+      .status-experimental { background: rgba(139,92,246,0.15); color: #a78bfa; }
+      .status-deprecated { background: rgba(239,68,68,0.15); color: #f87171; }
+      .status-draft { background: rgba(100,116,139,0.15); color: #94a3b8; }
+
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+      .fade-in { animation: fadeIn 0.2s ease forwards; }
+
+      .substrate-tag { font-size: 0.65rem; padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+
+      svg text { font-family: 'Inter', sans-serif; }
+
+      .mobile-sidebar { transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+      .mobile-sidebar.hidden-mobile { transform: translateX(-100%); }
+    </style>
+</head>
+<body data-id="0" class="min-h-screen flex flex-col">
+    <app-icon data-id="1" hidden data-icon="scan-search" data-palette="Blue"></app-icon>
+
+    <!-- HEADER -->
+    <header data-id="2" id="header-main" class="fixed top-0 left-0 right-0 z-50 bg-bg-900/95 backdrop-blur-sm border-b border-bdr h-14 flex items-center px-4 gap-3">
+        <button data-id="3" id="mobile-sidebar-btn" class="md:hidden p-2 text-txt-300 hover:text-txt-100">
+            <i data-id="4" data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        <div data-id="5" class="flex items-center gap-2 shrink-0">
+            <span data-id="6" class="font-mono font-bold text-lg text-acc-500">CLR</span>
+            <span data-id="7" class="hidden sm:inline text-txt-100 font-semibold text-sm">Clarity Operator Catalog</span>
+        </div>
+        <div data-id="8" class="flex-1 max-w-md mx-auto relative">
+            <i data-id="9" data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-txt-400"></i>
+            <input data-id="10" id="search-input" type="text" placeholder="Search operators... ( / )" class="w-full bg-bg-700 border border-bdr rounded-lg pl-9 pr-3 py-1.5 text-sm text-txt-100 placeholder:text-txt-500 focus:outline-none focus:border-acc-500 font-sans" />
+        </div>
+        <div data-id="11" class="hidden sm:flex items-center gap-2 shrink-0">
+            <span data-id="12" class="text-xs font-mono bg-bg-700 border border-bdr rounded px-2 py-0.5 text-txt-300">v3.1 · TF-CLARITY</span>
+        </div>
+        <button data-id="13" id="graph-toggle-btn" class="p-2 text-txt-300 hover:text-txt-100 shrink-0" title="Toggle Module Graph">
+            <i data-id="14" data-lucide="network" class="w-4 h-4"></i>
+        </button>
+    </header>
+
+    <!-- FILTER BAR -->
+    <div data-id="15" id="filter-bar" class="fixed top-14 left-0 right-0 z-40 bg-bg-800/95 backdrop-blur-sm border-b border-bdr px-4 py-2 overflow-x-auto">
+        <div data-id="16" class="flex flex-wrap gap-2 items-center min-w-0">
+            <span data-id="17" class="text-[10px] uppercase tracking-wider text-txt-500 font-medium shrink-0 mr-1">RTT</span>
+            <div data-id="18" id="rtt-filters" class="flex gap-1 flex-wrap"></div>
+            <div data-id="19" class="w-px h-4 bg-bdr mx-1 hidden sm:block shrink-0"></div>
+            <span data-id="20" class="text-[10px] uppercase tracking-wider text-txt-500 font-medium shrink-0 mr-1">Status</span>
+            <div data-id="21" id="status-filters" class="flex gap-1 flex-wrap"></div>
+            <div data-id="22" class="w-px h-4 bg-bdr mx-1 hidden sm:block shrink-0"></div>
+            <span data-id="23" class="text-[10px] uppercase tracking-wider text-txt-500 font-medium shrink-0 mr-1">Substrate</span>
+            <div data-id="24" id="substrate-filters" class="flex gap-1 flex-wrap"></div>
+            <div data-id="25" class="w-px h-4 bg-bdr mx-1 hidden sm:block shrink-0"></div>
+            <span data-id="26" class="text-[10px] uppercase tracking-wider text-txt-500 font-medium shrink-0 mr-1">Layer</span>
+            <div data-id="27" id="layer-filters" class="flex gap-1 flex-wrap"></div>
+        </div>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div data-id="28" class="flex flex-1 pt-[104px]">
+        <!-- LEFT SIDEBAR -->
+        <aside data-id="29" id="sidebar" class="fixed md:sticky top-[104px] left-0 bottom-0 w-56 md:w-52 lg:w-56 bg-bg-800 border-r border-bdr z-30 flex flex-col overflow-y-auto mobile-sidebar hidden-mobile md:transform-none">
+            <div data-id="30" class="flex items-center justify-between p-3 border-b border-bdr md:hidden">
+                <span data-id="31" class="text-sm font-semibold text-txt-100">Operator Classes</span>
+                <button data-id="32" id="mobile-sidebar-close" class="p-1 text-txt-300 hover:text-txt-100">
+                    <i data-id="33" data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <nav data-id="34" id="class-nav" class="flex-1 py-2"></nav>
+            <div data-id="35" class="p-3 border-t border-bdr">
+                <div data-id="36" class="text-[10px] uppercase tracking-wider text-txt-500 mb-1">Catalog</div>
+                <div data-id="37" class="text-xs text-txt-400">48 operators · 10 classes</div>
+                <div data-id="38" class="text-xs text-txt-400">11 modules · TriadicFrameworks</div>
+            </div>
+        </aside>
+        <div data-id="39" id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden"></div>
+
+        <!-- MAIN CONTENT -->
+        <main data-id="40" class="flex-1 min-w-0 flex flex-col">
+            <!-- STATS BAR -->
+            <div data-id="41" id="stats-bar" class="px-4 lg:px-6 py-3 border-b border-bdr bg-bg-900 flex flex-wrap items-center gap-3 text-xs"></div>
+
+            <!-- GRID -->
+            <div data-id="42" class="flex-1 overflow-y-auto px-4 lg:px-6 py-4">
+                <div data-id="43" id="operator-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-3"></div>
+                <div data-id="44" id="empty-state" class="hidden flex-col items-center justify-center py-20 text-center">
+                    <i data-id="45" data-lucide="search-x" class="w-12 h-12 text-txt-500 mb-3"></i>
+                    <h3 data-id="46" class="text-lg font-semibold text-txt-200 mb-1">No operators match</h3>
+                    <p data-id="47" class="text-sm text-txt-400 mb-4">Try adjusting your search or filters</p>
+                    <button data-id="48" id="clear-all-btn" class="px-4 py-2 bg-acc-500 hover:bg-acc-600 text-white text-sm rounded-lg font-medium">Clear All Filters</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- RIGHT GRAPH PANEL -->
+        <aside data-id="49" id="graph-panel" class="sticky top-[104px] h-[calc(100vh-104px)] bg-bg-800 border-l border-bdr graph-panel collapsed hidden md:block overflow-y-auto">
+            <div data-id="50" class="p-3 border-b border-bdr flex items-center justify-between">
+                <h3 data-id="51" class="text-xs font-semibold text-txt-200 uppercase tracking-wider">Module Dependency Graph</h3>
+                <button data-id="52" id="graph-close-btn" class="p-1 text-txt-400 hover:text-txt-200">
+                    <i data-id="53" data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div data-id="54" class="p-3">
+                <svg data-id="55" id="module-graph" viewBox="0 0 260 260" class="w-full"></svg>
+                <div data-id="56" id="graph-legend" class="mt-3 space-y-1"></div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- DETAIL PANEL -->
+    <div data-id="57" id="detail-overlay" class="fixed inset-0 bg-black/60 z-50 hidden"></div>
+    <div data-id="58" id="detail-panel" class="fixed top-0 right-0 bottom-0 w-full sm:w-[520px] md:w-[580px] bg-bg-800 border-l border-bdr z-50 detail-panel closed overflow-y-auto">
+        <div data-id="59" id="detail-content"></div>
+    </div>
+
+    <footer data-id="60" class="border-t border-bdr py-4 text-center bg-bg-900">
+        <p data-id="61" class="text-xs text-txt-500">Made by Copilot</p>
+    </footer>
+
+    <script>
+    // ============================================================
+    // FULL OPERATOR DATA — 48 OPERATORS
+    // ============================================================
+    const CLASS_COLORS = {
+        LENS: '#3b82f6', FILTER: '#10b981', RESOLVE: '#f59e0b', TRACE: '#8b5cf6',
+        MAP: '#06b6d4', DIFF: '#f97316', SYNC: '#ec4899', GATE: '#ef4444',
+        ANCHOR: '#14b8a6', WEAVE: '#a855f7'
+    };
+    const CLASS_ICONS = {
+        LENS: 'scan', FILTER: 'filter', RESOLVE: 'git-merge', TRACE: 'route',
+        MAP: 'map', DIFF: 'git-compare', SYNC: 'refresh-cw', GATE: 'shield-check',
+        ANCHOR: 'anchor', WEAVE: 'layers'
+    };
+
+    const OPERATORS = [
+      // ===== LENS =====
+      {id:"CLR.LENS.001",name:"FOCAL_PROJECT",class:"LENS",module:"clarity-lens",version:"2.1.0",status:"STABLE",rttProfile:"SEMANTIC",substrateProfile:["TEXT","VECTOR"],analyzerLayer:["L2","L3"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Input signal to project"},{name:"lens",type:"LensParams",required:true,description:"Lens parameter set defining the focal plane"},{name:"depth",type:"float",required:false,description:"Projection depth multiplier (default 1.0)"}],outputs:[{name:"projection",type:"SignalBundle",description:"Projected signal with reduced dimensional noise"},{name:"focal_residue",type:"ResidueMap",description:"Residue map of dropped content"}],description:"Projects a signal through a focal plane defined by a lens parameter set, reducing dimensional noise while preserving semantic density.",longDescription:"Projects a signal through a focal plane defined by a lens parameter set, reducing dimensional noise while preserving semantic density. The focal plane is configured via LensParams which specify the focal axis and aperture width.",example:{input:'{signal: "multi-topic corpus stream", lens: {focal_axis: "causal", aperture: 0.7}, depth: 1.2}',output:'{projection: "causally-filtered signal", focal_residue: {dropped_topics: 3}}',notes:"Aperture < 1.0 narrows focus; depth > 1.0 deepens projection."},crossRefs:["CLR.FILTER.003","CLR.MAP.001","CLR.RESOLVE.002"],tags:["projection","focal","semantic-density"],complexity:"O(n)",canonRef:"TF-CLARITY-§2.1"},
+      {id:"CLR.LENS.002",name:"APERTURE_SCALE",class:"LENS",module:"clarity-lens",version:"2.0.1",status:"STABLE",rttProfile:"SIGNAL",substrateProfile:["VECTOR","TENSOR"],analyzerLayer:["L1","L2"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Input signal for aperture scaling"},{name:"aperture_target",type:"float",required:true,description:"Target aperture value"},{name:"variance_threshold",type:"float",required:false,description:"Variance threshold for adaptive scaling"}],outputs:[{name:"scaled_lens",type:"LensParams",description:"Lens with dynamically scaled aperture"},{name:"aperture_delta",type:"float",description:"Change in aperture from original"}],description:"Scales the aperture of a lens operator dynamically based on signal variance, adaptively narrowing or widening focus.",longDescription:"Scales the aperture of a lens operator dynamically based on signal variance, adaptively narrowing or widening focus. High-variance signals receive narrower apertures to maintain focus.",example:{input:'signal with σ=0.8, target=0.5',output:'scaled_lens with aperture=0.52, delta=-0.28',notes:"Variance-adaptive: higher variance → tighter aperture."},crossRefs:["CLR.LENS.001","CLR.DIFF.002","CLR.SYNC.001"],tags:["aperture","adaptive","variance"],complexity:"O(n)",canonRef:"TF-CLARITY-§2.2"},
+      {id:"CLR.LENS.003",name:"MULTI_FOCAL",class:"LENS",module:"clarity-lens",version:"0.9.4",status:"EXPERIMENTAL",rttProfile:"COMPOSITE",substrateProfile:["TEXT","VECTOR","GRAPH"],analyzerLayer:["L2","L3","L4"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Input signal for multi-focal projection"},{name:"lens_stack",type:"LensParams[]",required:true,description:"Stack of lens parameters (min 2)"},{name:"interference_mode",type:"string",required:false,description:"Interference computation mode"}],outputs:[{name:"projection_stack",type:"SignalBundle[]",description:"Stack of layered projections"},{name:"interference_map",type:"InterferenceMap",description:"Inter-focal interference metadata"}],description:"Applies multiple focal planes simultaneously, producing a layered projection stack with inter-focal interference metadata.",longDescription:"Applies multiple focal planes simultaneously, producing a layered projection stack with inter-focal interference metadata. Useful for comparing multiple analytical perspectives on the same signal.",example:{input:'signal + 3 lenses with different focal axes',output:'3-element projection stack + interference map',notes:"Interference modes: constructive, destructive, mixed."},crossRefs:["CLR.LENS.001","CLR.WEAVE.001","CLR.SYNC.003"],tags:["multi-focal","interference","stack"],complexity:"O(n²)",canonRef:"TF-CLARITY-§2.3"},
+      {id:"CLR.LENS.004",name:"REFRACT",class:"LENS",module:"clarity-lens",version:"1.3.0",status:"STABLE",rttProfile:"STRUCTURAL",substrateProfile:["GRAPH","SCHEMA"],analyzerLayer:["L3","L4"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Input signal to refract"},{name:"boundary",type:"SchemaNode",required:true,description:"Structural boundary for refraction"},{name:"refraction_angle",type:"float",required:false,description:"Angle of refraction"}],outputs:[{name:"sub_signals",type:"SignalBundle[]",description:"Decomposed sub-signals"},{name:"topology_map",type:"TopologyMap",description:"Relational topology preservation map"}],description:"Refracts a signal across a structural boundary, decomposing it into sub-signals with preserved relational topology.",longDescription:"Refracts a signal across a structural boundary, decomposing it into sub-signals with preserved relational topology. Useful for structural decomposition while maintaining relationships.",example:{input:'signal + schema boundary node',output:'Array of sub-signals + topology map',notes:"Refraction angle controls decomposition granularity."},crossRefs:["CLR.MAP.002","CLR.RESOLVE.001","CLR.ANCHOR.002"],tags:["refraction","decomposition","topology"],complexity:"O(n log n)",canonRef:"TF-CLARITY-§2.4"},
+      {id:"CLR.LENS.005",name:"BLIND_SPOT_DETECT",class:"LENS",module:"clarity-lens",version:"1.1.2",status:"STABLE",rttProfile:"MODAL",substrateProfile:["TEXT","VECTOR"],analyzerLayer:["L1","L2","L3"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to analyze for blind spots"},{name:"lens",type:"LensParams",required:true,description:"Current lens configuration to evaluate"}],outputs:[{name:"blind_spots",type:"BlindSpotMap",description:"Map of unresolvable signal regions"},{name:"coverage_score",type:"float",description:"Coverage completeness score (0-1)"}],description:"Identifies regions of the signal space that the current lens configuration cannot resolve, returning a blind-spot map for coverage analysis.",longDescription:"Identifies regions of the signal space that the current lens configuration cannot resolve, returning a blind-spot map for coverage analysis. Essential for ensuring analytical completeness.",example:{input:'signal + narrow-aperture lens',output:'blind_spots: 3 regions, coverage_score: 0.72',notes:"Coverage below 0.8 suggests aperture widening or multi-focal approach."},crossRefs:["CLR.GATE.003","CLR.TRACE.004","CLR.RESOLVE.003"],tags:["blind-spot","coverage","modal"],complexity:"O(n)",canonRef:"TF-CLARITY-§2.5"},
+      // ===== FILTER =====
+      {id:"CLR.FILTER.001",name:"NOISE_SUPPRESS",class:"FILTER",module:"clarity-filter",version:"3.0.0",status:"STABLE",rttProfile:"SIGNAL",substrateProfile:["TEXT","VECTOR","STREAM"],analyzerLayer:["L0","L1"],inputs:[{name:"raw_signal",type:"RawSignal",required:true,description:"Raw input signal"},{name:"kernel",type:"SuppressKernel",required:false,description:"Suppression kernel configuration"},{name:"threshold",type:"float",required:false,description:"Noise threshold (default 0.15)"}],outputs:[{name:"clean_signal",type:"SignalBundle",description:"Cleaned signal"},{name:"noise_residue",type:"ResidueMap",description:"Extracted noise residue"},{name:"snr",type:"float",description:"Signal-to-noise ratio after suppression"}],description:"Applies adaptive noise suppression to raw signal input, using a configurable suppression kernel. Foundation operator — runs before all other signal operations.",longDescription:"Applies adaptive noise suppression to raw signal input, using a configurable suppression kernel. Foundation operator — runs before all other signal operations. The kernel auto-adapts to signal characteristics when not explicitly configured.",example:{input:'raw stream with SNR=6.2dB',output:'clean_signal, snr=18.4dB',notes:"Foundation L0 operator. Always runs first in any pipeline."},crossRefs:["CLR.FILTER.002","CLR.LENS.001","CLR.GATE.001"],tags:["noise","suppress","foundation","L0"],complexity:"O(n)",canonRef:"TF-CLARITY-§3.1"},
+      {id:"CLR.FILTER.002",name:"BANDPASS",class:"FILTER",module:"clarity-filter",version:"2.2.0",status:"STABLE",rttProfile:"SIGNAL",substrateProfile:["VECTOR","STREAM","TENSOR"],analyzerLayer:["L1","L2"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Input signal to filter"},{name:"low_cutoff",type:"float",required:true,description:"Low frequency cutoff"},{name:"high_cutoff",type:"float",required:true,description:"High frequency cutoff"},{name:"roll_off",type:"string",required:false,description:"Roll-off curve type"}],outputs:[{name:"filtered_signal",type:"SignalBundle",description:"Band-passed signal"},{name:"rejected_band",type:"SignalBundle",description:"Out-of-band rejected content"}],description:"Filters a signal to retain only components within a specified frequency band (semantic or temporal), rejecting out-of-band content.",longDescription:"Filters a signal to retain only components within a specified frequency band (semantic or temporal), rejecting out-of-band content. Supports configurable roll-off curves for gradual or sharp cutoff.",example:{input:'signal + low=0.2 + high=0.8',output:'filtered band + rejected_band',notes:"Roll-off options: sharp, gradual, butterworth."},crossRefs:["CLR.FILTER.001","CLR.FILTER.004","CLR.DIFF.001"],tags:["bandpass","frequency","band"],complexity:"O(n)",canonRef:"TF-CLARITY-§3.2"},
+      {id:"CLR.FILTER.003",name:"SEMANTIC_SIEVE",class:"FILTER",module:"clarity-filter",version:"1.8.0",status:"STABLE",rttProfile:"SEMANTIC",substrateProfile:["TEXT","VECTOR"],analyzerLayer:["L2","L3"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to sieve"},{name:"category_profile",type:"SemanticProfile",required:true,description:"Semantic category profile for matching"},{name:"match_threshold",type:"float",required:false,description:"Match confidence threshold (default 0.72)"}],outputs:[{name:"sieved_signal",type:"SignalBundle",description:"Tokens passing the semantic filter"},{name:"rejected_tokens",type:"TokenList",description:"Tokens that did not match"},{name:"match_scores",type:"ScoreMap",description:"Per-token match confidence scores"}],description:"Sieves a signal through a semantic mesh, passing only tokens or embeddings that match a defined semantic category profile.",longDescription:"Sieves a signal through a semantic mesh, passing only tokens or embeddings that match a defined semantic category profile. Precision tunable via match_threshold.",example:{input:'corpus + profile:{causal, inferential} + threshold:0.72',output:'340/512 tokens passed',notes:"Lower threshold = more permissive. Default 0.72 balances precision/recall."},crossRefs:["CLR.LENS.001","CLR.RESOLVE.001","CLR.GATE.002"],tags:["semantic","sieve","categorize"],complexity:"O(n log n)",canonRef:"TF-CLARITY-§3.3"},
+      {id:"CLR.FILTER.004",name:"HARMONIC_EXTRACT",class:"FILTER",module:"clarity-filter",version:"0.7.1",status:"EXPERIMENTAL",rttProfile:"SIGNAL",substrateProfile:["VECTOR","TENSOR"],analyzerLayer:["L1","L2","L3"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Input signal to analyze"},{name:"base_frequency",type:"float",required:true,description:"Base frequency for harmonic extraction"},{name:"harmonic_count",type:"int",required:false,description:"Number of harmonics to extract (default 3)"}],outputs:[{name:"harmonics",type:"HarmonicSet",description:"Extracted harmonic components"},{name:"fundamental",type:"SignalBundle",description:"Fundamental frequency signal"},{name:"residue",type:"ResidueMap",description:"Non-harmonic residue"}],description:"Extracts harmonic components from a signal, isolating resonant frequency patterns that indicate structural periodicity.",longDescription:"Extracts harmonic components from a signal, isolating resonant frequency patterns that indicate structural periodicity. Useful for identifying recurring structural motifs in semantic signals.",example:{input:'signal + base_freq=0.4 + harmonic_count=4',output:'4 harmonics + fundamental + residue',notes:"Higher harmonic counts reveal finer periodicity patterns."},crossRefs:["CLR.FILTER.002","CLR.SYNC.002","CLR.WEAVE.002"],tags:["harmonic","periodic","resonance"],complexity:"O(n log n)",canonRef:"TF-CLARITY-§3.4"},
+      {id:"CLR.FILTER.005",name:"CONTEXT_GATE_FILTER",class:"FILTER",module:"clarity-filter",version:"1.5.0",status:"STABLE",rttProfile:"SEMANTIC",substrateProfile:["TEXT","GRAPH"],analyzerLayer:["L2","L3","L4"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to filter"},{name:"context",type:"ContextState",required:true,description:"Ambient context state"},{name:"gate_policy",type:"GatePolicy",required:false,description:"Gating policy configuration"}],outputs:[{name:"gated_signal",type:"SignalBundle",description:"Context-gated signal"},{name:"attenuation_map",type:"AttenuationMap",description:"Map of signal attenuation per context"},{name:"context_delta",type:"ContextDelta",description:"Change in context after gating"}],description:"Applies context-conditional filtering — signals pass or are attenuated based on ambient context state at evaluation time.",longDescription:"Applies context-conditional filtering — signals pass or are attenuated based on ambient context state at evaluation time. Context-sensitive attenuation allows signals to be partially passed rather than binary blocked.",example:{input:'signal + context:{topic: finance, urgency: high}',output:'gated_signal with finance tokens amplified',notes:"Gate policy can be pass/block/attenuate."},crossRefs:["CLR.GATE.001","CLR.GATE.002","CLR.ANCHOR.001"],tags:["context","gate","conditional","attenuation"],complexity:"O(n)",canonRef:"TF-CLARITY-§3.5"},
+      {id:"CLR.FILTER.006",name:"TEMPORAL_MASK",class:"FILTER",module:"clarity-filter",version:"2.0.0",status:"STABLE",rttProfile:"TEMPORAL",substrateProfile:["STREAM","VECTOR"],analyzerLayer:["L0","L1","L2"],inputs:[{name:"stream",type:"SignalStream",required:true,description:"Input signal stream"},{name:"window",type:"TimeWindow",required:true,description:"Temporal window definition"},{name:"interpolate",type:"bool",required:false,description:"Interpolate masked segments (default false)"}],outputs:[{name:"masked_stream",type:"SignalStream",description:"Temporally masked stream"},{name:"masked_segments",type:"SegmentList",description:"List of masked segment boundaries"}],description:"Applies a temporal mask to a signal stream, zeroing or interpolating segments outside a defined time window.",longDescription:"Applies a temporal mask to a signal stream, zeroing or interpolating segments outside a defined time window. With interpolation enabled, masked segments are smoothly interpolated rather than zeroed.",example:{input:'stream + window:[t=100ms, t=500ms]',output:'masked_stream with only 100-500ms content',notes:"Interpolation uses cubic spline by default."},crossRefs:["CLR.FILTER.001","CLR.SYNC.001","CLR.TRACE.002"],tags:["temporal","mask","window","stream"],complexity:"O(n)",canonRef:"TF-CLARITY-§3.6"},
+      // ===== RESOLVE =====
+      {id:"CLR.RESOLVE.001",name:"DISAMBIGUATE",class:"RESOLVE",module:"clarity-resolve",version:"2.3.1",status:"STABLE",rttProfile:"SEMANTIC",substrateProfile:["TEXT","GRAPH"],analyzerLayer:["L2","L3","L4"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal with ambiguous references"},{name:"schema_context",type:"SchemaNode",required:true,description:"Schema context for disambiguation"},{name:"strategy",type:"string",required:false,description:"Strategy: majority|weighted|contextual (default: contextual)"}],outputs:[{name:"resolved_signal",type:"SignalBundle",description:"Signal with disambiguated references"},{name:"ambiguity_log",type:"AmbiguityLog",description:"Log of all disambiguation decisions"},{name:"confidence",type:"ScoreMap",description:"Per-node confidence scores"}],description:"Core disambiguation operator. Resolves polysemous or multi-referent nodes in a signal to their canonical interpretations using schema context.",longDescription:"Core disambiguation operator. Resolves polysemous or multi-referent nodes in a signal to their canonical interpretations using schema context. Supports multiple resolution strategies.",example:{input:'"bank" in financial+river context',output:'{sense: financial, confidence: 0.91}',notes:"Contextual strategy uses full graph context. Majority uses token voting."},crossRefs:["CLR.FILTER.003","CLR.LENS.004","CLR.MAP.003"],tags:["disambiguate","polysemy","canonical"],complexity:"O(n log n)",canonRef:"TF-CLARITY-§4.1"},
+      {id:"CLR.RESOLVE.002",name:"FOCAL_ALIGN",class:"RESOLVE",module:"clarity-resolve",version:"1.6.0",status:"STABLE",rttProfile:"SEMANTIC",substrateProfile:["TEXT","VECTOR"],analyzerLayer:["L2","L3"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to align"},{name:"reference_lens",type:"LensParams",required:true,description:"Reference lens for alignment"},{name:"tolerance",type:"float",required:false,description:"Alignment tolerance (default 0.05)"}],outputs:[{name:"aligned_signal",type:"SignalBundle",description:"Focally aligned signal"},{name:"alignment_delta",type:"float",description:"Angular delta from reference"},{name:"axis_report",type:"AxisReport",description:"Detailed axis alignment report"}],description:"Aligns a signal's focal axis with a reference lens, resolving directional ambiguity in projection space.",longDescription:"Aligns a signal's focal axis with a reference lens, resolving directional ambiguity in projection space. Critical for ensuring consistent projection orientation across pipeline stages.",example:{input:'signal + reference_lens + tolerance:0.05',output:'aligned_signal with delta=0.03',notes:"Delta < tolerance means alignment successful."},crossRefs:["CLR.LENS.001","CLR.RESOLVE.001","CLR.ANCHOR.001"],tags:["alignment","focal","axis"],complexity:"O(n)",canonRef:"TF-CLARITY-§4.2"},
+      {id:"CLR.RESOLVE.003",name:"CONFLICT_ARBITRATE",class:"RESOLVE",module:"clarity-resolve",version:"2.0.3",status:"STABLE",rttProfile:"MODAL",substrateProfile:["GRAPH","SCHEMA"],analyzerLayer:["L3","L4","L5"],inputs:[{name:"interpretations",type:"Interpretation[]",required:true,description:"Conflicting interpretations (min 2)"},{name:"priority_matrix",type:"PriorityMatrix",required:true,description:"Priority weights for arbitration"},{name:"arbitration_mode",type:"string",required:false,description:"Arbitration mode"}],outputs:[{name:"canonical",type:"Interpretation",description:"Winning canonical interpretation"},{name:"dissent_log",type:"DissentLog",description:"Log of dissenting interpretations"},{name:"arbitration_trace",type:"TraceMap",description:"Full arbitration decision trace"}],description:"Arbitrates between conflicting signal interpretations using a priority-weighted decision tree, producing a canonical resolution with dissent log.",longDescription:"Arbitrates between conflicting signal interpretations using a priority-weighted decision tree, producing a canonical resolution with dissent log. Ensures deterministic conflict resolution.",example:{input:'3 conflicting interpretations + priority matrix',output:'canonical winner + 2 dissent entries',notes:"Arbitration trace provides full decision transparency."},crossRefs:["CLR.RESOLVE.001","CLR.GATE.004","CLR.TRACE.001"],tags:["conflict","arbitration","priority","canonical"],complexity:"O(n²)",canonRef:"TF-CLARITY-§4.3"},
+      {id:"CLR.RESOLVE.004",name:"SCHEMA_BIND",class:"RESOLVE",module:"clarity-resolve",version:"1.9.0",status:"STABLE",rttProfile:"STRUCTURAL",substrateProfile:["SCHEMA","GRAPH"],analyzerLayer:["L3","L4"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Unbound signal"},{name:"schema",type:"Schema",required:true,description:"Target schema definition"},{name:"strict",type:"bool",required:false,description:"Strict mode enforcement (default false)"}],outputs:[{name:"bound_signal",type:"BoundSignal",description:"Schema-bound signal"},{name:"schema_violations",type:"ViolationList",description:"List of binding violations"},{name:"binding_map",type:"BindingMap",description:"Field-level binding map"}],description:"Binds an unstructured or loosely-typed signal to a canonical schema definition, enforcing type constraints and resolving field ambiguities.",longDescription:"Binds an unstructured or loosely-typed signal to a canonical schema definition, enforcing type constraints and resolving field ambiguities. Strict mode rejects any field that cannot be cleanly bound.",example:{input:'loose signal + target schema',output:'bound_signal + 2 violations (non-strict)',notes:"Strict mode fails on any violation. Non-strict logs and continues."},crossRefs:["CLR.RESOLVE.001","CLR.MAP.002","CLR.ANCHOR.003"],tags:["schema","bind","type","structure"],complexity:"O(n)",canonRef:"TF-CLARITY-§4.4"},
+      {id:"CLR.RESOLVE.005",name:"SENSE_ANCHOR",class:"RESOLVE",module:"clarity-resolve",version:"0.8.2",status:"EXPERIMENTAL",rttProfile:"SEMANTIC",substrateProfile:["TEXT","VECTOR"],analyzerLayer:["L2","L3"],inputs:[{name:"resolved_signal",type:"SignalBundle",required:true,description:"Previously resolved signal"},{name:"anchor_point",type:"AnchorDef",required:true,description:"Anchor definition for sense locking"},{name:"drift_tolerance",type:"float",required:false,description:"Maximum allowable drift"}],outputs:[{name:"anchored_signal",type:"SignalBundle",description:"Sense-anchored signal"},{name:"anchor_id",type:"string",description:"Unique anchor identifier"},{name:"stability_score",type:"float",description:"Stability metric (0-1)"}],description:"Anchors a resolved sense to a durable reference point in the semantic manifold, preventing drift on subsequent processing passes.",longDescription:"Anchors a resolved sense to a durable reference point in the semantic manifold, preventing drift on subsequent processing passes. Essential for long-pipeline semantic stability.",example:{input:'resolved signal + anchor_point',output:'anchored + stability_score: 0.96',notes:"Stability > 0.9 indicates strong anchoring."},crossRefs:["CLR.ANCHOR.001","CLR.RESOLVE.001","CLR.TRACE.003"],tags:["anchor","sense","drift-prevention","semantic"],complexity:"O(1)",canonRef:"TF-CLARITY-§4.5"},
+      // ===== TRACE =====
+      {id:"CLR.TRACE.001",name:"PROVENANCE_CHAIN",class:"TRACE",module:"clarity-trace",version:"3.1.0",status:"STABLE",rttProfile:"STRUCTURAL",substrateProfile:["GRAPH","SCHEMA","STREAM"],analyzerLayer:["L0","L1","L2","L3","L4","L5"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to trace"},{name:"depth",type:"int",required:false,description:"Trace depth (default: full)"},{name:"include_residue",type:"bool",required:false,description:"Include residue in chain"}],outputs:[{name:"provenance_chain",type:"ProvenanceChain",description:"Full provenance chain"},{name:"summary",type:"ProvSummary",description:"Provenance summary"},{name:"hash",type:"string",description:"Chain integrity hash"}],description:"Constructs a full provenance chain for a signal, recording every operator application, transformation, and branching event from L0 to current state.",longDescription:"Constructs a full provenance chain for a signal, recording every operator application, transformation, and branching event from L0 to current state. Immutable audit trail for signal lineage.",example:{input:'signal after 6 ops',output:'chain with 6 nodes, 2 branch points, hash: "a3f9..."',notes:"Hash enables tamper detection on provenance chains."},crossRefs:["CLR.TRACE.002","CLR.ANCHOR.004","CLR.DIFF.003"],tags:["provenance","lineage","chain","audit"],complexity:"O(n)",canonRef:"TF-CLARITY-§5.1"},
+      {id:"CLR.TRACE.002",name:"TEMPORAL_STAMP",class:"TRACE",module:"clarity-trace",version:"2.0.0",status:"STABLE",rttProfile:"TEMPORAL",substrateProfile:["STREAM","SCHEMA"],analyzerLayer:["L0","L1"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to stamp"},{name:"epoch",type:"Epoch",required:false,description:"Epoch reference"},{name:"frame_index",type:"int",required:false,description:"Frame index within epoch"}],outputs:[{name:"stamped_signal",type:"SignalBundle",description:"Temporally stamped signal"},{name:"timestamp",type:"TemporalStamp",description:"Canonical temporal marker"}],description:"Stamps a signal with a canonical temporal marker (epoch + frame index), enabling precise temporal ordering in multi-stream environments.",longDescription:"Stamps a signal with a canonical temporal marker (epoch + frame index), enabling precise temporal ordering in multi-stream environments.",example:{input:'signal + epoch:E42 + frame:17',output:'stamped_signal with ts={E42:17}',notes:"Epoch+frame provides total ordering across streams."},crossRefs:["CLR.TRACE.001","CLR.SYNC.001","CLR.FILTER.006"],tags:["timestamp","temporal","ordering","epoch"],complexity:"O(1)",canonRef:"TF-CLARITY-§5.2"},
+      {id:"CLR.TRACE.003",name:"DELTA_LOG",class:"TRACE",module:"clarity-trace",version:"1.7.0",status:"STABLE",rttProfile:"SIGNAL",substrateProfile:["VECTOR","SCHEMA"],analyzerLayer:["L1","L2","L3"],inputs:[{name:"signal_before",type:"SignalBundle",required:true,description:"Signal state before operation"},{name:"signal_after",type:"SignalBundle",required:true,description:"Signal state after operation"},{name:"log_level",type:"string",required:false,description:"Logging verbosity level"}],outputs:[{name:"delta_record",type:"DeltaRecord",description:"Compact diff record"},{name:"magnitude",type:"float",description:"Delta magnitude"},{name:"reversible",type:"bool",description:"Whether the delta can be reversed"}],description:"Logs the delta between two signal states, producing a compact diff record for audit and rollback purposes.",longDescription:"Logs the delta between two signal states, producing a compact diff record for audit and rollback purposes. Reversible deltas can be used with ROLLBACK operator.",example:{input:'signal_before + signal_after',output:'delta_record, magnitude: 0.34, reversible: true',notes:"Reversible=true enables rollback. Magnitude indicates change size."},crossRefs:["CLR.DIFF.001","CLR.TRACE.001","CLR.ANCHOR.004"],tags:["delta","log","diff","audit"],complexity:"O(n)",canonRef:"TF-CLARITY-§5.3"},
+      {id:"CLR.TRACE.004",name:"COVERAGE_MAP",class:"TRACE",module:"clarity-trace",version:"1.4.0",status:"STABLE",rttProfile:"MODAL",substrateProfile:["TEXT","VECTOR","GRAPH"],analyzerLayer:["L2","L3","L4"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to analyze"},{name:"operator_stack",type:"OperatorStack",required:true,description:"Stack of applied operators"}],outputs:[{name:"coverage_map",type:"CoverageMap",description:"Coverage visualization"},{name:"uncovered_regions",type:"RegionList",description:"Unprocessed regions"},{name:"coverage_pct",type:"float",description:"Coverage percentage"}],description:"Generates a coverage map showing which portions of the signal space have been processed, filtered, or resolved by the current operator stack.",longDescription:"Generates a coverage map showing which portions of the signal space have been processed, filtered, or resolved by the current operator stack. Essential for completeness verification.",example:{input:'signal + 5-op stack',output:'coverage_pct: 0.87, 2 uncovered regions',notes:"Feed into COVERAGE_CHECK gate for automated validation."},crossRefs:["CLR.LENS.005","CLR.GATE.003","CLR.TRACE.001"],tags:["coverage","map","completeness","audit"],complexity:"O(n log n)",canonRef:"TF-CLARITY-§5.4"},
+      {id:"CLR.TRACE.005",name:"FORK_RECORD",class:"TRACE",module:"clarity-trace",version:"1.2.1",status:"STABLE",rttProfile:"STRUCTURAL",substrateProfile:["GRAPH","STREAM"],analyzerLayer:["L2","L3","L4"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal at fork point"},{name:"branch_condition",type:"Condition",required:true,description:"Condition triggering the fork"},{name:"branch_labels",type:"string[]",required:false,description:"Labels for each branch"}],outputs:[{name:"fork_record",type:"ForkRecord",description:"Fork event record"},{name:"branch_signals",type:"SignalBundle[]",description:"Signal copies for each branch"},{name:"branch_ids",type:"string[]",description:"Unique IDs for each branch"}],description:"Records a signal fork event (branching into two or more execution paths), preserving the branch condition and initial state for each branch.",longDescription:"Records a signal fork event (branching into two or more execution paths), preserving the branch condition and initial state for each branch. Essential for parallel processing audit.",example:{input:'signal + condition + 3 branch labels',output:'fork_record + 3 branch_signals + 3 branch_ids',notes:"Branch IDs are deterministic and traceable."},crossRefs:["CLR.TRACE.001","CLR.GATE.004","CLR.SYNC.003"],tags:["fork","branch","record","divergence"],complexity:"O(1)",canonRef:"TF-CLARITY-§5.5"},
+      // ===== MAP =====
+      {id:"CLR.MAP.001",name:"SEMANTIC_PROJECT",class:"MAP",module:"clarity-map",version:"2.4.0",status:"STABLE",rttProfile:"SEMANTIC",substrateProfile:["TEXT","VECTOR"],analyzerLayer:["L2","L3","L4"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to project"},{name:"source_space",type:"SemanticSpace",required:true,description:"Source semantic space"},{name:"target_space",type:"SemanticSpace",required:true,description:"Target semantic space"},{name:"projection_matrix",type:"Matrix",required:false,description:"Custom projection matrix"}],outputs:[{name:"projected_signal",type:"SignalBundle",description:"Signal in target space"},{name:"projection_error",type:"float",description:"Projection error metric"},{name:"space_report",type:"SpaceReport",description:"Space compatibility report"}],description:"Projects a signal from its source semantic space into a target semantic space using a learned or rule-defined projection matrix.",longDescription:"Projects a signal from its source semantic space into a target semantic space using a learned or rule-defined projection matrix. Enables cross-domain semantic transfer.",example:{input:'signal + source: medical_ontology + target: legal_ontology',output:'projected_signal in legal space, error: 0.12',notes:"Low projection error indicates good space compatibility."},crossRefs:["CLR.LENS.001","CLR.MAP.002","CLR.RESOLVE.002"],tags:["projection","semantic","space","mapping"],complexity:"O(n)",canonRef:"TF-CLARITY-§6.1"},
+      {id:"CLR.MAP.002",name:"SCHEMA_TRANSFORM",class:"MAP",module:"clarity-map",version:"2.1.0",status:"STABLE",rttProfile:"STRUCTURAL",substrateProfile:["SCHEMA","GRAPH"],analyzerLayer:["L3","L4"],inputs:[{name:"signal",type:"BoundSignal",required:true,description:"Schema-bound signal"},{name:"source_schema",type:"Schema",required:true,description:"Current schema"},{name:"target_schema",type:"Schema",required:true,description:"Target schema"},{name:"mapping_rules",type:"MappingRules",required:false,description:"Custom field mapping rules"}],outputs:[{name:"transformed_signal",type:"BoundSignal",description:"Signal bound to target schema"},{name:"unmapped_fields",type:"FieldList",description:"Fields that couldn't be mapped"},{name:"coercion_log",type:"CoercionLog",description:"Type coercion decisions log"}],description:"Transforms a signal's schema representation from one structural form to another, applying field mappings, type coercions, and relation rewrites.",longDescription:"Transforms a signal's schema representation from one structural form to another, applying field mappings, type coercions, and relation rewrites.",example:{input:'bound_signal + source_schema + target_schema',output:'transformed + 1 unmapped field + 3 coercions',notes:"Coercion log records every type conversion for audit."},crossRefs:["CLR.RESOLVE.004","CLR.MAP.001","CLR.LENS.004"],tags:["schema","transform","structural","mapping"],complexity:"O(n)",canonRef:"TF-CLARITY-§6.2"},
+      {id:"CLR.MAP.003",name:"RELATIONAL_REWRITE",class:"MAP",module:"clarity-map",version:"1.5.0",status:"STABLE",rttProfile:"STRUCTURAL",substrateProfile:["GRAPH"],analyzerLayer:["L3","L4","L5"],inputs:[{name:"signal_graph",type:"SignalGraph",required:true,description:"Graph to rewrite"},{name:"rewrite_rules",type:"RewriteRules",required:true,description:"Edge rewrite ruleset"},{name:"preserve_nodes",type:"bool",required:false,description:"Preserve node identity (default true)"}],outputs:[{name:"rewritten_graph",type:"SignalGraph",description:"Rewritten graph"},{name:"rewrite_log",type:"RewriteLog",description:"Log of all edge rewrites"},{name:"edge_delta",type:"EdgeDelta",description:"Summary of edge changes"}],description:"Rewrites relational edges in a signal graph according to a rewrite ruleset, preserving node identity while restructuring connectivity.",longDescription:"Rewrites relational edges in a signal graph according to a rewrite ruleset, preserving node identity while restructuring connectivity. Safe graph surgery.",example:{input:'graph with 50 edges + 12 rewrite rules',output:'rewritten graph, 8 edges modified, 2 added',notes:"preserve_nodes=true ensures no node is lost during rewrite."},crossRefs:["CLR.MAP.002","CLR.RESOLVE.001","CLR.DIFF.002"],tags:["relational","graph","rewrite","edges"],complexity:"O(n²)",canonRef:"TF-CLARITY-§6.3"},
+      {id:"CLR.MAP.004",name:"VECTOR_EMBED",class:"MAP",module:"clarity-map",version:"2.0.0",status:"STABLE",rttProfile:"SIGNAL",substrateProfile:["TEXT","VECTOR","TENSOR"],analyzerLayer:["L1","L2"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to embed"},{name:"embedding_model",type:"ModelRef",required:true,description:"Embedding model reference"},{name:"dim",type:"int",required:false,description:"Embedding dimensions (default 768)"}],outputs:[{name:"embedding",type:"VectorEmbedding",description:"Dense vector embedding"},{name:"coordinates",type:"float[]",description:"Raw coordinate values"},{name:"metadata",type:"EmbedMetadata",description:"Embedding metadata"}],description:"Embeds a text or structured signal into a dense vector space using a configurable embedding model, producing coordinates for downstream operators.",longDescription:"Embeds a text or structured signal into a dense vector space using a configurable embedding model, producing coordinates for downstream operators.",example:{input:'text signal + model:clarity-embed-v3 + dim:768',output:'768-dim embedding vector',notes:"Higher dimensions capture finer semantic distinctions."},crossRefs:["CLR.FILTER.003","CLR.MAP.001","CLR.DIFF.001"],tags:["embedding","vector","dense","encode"],complexity:"O(n)",canonRef:"TF-CLARITY-§6.4"},
+      {id:"CLR.MAP.005",name:"ONTOLOGY_LIFT",class:"MAP",module:"clarity-map",version:"0.6.0",status:"EXPERIMENTAL",rttProfile:"SEMANTIC",substrateProfile:["TEXT","GRAPH","SCHEMA"],analyzerLayer:["L3","L4","L5"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to lift"},{name:"ontology",type:"OntologyDef",required:true,description:"Target ontology definition"},{name:"lift_depth",type:"int",required:false,description:"Lift depth (default 2)"}],outputs:[{name:"lifted_signal",type:"SignalBundle",description:"Ontologically enriched signal"},{name:"ontology_trace",type:"OntologyTrace",description:"Ontological path trace"},{name:"inferred_relations",type:"RelationSet",description:"Newly inferred relations"}],description:"Lifts a signal from a surface-level representation into a higher-order ontological space, enriching it with categorical, taxonomic, and inferential metadata.",longDescription:"Lifts a signal from a surface-level representation into a higher-order ontological space, enriching it with categorical, taxonomic, and inferential metadata.",example:{input:'signal + ontology:medical_taxonomy + depth:3',output:'lifted signal with 12 inferred relations',notes:"Deeper lift = more inferred but potentially noisier relations."},crossRefs:["CLR.RESOLVE.001","CLR.MAP.001","CLR.WEAVE.003"],tags:["ontology","lift","taxonomy","inference"],complexity:"O(n log n)",canonRef:"TF-CLARITY-§6.5"},
+      // ===== DIFF =====
+      {id:"CLR.DIFF.001",name:"SIGNAL_DELTA",class:"DIFF",module:"clarity-diff",version:"2.2.0",status:"STABLE",rttProfile:"SIGNAL",substrateProfile:["VECTOR","TENSOR"],analyzerLayer:["L1","L2"],inputs:[{name:"signal_a",type:"SignalBundle",required:true,description:"First signal"},{name:"signal_b",type:"SignalBundle",required:true,description:"Second signal"},{name:"norm",type:"string",required:false,description:"Distance norm: L1|L2|cosine (default: cosine)"}],outputs:[{name:"delta_vector",type:"VectorEmbedding",description:"Directional difference vector"},{name:"magnitude",type:"float",description:"Delta magnitude"},{name:"direction",type:"DirectionMap",description:"Direction map of delta"}],description:"Computes the vector delta between two signals in the same embedding space, producing a directional difference vector and magnitude.",longDescription:"Computes the vector delta between two signals in the same embedding space, producing a directional difference vector and magnitude.",example:{input:'signal_a + signal_b + norm:cosine',output:'delta magnitude: 0.34, direction map',notes:"Cosine norm is scale-invariant. L2 captures absolute distance."},crossRefs:["CLR.TRACE.003","CLR.DIFF.002","CLR.MAP.004"],tags:["delta","diff","vector","magnitude"],complexity:"O(n)",canonRef:"TF-CLARITY-§7.1"},
+      {id:"CLR.DIFF.002",name:"STRUCTURAL_CONTRAST",class:"DIFF",module:"clarity-diff",version:"1.8.0",status:"STABLE",rttProfile:"STRUCTURAL",substrateProfile:["GRAPH","SCHEMA"],analyzerLayer:["L3","L4"],inputs:[{name:"structure_a",type:"SignalGraph",required:true,description:"First structure"},{name:"structure_b",type:"SignalGraph",required:true,description:"Second structure"},{name:"granularity",type:"string",required:false,description:"Diff granularity level"}],outputs:[{name:"structural_diff",type:"StructDiff",description:"Structural diff result"},{name:"similarity_score",type:"float",description:"Structural similarity (0-1)"},{name:"change_set",type:"ChangeSet",description:"Set of structural changes"}],description:"Contrasts two signal structures (graphs or schemas), producing a structural diff highlighting added, removed, and modified elements.",longDescription:"Contrasts two signal structures (graphs or schemas), producing a structural diff highlighting added, removed, and modified elements.",example:{input:'two graph structures',output:'similarity: 0.78, 5 added, 3 removed, 2 modified',notes:"Granularity: node, edge, subgraph."},crossRefs:["CLR.TRACE.003","CLR.MAP.003","CLR.LENS.002"],tags:["contrast","structural","diff","similarity"],complexity:"O(n²)",canonRef:"TF-CLARITY-§7.2"},
+      {id:"CLR.DIFF.003",name:"PROVENANCE_DIFF",class:"DIFF",module:"clarity-diff",version:"1.3.0",status:"STABLE",rttProfile:"STRUCTURAL",substrateProfile:["SCHEMA","GRAPH"],analyzerLayer:["L1","L2","L3"],inputs:[{name:"chain_a",type:"ProvenanceChain",required:true,description:"First provenance chain"},{name:"chain_b",type:"ProvenanceChain",required:true,description:"Second provenance chain"}],outputs:[{name:"divergence_point",type:"ProvenanceNode",description:"Point of divergence"},{name:"shared_trunk",type:"ProvenanceChain",description:"Common ancestry chain"},{name:"branch_diff",type:"BranchDiff",description:"Diff between branches"}],description:"Diffs two provenance chains to identify divergence points, shared ancestry, and operator-level differences in processing history.",longDescription:"Diffs two provenance chains to identify divergence points, shared ancestry, and operator-level differences in processing history.",example:{input:'chain_a (8 nodes) + chain_b (6 nodes)',output:'divergence at node 4, shared trunk: 4 nodes',notes:"Useful for comparing parallel processing paths."},crossRefs:["CLR.TRACE.001","CLR.DIFF.001","CLR.ANCHOR.004"],tags:["provenance","diff","divergence","ancestry"],complexity:"O(n)",canonRef:"TF-CLARITY-§7.3"},
+      {id:"CLR.DIFF.004",name:"TEMPORAL_DRIFT",class:"DIFF",module:"clarity-diff",version:"1.6.0",status:"STABLE",rttProfile:"TEMPORAL",substrateProfile:["STREAM","VECTOR"],analyzerLayer:["L1","L2","L3"],inputs:[{name:"signal_t0",type:"SignalBundle",required:true,description:"Signal at time T0"},{name:"signal_t1",type:"SignalBundle",required:true,description:"Signal at time T1"},{name:"time_delta",type:"Duration",required:true,description:"Time elapsed between captures"}],outputs:[{name:"drift_magnitude",type:"float",description:"Total drift magnitude"},{name:"drift_type",type:"string",description:"Drift classification"},{name:"systematic_component",type:"float",description:"Systematic drift component"},{name:"stochastic_component",type:"float",description:"Random drift component"}],description:"Measures temporal drift between two signal versions captured at different times, decomposing drift into systematic and stochastic components.",longDescription:"Measures temporal drift between two signal versions captured at different times, decomposing drift into systematic and stochastic components.",example:{input:'signal_t0 + signal_t1 + time_delta: 24h',output:'drift: 0.18, systematic: 0.12, stochastic: 0.06',notes:"High systematic component indicates structural shift."},crossRefs:["CLR.TRACE.002","CLR.SYNC.002","CLR.FILTER.006"],tags:["drift","temporal","systematic","stochastic"],complexity:"O(n)",canonRef:"TF-CLARITY-§7.4"},
+      // ===== SYNC =====
+      {id:"CLR.SYNC.001",name:"FRAME_ALIGN",class:"SYNC",module:"clarity-sync",version:"2.0.0",status:"STABLE",rttProfile:"TEMPORAL",substrateProfile:["STREAM","VECTOR"],analyzerLayer:["L0","L1","L2"],inputs:[{name:"streams",type:"SignalStream[]",required:true,description:"Streams to align (min 2)"},{name:"reference_frame",type:"TemporalFrame",required:false,description:"Reference temporal frame"},{name:"interpolation",type:"string",required:false,description:"Interpolation method"}],outputs:[{name:"aligned_streams",type:"SignalStream[]",description:"Temporally aligned streams"},{name:"phase_offsets",type:"float[]",description:"Phase offset corrections"},{name:"alignment_report",type:"AlignmentReport",description:"Alignment quality report"}],description:"Aligns two or more signal streams to a common temporal frame, interpolating gaps and resolving phase offsets.",longDescription:"Aligns two or more signal streams to a common temporal frame, interpolating gaps and resolving phase offsets.",example:{input:'3 streams with different temporal origins',output:'3 aligned streams, phase_offsets: [0, 12ms, -4ms]',notes:"Interpolation: linear, cubic, nearest."},crossRefs:["CLR.TRACE.002","CLR.DIFF.004","CLR.FILTER.006"],tags:["align","frame","temporal","sync","phase"],complexity:"O(n)",canonRef:"TF-CLARITY-§8.1"},
+      {id:"CLR.SYNC.002",name:"RESONANCE_LOCK",class:"SYNC",module:"clarity-sync",version:"0.8.0",status:"EXPERIMENTAL",rttProfile:"SIGNAL",substrateProfile:["VECTOR","TENSOR"],analyzerLayer:["L1","L2"],inputs:[{name:"signal_a",type:"SignalBundle",required:true,description:"First signal"},{name:"signal_b",type:"SignalBundle",required:true,description:"Second signal"},{name:"lock_mode",type:"string",required:false,description:"Lock mode: phase|frequency|both"}],outputs:[{name:"locked_a",type:"SignalBundle",description:"Resonance-locked signal A"},{name:"locked_b",type:"SignalBundle",description:"Resonance-locked signal B"},{name:"resonance_score",type:"float",description:"Resonance quality score"}],description:"Locks two signals into resonance by matching their dominant frequency components, enabling coherent composite analysis.",longDescription:"Locks two signals into resonance by matching their dominant frequency components, enabling coherent composite analysis.",example:{input:'signal_a + signal_b + lock_mode: both',output:'locked signals, resonance_score: 0.92',notes:"Both mode locks phase AND frequency for maximum coherence."},crossRefs:["CLR.FILTER.004","CLR.DIFF.004","CLR.SYNC.001"],tags:["resonance","lock","coherence","frequency"],complexity:"O(n log n)",canonRef:"TF-CLARITY-§8.2"},
+      {id:"CLR.SYNC.003",name:"MULTI_STREAM_MERGE",class:"SYNC",module:"clarity-sync",version:"1.9.0",status:"STABLE",rttProfile:"COMPOSITE",substrateProfile:["STREAM","GRAPH"],analyzerLayer:["L2","L3","L4"],inputs:[{name:"streams",type:"SignalStream[]",required:true,description:"Streams to merge (min 2)"},{name:"strategy",type:"string",required:true,description:"Merge strategy: union|intersection|weighted_avg"},{name:"weights",type:"float[]",required:false,description:"Per-stream weights (for weighted_avg)"}],outputs:[{name:"merged_signal",type:"SignalBundle",description:"Merged composite signal"},{name:"merge_report",type:"MergeReport",description:"Merge quality report"},{name:"dropped_segments",type:"SegmentList",description:"Segments dropped during merge"}],description:"Merges multiple aligned signal streams into a single coherent signal using a configurable merge strategy (union, intersection, weighted average).",longDescription:"Merges multiple aligned signal streams into a single coherent signal using a configurable merge strategy (union, intersection, weighted average).",example:{input:'3 aligned streams + strategy: weighted_avg',output:'merged_signal + 2 dropped_segments',notes:"Pre-align with FRAME_ALIGN for best results."},crossRefs:["CLR.SYNC.001","CLR.WEAVE.001","CLR.LENS.003"],tags:["merge","multi-stream","union","composite"],complexity:"O(n log n)",canonRef:"TF-CLARITY-§8.3"},
+      {id:"CLR.SYNC.004",name:"CLOCK_CALIBRATE",class:"SYNC",module:"clarity-sync",version:"1.1.0",status:"STABLE",rttProfile:"TEMPORAL",substrateProfile:["STREAM","SCHEMA"],analyzerLayer:["L0","L1"],inputs:[{name:"stream",type:"SignalStream",required:true,description:"Stream to calibrate"},{name:"canonical_epoch",type:"Epoch",required:true,description:"Reference epoch"},{name:"skew_tolerance",type:"Duration",required:false,description:"Maximum tolerable skew"}],outputs:[{name:"calibrated_stream",type:"SignalStream",description:"Clock-calibrated stream"},{name:"skew_correction",type:"Duration",description:"Applied skew correction"},{name:"calibration_log",type:"CalibLog",description:"Calibration decision log"}],description:"Calibrates the internal clock reference of a signal stream against a canonical epoch, correcting for skew and drift over long processing chains.",longDescription:"Calibrates the internal clock reference of a signal stream against a canonical epoch, correcting for skew and drift over long processing chains.",example:{input:'stream + canonical_epoch:E0 + skew_tolerance:5ms',output:'calibrated, skew_correction: 3.2ms',notes:"Run periodically in long pipelines to prevent accumulated skew."},crossRefs:["CLR.TRACE.002","CLR.SYNC.001","CLR.DIFF.004"],tags:["calibrate","clock","epoch","skew"],complexity:"O(1)",canonRef:"TF-CLARITY-§8.4"},
+      // ===== GATE =====
+      {id:"CLR.GATE.001",name:"SIGNAL_PASS",class:"GATE",module:"clarity-gate",version:"3.0.0",status:"STABLE",rttProfile:"SIGNAL",substrateProfile:["TEXT","VECTOR","STREAM"],analyzerLayer:["L0","L1"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to evaluate"},{name:"metric",type:"GateMetric",required:true,description:"Metric to evaluate against"},{name:"threshold",type:"float",required:true,description:"Pass/block threshold"},{name:"invert",type:"bool",required:false,description:"Invert gate logic (default false)"}],outputs:[{name:"passed_signal",type:"SignalBundle | null",description:"Passed signal or null"},{name:"gate_result",type:"bool",description:"Pass/block result"},{name:"metric_value",type:"float",description:"Evaluated metric value"}],description:"Fundamental binary gate. Passes or blocks a signal based on a threshold condition evaluated against a gate metric. Foundation of all conditional operator chains.",longDescription:"Fundamental binary gate. Passes or blocks a signal based on a threshold condition evaluated against a gate metric. Foundation of all conditional operator chains.",example:{input:'signal + metric:snr + threshold:12.0',output:'passed=true, snr=14.2',notes:"Foundation gate. Most other gates build on this pattern."},crossRefs:["CLR.GATE.002","CLR.FILTER.001","CLR.TRACE.001"],tags:["gate","pass","threshold","binary","foundation"],complexity:"O(1)",canonRef:"TF-CLARITY-§9.1"},
+      {id:"CLR.GATE.002",name:"SEMANTIC_GUARD",class:"GATE",module:"clarity-gate",version:"2.1.0",status:"STABLE",rttProfile:"SEMANTIC",substrateProfile:["TEXT","VECTOR"],analyzerLayer:["L2","L3"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to guard"},{name:"precondition",type:"SemanticProfile",required:true,description:"Required semantic precondition"},{name:"fail_action",type:"string",required:false,description:"On fail: block|flag|reroute"}],outputs:[{name:"guarded_signal",type:"SignalBundle",description:"Guarded signal (if passed)"},{name:"guard_result",type:"GuardResult",description:"Guard evaluation result"},{name:"violation_detail",type:"string",description:"Violation details if failed"}],description:"Guards downstream operations by verifying that a signal meets a semantic precondition profile before allowing processing to continue.",longDescription:"Guards downstream operations by verifying that a signal meets a semantic precondition profile before allowing processing to continue.",example:{input:'signal + precondition: {must_contain: causal_chain}',output:'guard_result: PASS',notes:"Fail actions: block stops pipeline, flag continues with warning, reroute sends to alternate path."},crossRefs:["CLR.GATE.001","CLR.FILTER.003","CLR.RESOLVE.002"],tags:["guard","semantic","precondition","safety"],complexity:"O(n)",canonRef:"TF-CLARITY-§9.2"},
+      {id:"CLR.GATE.003",name:"COVERAGE_CHECK",class:"GATE",module:"clarity-gate",version:"1.4.0",status:"STABLE",rttProfile:"MODAL",substrateProfile:["TEXT","VECTOR","GRAPH"],analyzerLayer:["L2","L3","L4"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to check"},{name:"coverage_map",type:"CoverageMap",required:true,description:"Current coverage map"},{name:"min_coverage",type:"float",required:true,description:"Minimum coverage threshold (default 0.85)"}],outputs:[{name:"check_result",type:"bool",description:"Coverage gate result"},{name:"current_coverage",type:"float",description:"Current coverage level"},{name:"deficit_map",type:"RegionList",description:"Uncovered region list"}],description:"Checks whether signal coverage meets a minimum completeness requirement, gating downstream processing until coverage threshold is satisfied.",longDescription:"Checks whether signal coverage meets a minimum completeness requirement, gating downstream processing until coverage threshold is satisfied.",example:{input:'signal + coverage_map + min:0.85',output:'check_result: false, coverage: 0.78, 3 deficit regions',notes:"Pair with COVERAGE_MAP from TRACE class."},crossRefs:["CLR.TRACE.004","CLR.LENS.005","CLR.GATE.001"],tags:["coverage","check","completeness","gate"],complexity:"O(n)",canonRef:"TF-CLARITY-§9.3"},
+      {id:"CLR.GATE.004",name:"CONFLICT_GATE",class:"GATE",module:"clarity-gate",version:"1.7.0",status:"STABLE",rttProfile:"MODAL",substrateProfile:["GRAPH","SCHEMA"],analyzerLayer:["L3","L4","L5"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to check for conflicts"},{name:"interpretations",type:"Interpretation[]",required:true,description:"Current interpretations"},{name:"conflict_threshold",type:"float",required:false,description:"Conflict threshold (default 0.3)"}],outputs:[{name:"gate_result",type:"bool",description:"Gate result (true if conflict detected)"},{name:"conflict_score",type:"float",description:"Conflict severity score"},{name:"triggered_arbitration",type:"bool",description:"Whether arbitration was triggered"}],description:"Detects and gates on signal conflicts — blocks or reroutes when two or more interpretations exceed a conflict threshold, triggering arbitration.",longDescription:"Detects and gates on signal conflicts — blocks or reroutes when two or more interpretations exceed a conflict threshold, triggering arbitration.",example:{input:'signal + 3 interpretations',output:'gate_result: true, conflict_score: 0.45, arbitration triggered',notes:"Automatically triggers CONFLICT_ARBITRATE from RESOLVE class."},crossRefs:["CLR.RESOLVE.003","CLR.GATE.001","CLR.TRACE.005"],tags:["conflict","gate","arbitration","modal"],complexity:"O(n²)",canonRef:"TF-CLARITY-§9.4"},
+      {id:"CLR.GATE.005",name:"SCHEMA_VALIDATE_GATE",class:"GATE",module:"clarity-gate",version:"1.5.0",status:"STABLE",rttProfile:"STRUCTURAL",substrateProfile:["SCHEMA","GRAPH"],analyzerLayer:["L3","L4"],inputs:[{name:"signal",type:"BoundSignal",required:true,description:"Schema-bound signal to validate"},{name:"schema",type:"Schema",required:true,description:"Canonical schema to validate against"},{name:"strictness",type:"string",required:false,description:"Strictness: lenient|standard|strict"}],outputs:[{name:"valid",type:"bool",description:"Validation result"},{name:"violations",type:"ViolationList",description:"Schema violations list"},{name:"gate_report",type:"GateReport",description:"Detailed gate report"}],description:"Validates a signal's schema binding against a canonical schema definition, gating on validation failure with configurable strictness.",longDescription:"Validates a signal's schema binding against a canonical schema definition, gating on validation failure with configurable strictness.",example:{input:'bound_signal + schema + strictness:standard',output:'valid: true, 0 violations',notes:"Strictness levels: lenient (warn only), standard (block on critical), strict (block on any)."},crossRefs:["CLR.RESOLVE.004","CLR.GATE.001","CLR.MAP.002"],tags:["schema","validate","gate","structural"],complexity:"O(n)",canonRef:"TF-CLARITY-§9.5"},
+      // ===== ANCHOR =====
+      {id:"CLR.ANCHOR.001",name:"REFERENCE_SET",class:"ANCHOR",module:"clarity-anchor",version:"2.5.0",status:"STABLE",rttProfile:"SEMANTIC",substrateProfile:["TEXT","VECTOR","SCHEMA"],analyzerLayer:["L2","L3","L4"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Signal to derive anchor from"},{name:"anchor_name",type:"string",required:true,description:"Name for the anchor"},{name:"coordinate",type:"VectorEmbedding",required:false,description:"Explicit coordinate"},{name:"ttl",type:"Duration",required:false,description:"Time-to-live for anchor"}],outputs:[{name:"anchor_id",type:"string",description:"Unique anchor identifier"},{name:"anchor_ref",type:"AnchorDef",description:"Anchor definition object"},{name:"coordinate",type:"VectorEmbedding",description:"Anchor coordinates"}],description:"Sets a named reference anchor point in the semantic manifold, creating a stable coordinate that other operators can resolve against.",longDescription:"Sets a named reference anchor point in the semantic manifold, creating a stable coordinate that other operators can resolve against.",example:{input:'"truth_baseline" anchor set at coord [0.21, -0.87, ...]',output:'anchor_id: "anc_truth_baseline_7f2a", TTL=indefinite',notes:"Anchors without TTL persist for the full pipeline lifetime."},crossRefs:["CLR.ANCHOR.002","CLR.RESOLVE.002","CLR.TRACE.003"],tags:["anchor","reference","coordinate","stable"],complexity:"O(1)",canonRef:"TF-CLARITY-§10.1"},
+      {id:"CLR.ANCHOR.002",name:"TOPOLOGY_PIN",class:"ANCHOR",module:"clarity-anchor",version:"1.6.0",status:"STABLE",rttProfile:"STRUCTURAL",substrateProfile:["GRAPH"],analyzerLayer:["L3","L4"],inputs:[{name:"graph",type:"SignalGraph",required:true,description:"Graph to pin"},{name:"pin_name",type:"string",required:true,description:"Pin identifier"},{name:"nodes",type:"string[]",required:false,description:"Specific nodes to pin"}],outputs:[{name:"pinned_graph",type:"SignalGraph",description:"Topology-pinned graph"},{name:"pin_id",type:"string",description:"Unique pin identifier"},{name:"pinned_nodes",type:"string[]",description:"List of pinned node IDs"}],description:"Pins a structural topology to a named anchor, preventing relational drift during graph rewrites or schema migrations.",longDescription:"Pins a structural topology to a named anchor, preventing relational drift during graph rewrites or schema migrations.",example:{input:'graph + pin_name:"core_topology"',output:'pinned_graph, 12 nodes pinned',notes:"Pinned nodes are immutable to RELATIONAL_REWRITE operations."},crossRefs:["CLR.ANCHOR.001","CLR.LENS.004","CLR.MAP.003"],tags:["topology","pin","anchor","graph"],complexity:"O(n)",canonRef:"TF-CLARITY-§10.2"},
+      {id:"CLR.ANCHOR.003",name:"CANONICAL_BIND",class:"ANCHOR",module:"clarity-anchor",version:"2.0.0",status:"STABLE",rttProfile:"STRUCTURAL",substrateProfile:["SCHEMA","GRAPH"],analyzerLayer:["L3","L4","L5"],inputs:[{name:"signal",type:"BoundSignal",required:true,description:"Resolved bound signal"},{name:"canonical_ref",type:"CanonicalDef",required:true,description:"Canonical reference definition"},{name:"namespace",type:"string",required:false,description:"Target namespace"}],outputs:[{name:"canonical_id",type:"string",description:"Canonical identity ID"},{name:"canonical_record",type:"CanonRecord",description:"Full canonical record"},{name:"binding_cert",type:"BindCert",description:"Binding certificate"}],description:"Binds a signal's resolved form to a canonical reference definition, establishing a permanent identity link in the clarity namespace.",longDescription:"Binds a signal's resolved form to a canonical reference definition, establishing a permanent identity link in the clarity namespace.",example:{input:'bound_signal + canonical_ref + namespace: "global"',output:'canonical_id: "canon_7f2a_global", binding_cert issued',notes:"Binding certificates are cryptographically signed."},crossRefs:["CLR.RESOLVE.004","CLR.ANCHOR.001","CLR.TRACE.001"],tags:["canonical","bind","identity","namespace"],complexity:"O(1)",canonRef:"TF-CLARITY-§10.3"},
+      {id:"CLR.ANCHOR.004",name:"CHECKPOINT_SAVE",class:"ANCHOR",module:"clarity-anchor",version:"1.9.0",status:"STABLE",rttProfile:"TEMPORAL",substrateProfile:["STREAM","SCHEMA","GRAPH"],analyzerLayer:["L0","L1","L2","L3","L4","L5"],inputs:[{name:"signal",type:"SignalBundle",required:true,description:"Full signal state to checkpoint"},{name:"checkpoint_name",type:"string",required:true,description:"Checkpoint label"},{name:"include_provenance",type:"bool",required:false,description:"Include provenance chain (default true)"}],outputs:[{name:"checkpoint_id",type:"string",description:"Unique checkpoint ID"},{name:"checkpoint_ref",type:"CheckpointRef",description:"Checkpoint reference"},{name:"state_size",type:"int",description:"Serialized state size in bytes"}],description:"Saves the current full signal state as a named checkpoint, enabling rollback or branch comparison at any subsequent processing stage.",longDescription:"Saves the current full signal state as a named checkpoint, enabling rollback or branch comparison at any subsequent processing stage.",example:{input:'signal + checkpoint_name:"pre_arbitration"',output:'checkpoint_id: "ckpt_pre_arb_9e3f", state_size: 14280',notes:"Include provenance for full audit trail on rollback."},crossRefs:["CLR.TRACE.001","CLR.TRACE.003","CLR.ANCHOR.001"],tags:["checkpoint","save","rollback","state"],complexity:"O(n)",canonRef:"TF-CLARITY-§10.4"},
+      {id:"CLR.ANCHOR.005",name:"ROLLBACK",class:"ANCHOR",module:"clarity-anchor",version:"1.4.0",status:"STABLE",rttProfile:"TEMPORAL",substrateProfile:["STREAM","SCHEMA","GRAPH"],analyzerLayer:["L0","L1","L2","L3","L4","L5"],inputs:[{name:"checkpoint_ref",type:"CheckpointRef",required:true,description:"Checkpoint to restore"},{name:"target_signal",type:"SignalBundle",required:true,description:"Current signal to replace"}],outputs:[{name:"restored_signal",type:"SignalBundle",description:"Restored signal state"},{name:"ops_reversed",type:"int",description:"Number of operations reversed"},{name:"rollback_log",type:"RollbackLog",description:"Rollback audit log"}],description:"Restores a signal to a previously saved checkpoint state, reversing all operator applications made after the checkpoint.",longDescription:"Restores a signal to a previously saved checkpoint state, reversing all operator applications made after the checkpoint.",example:{input:'checkpoint_ref + target_signal (8 ops later)',output:'restored_signal, ops_reversed: 8',notes:"Irreversible operators are noted in rollback_log as 'destructive'."},crossRefs:["CLR.ANCHOR.004","CLR.TRACE.001","CLR.DIFF.003"],tags:["rollback","restore","checkpoint","revert"],complexity:"O(n)",canonRef:"TF-CLARITY-§10.5"},
+      // ===== WEAVE =====
+      {id:"CLR.WEAVE.001",name:"SIGNAL_COMPOSE",class:"WEAVE",module:"clarity-weave",version:"2.3.0",status:"STABLE",rttProfile:"COMPOSITE",substrateProfile:["TEXT","VECTOR","GRAPH"],analyzerLayer:["L3","L4","L5"],inputs:[{name:"signals",type:"SignalBundle[]",required:true,description:"Signals to compose (min 2)"},{name:"compose_strategy",type:"string",required:true,description:"Strategy: union|weighted|exclusive"},{name:"weights",type:"float[]",required:false,description:"Per-signal weights"}],outputs:[{name:"composite_signal",type:"SignalBundle",description:"Unified composite signal"},{name:"composition_map",type:"CompMap",description:"Composition contribution map"},{name:"overlap_log",type:"OverlapLog",description:"Semantic overlap log"}],description:"Composes two or more processed signals into a unified composite signal, resolving semantic overlaps and preserving distinct contributions.",longDescription:"Composes two or more processed signals into a unified composite signal, resolving semantic overlaps and preserving distinct contributions.",example:{input:'3 signals + strategy: weighted',output:'composite_signal, 2 overlap regions resolved',notes:"Exclusive strategy drops overlapping segments. Union preserves all."},crossRefs:["CLR.SYNC.003","CLR.LENS.003","CLR.RESOLVE.003"],tags:["compose","weave","composite","union"],complexity:"O(n²)",canonRef:"TF-CLARITY-§11.1"},
+      {id:"CLR.WEAVE.002",name:"HARMONIC_WEAVE",class:"WEAVE",module:"clarity-weave",version:"0.7.0",status:"EXPERIMENTAL",rttProfile:"SIGNAL",substrateProfile:["VECTOR","TENSOR"],analyzerLayer:["L2","L3"],inputs:[{name:"harmonic_sets",type:"HarmonicSet[]",required:true,description:"Harmonic sets to weave (min 2)"},{name:"phase_offsets",type:"float[]",required:false,description:"Phase offsets per set"},{name:"amplitude_weights",type:"float[]",required:false,description:"Amplitude weights per set"}],outputs:[{name:"composite_waveform",type:"SignalBundle",description:"Composite harmonic waveform"},{name:"phase_map",type:"PhaseMap",description:"Phase alignment map"},{name:"synthesis_report",type:"SynthReport",description:"Synthesis quality report"}],description:"Weaves harmonic components from multiple signal sources into a composite waveform, enabling frequency-domain synthesis of semantic signals.",longDescription:"Weaves harmonic components from multiple signal sources into a composite waveform, enabling frequency-domain synthesis of semantic signals.",example:{input:'2 harmonic sets + phase_offsets',output:'composite waveform + synthesis report',notes:"Pre-extract harmonics with HARMONIC_EXTRACT from FILTER class."},crossRefs:["CLR.FILTER.004","CLR.SYNC.002","CLR.WEAVE.001"],tags:["harmonic","weave","synthesis","waveform"],complexity:"O(n log n)",canonRef:"TF-CLARITY-§11.2"},
+      {id:"CLR.WEAVE.003",name:"ONTOLOGY_BRIDGE",class:"WEAVE",module:"clarity-weave",version:"0.5.0",status:"EXPERIMENTAL",rttProfile:"SEMANTIC",substrateProfile:["GRAPH","SCHEMA"],analyzerLayer:["L4","L5"],inputs:[{name:"ontology_a",type:"OntologyDef",required:true,description:"First ontology"},{name:"ontology_b",type:"OntologyDef",required:true,description:"Second ontology"},{name:"bridge_mode",type:"string",required:false,description:"Bridge mode: strict|fuzzy"}],outputs:[{name:"bridge_map",type:"OntologyBridge",description:"Cross-ontology bridge mapping"},{name:"shared_concepts",type:"ConceptSet",description:"Shared concept set"},{name:"bridge_score",type:"float",description:"Bridge quality score"}],description:"Bridges two distinct ontological spaces by weaving shared concept nodes into a cross-ontology mapping structure, enabling semantic transfer.",longDescription:"Bridges two distinct ontological spaces by weaving shared concept nodes into a cross-ontology mapping structure, enabling semantic transfer.",example:{input:'medical_ontology + legal_ontology + mode: fuzzy',output:'bridge with 23 shared concepts, score: 0.68',notes:"Fuzzy mode uses embedding similarity. Strict requires exact concept match."},crossRefs:["CLR.MAP.005","CLR.RESOLVE.001","CLR.WEAVE.001"],tags:["ontology","bridge","semantic-transfer","mapping"],complexity:"O(n²)",canonRef:"TF-CLARITY-§11.3"},
+      {id:"CLR.WEAVE.004",name:"LAYER_INTEGRATE",class:"WEAVE",module:"clarity-weave",version:"1.5.0",status:"STABLE",rttProfile:"COMPOSITE",substrateProfile:["TEXT","VECTOR","GRAPH","SCHEMA"],analyzerLayer:["L1","L2","L3","L4","L5"],inputs:[{name:"layer_signals",type:"LayerSignalMap",required:true,description:"Signals keyed by analyzer layer"},{name:"integration_policy",type:"IntegrationPolicy",required:false,description:"Integration policy configuration"}],outputs:[{name:"integrated_signal",type:"SignalBundle",description:"Multi-layer integrated signal"},{name:"layer_attribution",type:"LayerAttrMap",description:"Per-layer attribution map"},{name:"integration_trace",type:"TraceMap",description:"Integration decision trace"}],description:"Integrates signals processed at different analyzer layers into a coherent multi-layer composite, maintaining layer attribution metadata.",longDescription:"Integrates signals processed at different analyzer layers into a coherent multi-layer composite, maintaining layer attribution metadata.",example:{input:'signals from L1, L2, L3, L4',output:'integrated_signal with layer attribution map',notes:"Attribution map shows contribution weight per layer."},crossRefs:["CLR.WEAVE.001","CLR.TRACE.001","CLR.ANCHOR.003"],tags:["layer","integrate","multi-layer","composite"],complexity:"O(n log n)",canonRef:"TF-CLARITY-§11.4"}
+    ];
+
+    // ============================================================
+    // STATE
+    // ============================================================
+    const RTT_PROFILES = ['ALL','SIGNAL','SEMANTIC','STRUCTURAL','TEMPORAL','MODAL','COMPOSITE'];
+    const STATUSES = ['ALL','STABLE','EXPERIMENTAL','DEPRECATED','DRAFT'];
+    const SUBSTRATES = ['TEXT','VECTOR','GRAPH','STREAM','SCHEMA','TENSOR'];
+    const LAYERS = ['L0','L1','L2','L3','L4','L5'];
+    const CLASSES = ['ALL','LENS','FILTER','RESOLVE','TRACE','MAP','DIFF','SYNC','GATE','ANCHOR','WEAVE'];
+    const CLASS_COUNTS = {};
+    OPERATORS.forEach(op => { CLASS_COUNTS[op.class] = (CLASS_COUNTS[op.class]||0)+1; });
+
+    let state = {
+        search: '',
+        activeClass: 'ALL',
+        activeRTT: 'ALL',
+        activeStatus: 'ALL',
+        activeSubstrates: [],
+        activeLayers: [],
+        selectedOp: null,
+        graphOpen: false,
+    };
+
+    // ============================================================
+    // FILTER LOGIC
+    // ============================================================
+    function filterOperators() {
+        return OPERATORS.filter(op => {
+            if (state.activeClass !== 'ALL' && op.class !== state.activeClass) return false;
+            if (state.activeRTT !== 'ALL' && op.rttProfile !== state.activeRTT) return false;
+            if (state.activeStatus !== 'ALL' && op.status !== state.activeStatus) return false;
+            if (state.activeSubstrates.length > 0 && !state.activeSubstrates.every(s => op.substrateProfile.includes(s))) return false;
+            if (state.activeLayers.length > 0 && !state.activeLayers.every(l => op.analyzerLayer.includes(l))) return false;
+            if (state.search) {
+                const q = state.search.toLowerCase();
+                const searchable = [op.id, op.name, op.description, op.module, op.rttProfile, op.class, ...op.tags, ...op.inputs.map(i=>i.name+' '+i.type), ...op.outputs.map(o=>o.name+' '+o.type)].join(' ').toLowerCase();
+                if (!searchable.includes(q)) return false;
+            }
+            return true;
+        });
+    }
+
+    // ============================================================
+    // RENDER SIDEBAR
+    // ============================================================
+    function renderSidebar() {
+        const nav = document.getElementById('class-nav');
+        nav.innerHTML = CLASSES.map(cls => {
+            const isAll = cls === 'ALL';
+            const count = isAll ? OPERATORS.length : (CLASS_COUNTS[cls]||0);
+            const color = isAll ? '#64748b' : CLASS_COLORS[cls];
+            const icon = isAll ? 'layers' : CLASS_ICONS[cls];
+            const active = state.activeClass === cls;
+            return `<div class="sidebar-item flex items-center gap-3 px-4 py-2.5 text-sm ${active ? 'active text-white' : 'text-txt-300'}" data-class="${cls}" style="${active ? 'border-color:'+color : ''}">
+                <i data-lucide="${icon}" class="w-4 h-4 shrink-0" style="color:${color}"></i>
+                <span class="flex-1 font-medium truncate">${isAll ? 'All Operators' : cls}</span>
+                <span class="text-xs font-mono px-1.5 py-0.5 rounded" style="background:${color}22;color:${color}">${count}</span>
+            </div>`;
+        }).join('');
+        if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") { lucide.createIcons(); }
+        nav.querySelectorAll('.sidebar-item').forEach(el => {
+            el.addEventListener('click', () => {
+                state.activeClass = el.dataset.class;
+                render();
+                closeMobileSidebar();
+            });
+        });
+    }
+
+    // ============================================================
+    // RENDER FILTER BAR
+    // ============================================================
+    function renderFilterBar() {
+        // RTT
+        const rttCont = document.getElementById('rtt-filters');
+        rttCont.innerHTML = RTT_PROFILES.map(r => {
+            const active = state.activeRTT === r;
+            return `<span class="filter-chip text-[10px] font-mono font-medium px-2 py-0.5 rounded cursor-pointer ${active ? 'text-white' : 'text-txt-400 hover:text-txt-200'}" data-rtt="${r}" style="${active ? 'background:#3b82f6;color:white' : 'background:#111520'}">${r}</span>`;
+        }).join('');
+        rttCont.querySelectorAll('.filter-chip').forEach(el => {
+            el.addEventListener('click', () => { state.activeRTT = el.dataset.rtt; render(); });
+        });
+
+        // Status
+        const statusCont = document.getElementById('status-filters');
+        statusCont.innerHTML = STATUSES.map(s => {
+            const active = state.activeStatus === s;
+            const colors = { ALL:'#64748b', STABLE:'#10b981', EXPERIMENTAL:'#8b5cf6', DEPRECATED:'#ef4444', DRAFT:'#64748b' };
+            const c = colors[s];
+            return `<span class="filter-chip text-[10px] font-mono font-medium px-2 py-0.5 rounded cursor-pointer ${active ? '' : 'text-txt-400 hover:text-txt-200'}" data-status="${s}" style="${active ? 'background:'+c+';color:white' : 'background:#111520'}">${s}</span>`;
+        }).join('');
+        statusCont.querySelectorAll('.filter-chip').forEach(el => {
+            el.addEventListener('click', () => { state.activeStatus = el.dataset.status; render(); });
+        });
+
+        // Substrate
+        const subCont = document.getElementById('substrate-filters');
+        subCont.innerHTML = SUBSTRATES.map(s => {
+            const active = state.activeSubstrates.includes(s);
+            return `<span class="filter-chip text-[10px] font-mono font-medium px-2 py-0.5 rounded cursor-pointer ${active ? 'text-white' : 'text-txt-400 hover:text-txt-200'}" data-sub="${s}" style="${active ? 'background:#06b6d4;color:white' : 'background:#111520'}">${s}</span>`;
+        }).join('');
+        subCont.querySelectorAll('.filter-chip').forEach(el => {
+            el.addEventListener('click', () => {
+                const s = el.dataset.sub;
+                if (state.activeSubstrates.includes(s)) state.activeSubstrates = state.activeSubstrates.filter(x=>x!==s);
+                else state.activeSubstrates.push(s);
+                render();
+            });
+        });
+
+        // Layers
+        const layCont = document.getElementById('layer-filters');
+        layCont.innerHTML = LAYERS.map(l => {
+            const active = state.activeLayers.includes(l);
+            return `<span class="filter-chip text-[10px] font-mono font-medium px-2 py-0.5 rounded cursor-pointer ${active ? 'text-white' : 'text-txt-400 hover:text-txt-200'}" data-layer="${l}" style="${active ? 'background:#f59e0b;color:#0a0c12' : 'background:#111520'}">${l}</span>`;
+        }).join('');
+        layCont.querySelectorAll('.filter-chip').forEach(el => {
+            el.addEventListener('click', () => {
+                const l = el.dataset.layer;
+                if (state.activeLayers.includes(l)) state.activeLayers = state.activeLayers.filter(x=>x!==l);
+                else state.activeLayers.push(l);
+                render();
+            });
+        });
+    }
+
+    // ============================================================
+    // RENDER STATS BAR
+    // ============================================================
+    function renderStatsBar(filtered) {
+        const stable = filtered.filter(o=>o.status==='STABLE').length;
+        const exp = filtered.filter(o=>o.status==='EXPERIMENTAL').length;
+        const modules = new Set(filtered.map(o=>o.module)).size;
+        document.getElementById('stats-bar').innerHTML = `
+            <span class="text-txt-200">Showing <strong class="text-white font-semibold">${filtered.length}</strong> of <strong class="text-white font-semibold">${OPERATORS.length}</strong> operators</span>
+            <span class="hidden sm:inline text-txt-500">|</span>
+            <span class="hidden sm:inline"><span class="inline-block w-2 h-2 rounded-full bg-success-500 mr-1"></span><span class="text-txt-300">${stable} STABLE</span></span>
+            <span class="hidden sm:inline"><span class="inline-block w-2 h-2 rounded-full bg-violet-500 mr-1"></span><span class="text-txt-300">${exp} EXPERIMENTAL</span></span>
+            <span class="hidden sm:inline text-txt-500">|</span>
+            <span class="hidden sm:inline text-txt-300">${modules} module${modules!==1?'s':''}</span>`;
+    }
+
+    // ============================================================
+    // RENDER OPERATOR GRID
+    // ============================================================
+    function renderGrid(filtered) {
+        const grid = document.getElementById('operator-grid');
+        const empty = document.getElementById('empty-state');
+        if (filtered.length === 0) {
+            grid.innerHTML = '';
+            grid.classList.add('hidden');
+            empty.classList.remove('hidden');
+            empty.classList.add('flex');
+            return;
+        }
+        grid.classList.remove('hidden');
+        empty.classList.add('hidden');
+        empty.classList.remove('flex');
+
+        grid.innerHTML = filtered.map((op, i) => {
+            const color = CLASS_COLORS[op.class];
+            const statusCls = 'status-' + op.status.toLowerCase();
+            const layerDots = LAYERS.map(l => `<span class="layer-dot ${op.analyzerLayer.includes(l)?'filled':' empty'}" style="background:${op.analyzerLayer.includes(l)?color:'#1e2535'}" title="${l}"></span>`).join('');
+            const substrateTags = op.substrateProfile.map(s => `<span class="substrate-tag" style="background:${color}18;color:${color}">${s}</span>`).join('');
+            return `<div class="op-card rounded-xl bg-bg-700 p-4 cursor-pointer fade-in" data-op-id="${op.id}" style="animation-delay:${Math.min(i*30,300)}ms">
+                <div class="flex items-start justify-between gap-2 mb-2">
+                    <div class="min-w-0">
+                        <span class="font-mono text-[11px] text-txt-400">${op.id}</span>
+                        <h3 class="font-mono font-semibold text-sm text-txt-100 truncate">${op.name}</h3>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <span class="text-[10px] font-medium px-1.5 py-0.5 rounded" style="background:${color}22;color:${color}">${op.class}</span>
+                        <span class="text-[10px] font-medium px-1.5 py-0.5 rounded ${statusCls}">${op.status}</span>
+                    </div>
+                </div>
+                <p class="text-xs text-txt-300 mb-3 line-clamp-2 leading-relaxed">${op.description}</p>
+                <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <div class="flex gap-0.5">${layerDots}</div>
+                        <span class="text-[10px] font-mono text-txt-400">${op.rttProfile}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-[10px] font-mono text-txt-500">${op.complexity}</span>
+                        <span class="text-[10px] font-mono text-txt-500">v${op.version}</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-1 mt-2">${substrateTags}</div>
+            </div>`;
+        }).join('');
+
+        grid.querySelectorAll('.op-card').forEach(card => {
+            card.addEventListener('click', () => { openDetail(card.dataset.opId); });
+        });
+    }
+
+    // ============================================================
+    // DETAIL PANEL
+    // ============================================================
+    function openDetail(opId) {
+        const op = OPERATORS.find(o => o.id === opId);
+        if (!op) return;
+        state.selectedOp = op;
+        const color = CLASS_COLORS[op.class];
+        const statusCls = 'status-' + op.status.toLowerCase();
+
+        const inputRows = op.inputs.map(i => `<tr class="border-t border-bg-500"><td class="py-2 pr-3 font-mono text-xs text-txt-200">${i.name}</td><td class="py-2 pr-3 font-mono text-[11px] text-acc-400">${i.type}</td><td class="py-2 pr-3 text-xs text-center">${i.required ? '<span class="text-success-400">●</span>' : '<span class="text-txt-500">○</span>'}</td><td class="py-2 text-xs text-txt-300">${i.description}</td></tr>`).join('');
+        const outputRows = op.outputs.map(o => `<tr class="border-t border-bg-500"><td class="py-2 pr-3 font-mono text-xs text-txt-200">${o.name}</td><td class="py-2 pr-3 font-mono text-[11px] text-acc-400">${o.type}</td><td class="py-2 text-xs text-txt-300">${o.description}</td></tr>`).join('');
+        const crossRefLinks = op.crossRefs.map(ref => `<span class="inline-block text-xs font-mono px-2 py-1 rounded bg-bg-600 text-acc-400 cursor-pointer hover:bg-bg-500 crossref-link" data-ref="${ref}">${ref}</span>`).join(' ');
+        const tagsList = op.tags.map(t => `<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-bg-600 text-txt-300">#${t}</span>`).join(' ');
+
+        document.getElementById('detail-content').innerHTML = `
+            <div class="sticky top-0 bg-bg-800 z-10 border-b border-bdr px-5 py-3 flex items-center justify-between">
+                <div class="min-w-0">
+                    <span class="font-mono text-xs text-txt-400">${op.id}</span>
+                    <h2 class="font-mono font-bold text-lg text-txt-100">${op.name}</h2>
+                </div>
+                <button id="detail-close-btn" class="p-2 text-txt-400 hover:text-txt-100 shrink-0">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="px-5 py-4 space-y-1">
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="text-xs font-medium px-2 py-1 rounded" style="background:${color}22;color:${color}">${op.class}</span>
+                    <span class="text-xs font-medium px-2 py-1 rounded ${statusCls}">${op.status}</span>
+                    <span class="text-xs font-mono px-2 py-1 rounded bg-bg-600 text-txt-300">v${op.version}</span>
+                    <span class="text-xs font-mono px-2 py-1 rounded bg-bg-600 text-txt-300">${op.complexity}</span>
+                    <span class="text-xs font-mono px-2 py-1 rounded bg-bg-600 text-txt-300">${op.rttProfile}</span>
+                    <span class="text-xs font-mono px-2 py-1 rounded bg-bg-600 text-txt-300">${op.module}</span>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="border-b border-bdr px-5 flex gap-0">
+                <button class="tab-btn active text-sm font-medium px-3 py-2 text-txt-400" data-tab="overview">Overview</button>
+                <button class="tab-btn text-sm font-medium px-3 py-2 text-txt-400" data-tab="io">Inputs/Outputs</button>
+                <button class="tab-btn text-sm font-medium px-3 py-2 text-txt-400" data-tab="example">Example</button>
+                <button class="tab-btn text-sm font-medium px-3 py-2 text-txt-400" data-tab="crossrefs">Cross-Refs</button>
+                <button class="tab-btn text-sm font-medium px-3 py-2 text-txt-400" data-tab="canon">Canon</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="px-5 py-4">
+                <div id="tab-overview" class="tab-content">
+                    <h4 class="text-xs uppercase tracking-wider text-txt-500 font-medium mb-2">Description</h4>
+                    <p class="text-sm text-txt-200 leading-relaxed mb-4">${op.longDescription || op.description}</p>
+                    <h4 class="text-xs uppercase tracking-wider text-txt-500 font-medium mb-2">Substrate Profiles</h4>
+                    <div class="flex flex-wrap gap-1.5 mb-4">${op.substrateProfile.map(s=>`<span class="substrate-tag text-xs" style="background:${color}18;color:${color}">${s}</span>`).join('')}</div>
+                    <h4 class="text-xs uppercase tracking-wider text-txt-500 font-medium mb-2">Analyzer Layers</h4>
+                    <div class="flex gap-2 mb-4">${LAYERS.map(l=>`<div class="text-center"><div class="layer-dot mx-auto mb-1 ${op.analyzerLayer.includes(l)?'filled':'empty'}" style="background:${op.analyzerLayer.includes(l)?color:'#1e2535'}"></div><span class="text-[10px] font-mono text-txt-400">${l}</span></div>`).join('')}</div>
+                    <h4 class="text-xs uppercase tracking-wider text-txt-500 font-medium mb-2">Tags</h4>
+                    <div class="flex flex-wrap gap-1.5">${tagsList}</div>
+                </div>
+                <div id="tab-io" class="tab-content hidden">
+                    <h4 class="text-xs uppercase tracking-wider text-txt-500 font-medium mb-2">Inputs</h4>
+                    <div class="overflow-x-auto mb-4 rounded-lg border border-bg-500">
+                        <table class="w-full text-left"><thead class="bg-bg-600"><tr><th class="px-3 py-2 text-[10px] uppercase tracking-wider text-txt-500">Name</th><th class="px-3 py-2 text-[10px] uppercase tracking-wider text-txt-500">Type</th><th class="px-3 py-2 text-[10px] uppercase tracking-wider text-txt-500 text-center">Req</th><th class="px-3 py-2 text-[10px] uppercase tracking-wider text-txt-500">Description</th></tr></thead><tbody class="bg-bg-700">${inputRows}</tbody></table>
+                    </div>
+                    <h4 class="text-xs uppercase tracking-wider text-txt-500 font-medium mb-2">Outputs</h4>
+                    <div class="overflow-x-auto rounded-lg border border-bg-500">
+                        <table class="w-full text-left"><thead class="bg-bg-600"><tr><th class="px-3 py-2 text-[10px] uppercase tracking-wider text-txt-500">Name</th><th class="px-3 py-2 text-[10px] uppercase tracking-wider text-txt-500">Type</th><th class="px-3 py-2 text-[10px] uppercase tracking-wider text-txt-500">Description</th></tr></thead><tbody class="bg-bg-700">${outputRows}</tbody></table>
+                    </div>
+                </div>
+                <div id="tab-example" class="tab-content hidden">
+                    <h4 class="text-xs uppercase tracking-wider text-txt-500 font-medium mb-2">Input</h4>
+                    <pre class="bg-bg-900 rounded-lg p-3 text-xs font-mono text-acc-400 overflow-x-auto mb-4 border border-bg-500">${op.example.input}</pre>
+                    <h4 class="text-xs uppercase tracking-wider text-txt-500 font-medium mb-2">Output</h4>
+                    <pre class="bg-bg-900 rounded-lg p-3 text-xs font-mono text-success-400 overflow-x-auto mb-4 border border-bg-500">${op.example.output}</pre>
+                    <h4 class="text-xs uppercase tracking-wider text-txt-500 font-medium mb-2">Notes</h4>
+                    <p class="text-sm text-txt-300 leading-relaxed">${op.example.notes}</p>
+                </div>
+                <div id="tab-crossrefs" class="tab-content hidden">
+                    <h4 class="text-xs uppercase tracking-wider text-txt-500 font-medium mb-3">Related Operators</h4>
+                    <div class="flex flex-wrap gap-2">${crossRefLinks}</div>
+                </div>
+                <div id="tab-canon" class="tab-content hidden">
+                    <h4 class="text-xs uppercase tracking-wider text-txt-500 font-medium mb-2">Canon Reference</h4>
+                    <div class="bg-bg-900 rounded-lg p-4 border border-bg-500">
+                        <span class="font-mono text-sm text-acc-400">${op.canonRef}</span>
+                        <p class="text-xs text-txt-400 mt-2">TriadicFrameworks Clarity Module Specification</p>
+                    </div>
+                    <div class="mt-4">
+                        <h4 class="text-xs uppercase tracking-wider text-txt-500 font-medium mb-2">Module</h4>
+                        <span class="font-mono text-sm text-txt-200">${op.module}</span>
+                    </div>
+                </div>
+            </div>`;
+
+        if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") { lucide.createIcons(); }
+
+        // Tab switching
+        document.querySelectorAll('#detail-panel .tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#detail-panel .tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('#detail-panel .tab-content').forEach(c => c.classList.add('hidden'));
+                btn.classList.add('active');
+                document.getElementById('tab-'+btn.dataset.tab).classList.remove('hidden');
+            });
+        });
+
+        // Cross-ref clicks
+        document.querySelectorAll('.crossref-link').forEach(el => {
+            el.addEventListener('click', (e) => { e.stopPropagation(); openDetail(el.dataset.ref); });
+        });
+
+        // Close
+        document.getElementById('detail-close-btn').addEventListener('click', closeDetail);
+
+        // Show
+        document.getElementById('detail-panel').classList.remove('closed');
+        document.getElementById('detail-panel').classList.add('open');
+        document.getElementById('detail-overlay').classList.remove('hidden');
+    }
+
+    function closeDetail() {
+        document.getElementById('detail-panel').classList.add('closed');
+        document.getElementById('detail-panel').classList.remove('open');
+        document.getElementById('detail-overlay').classList.add('hidden');
+        state.selectedOp = null;
+    }
+
+    // ============================================================
+    // MODULE GRAPH (SVG)
+    // ============================================================
+    function renderModuleGraph() {
+        const svg = document.getElementById('module-graph');
+        const legend = document.getElementById('graph-legend');
+        const classes = Object.keys(CLASS_COLORS);
+        const cx = 130, cy = 130, r = 100;
+        const positions = {};
+        classes.forEach((cls, i) => {
+            const angle = (i / classes.length) * 2 * Math.PI - Math.PI/2;
+            positions[cls] = { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+        });
+
+        // Build cross-ref edges between classes
+        const edgeMap = {};
+        OPERATORS.forEach(op => {
+            op.crossRefs.forEach(ref => {
+                const target = OPERATORS.find(o => o.id === ref);
+                if (target && op.class !== target.class) {
+                    const key = [op.class, target.class].sort().join('-');
+                    edgeMap[key] = (edgeMap[key]||0) + 1;
+                }
+            });
+        });
+
+        let svgContent = '';
+        // Edges
+        Object.entries(edgeMap).forEach(([key, count]) => {
+            const [a, b] = key.split('-');
+            const pa = positions[a], pb = positions[b];
+            const opacity = Math.min(0.15 + count * 0.03, 0.5);
+            svgContent += `<line x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}" stroke="#2a3247" stroke-width="${Math.min(1 + count*0.3, 3)}" stroke-opacity="${opacity}"/>`;
+        });
+        // Nodes
+        classes.forEach(cls => {
+            const p = positions[cls];
+            svgContent += `<circle cx="${p.x}" cy="${p.y}" r="16" fill="${CLASS_COLORS[cls]}22" stroke="${CLASS_COLORS[cls]}" stroke-width="1.5" class="cursor-pointer graph-node" data-class="${cls}"/>`;
+            svgContent += `<text x="${p.x}" y="${p.y+1}" text-anchor="middle" dominant-baseline="middle" fill="${CLASS_COLORS[cls]}" font-size="7" font-weight="600" class="pointer-events-none" style="font-family:'JetBrains Mono',monospace">${cls.substring(0,3)}</text>`;
+        });
+        svg.innerHTML = svgContent;
+
+        // Legend
+        legend.innerHTML = classes.map(cls => `<div class="flex items-center gap-2 text-[10px] graph-legend-item cursor-pointer hover:opacity-80" data-class="${cls}"><span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${CLASS_COLORS[cls]}"></span><span class="text-txt-300 font-mono">${cls}</span><span class="text-txt-500">(${CLASS_COUNTS[cls]})</span></div>`).join('');
+
+        // Click handlers
+        svg.querySelectorAll('.graph-node').forEach(node => {
+            node.addEventListener('click', () => { state.activeClass = node.dataset.class; render(); });
+        });
+        legend.querySelectorAll('.graph-legend-item').forEach(item => {
+            item.addEventListener('click', () => { state.activeClass = item.dataset.class; render(); });
+        });
+    }
+
+    // ============================================================
+    // MOBILE SIDEBAR
+    // ============================================================
+    function openMobileSidebar() {
+        document.getElementById('sidebar').classList.remove('hidden-mobile');
+        document.getElementById('sidebar-overlay').classList.remove('hidden');
+    }
+    function closeMobileSidebar() {
+        document.getElementById('sidebar').classList.add('hidden-mobile');
+        document.getElementById('sidebar-overlay').classList.add('hidden');
+    }
+
+    // ============================================================
+    // MAIN RENDER
+    // ============================================================
+    function render() {
+        const filtered = filterOperators();
+        renderSidebar();
+        renderFilterBar();
+        renderStatsBar(filtered);
+        renderGrid(filtered);
+    }
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
+        lucide.createIcons();
+    }
+
+    // Search
+    document.getElementById('search-input').addEventListener('input', (e) => {
+        state.search = e.target.value;
+        render();
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeDetail();
+        if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+            e.preventDefault();
+            document.getElementById('search-input').focus();
+        }
+    });
+
+    // Detail overlay click to close
+    document.getElementById('detail-overlay').addEventListener('click', closeDetail);
+
+    // Graph toggle
+    document.getElementById('graph-toggle-btn').addEventListener('click', () => {
+        const panel = document.getElementById('graph-panel');
+        state.graphOpen = !state.graphOpen;
+        if (state.graphOpen) {
+            panel.classList.remove('collapsed');
+            panel.classList.add('expanded');
+        } else {
+            panel.classList.add('collapsed');
+            panel.classList.remove('expanded');
+        }
+    });
+    document.getElementById('graph-close-btn').addEventListener('click', () => {
+        const panel = document.getElementById('graph-panel');
+        state.graphOpen = false;
+        panel.classList.add('collapsed');
+        panel.classList.remove('expanded');
+    });
+
+    // Clear all filters
+    document.addEventListener('click', (e) => {
+        if (e.target.id === 'clear-all-btn') {
+            state.search = '';
+            state.activeClass = 'ALL';
+            state.activeRTT = 'ALL';
+            state.activeStatus = 'ALL';
+            state.activeSubstrates = [];
+            state.activeLayers = [];
+            document.getElementById('search-input').value = '';
+            render();
+        }
+    });
+
+    // Mobile sidebar
+    document.getElementById('mobile-sidebar-btn').addEventListener('click', openMobileSidebar);
+    document.getElementById('mobile-sidebar-close').addEventListener('click', closeMobileSidebar);
+    document.getElementById('sidebar-overlay').addEventListener('click', closeMobileSidebar);
+
+    // Initial render
+    render();
+    renderModuleGraph();
+    </script>
+</body>
+</html>
