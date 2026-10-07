@@ -1,0 +1,314 @@
+{
+  "canon_version": "R5",
+  "family": "clarity",
+  "modules": [
+    {
+      "id": "clarity.engine",
+      "category": "engine",
+      "layers": {
+        "operator": [
+          {
+            "id": "triad",
+            "role": "core-triad-evaluation",
+            "inputs": ["structure", "resonance", "activation"],
+            "outputs": ["triad_profile"],
+            "clarity_baseline": "C3"
+          },
+          {
+            "id": "stability_index",
+            "role": "stability-evaluation",
+            "inputs": ["triad_profile", "substrate_profile"],
+            "outputs": ["stability_index"],
+            "clarity_baseline": "C3"
+          },
+          {
+            "id": "diagnostic_packet",
+            "role": "diagnostic-aggregation",
+            "inputs": ["stability_index", "regime_profile"],
+            "outputs": ["diagnostic_packet"],
+            "clarity_baseline": "C3"
+          }
+        ],
+        "dimensional": [
+          {
+            "id": "clarity_dimensional_scan",
+            "role": "dimensional-clarity-scan",
+            "inputs": ["triad_profile"],
+            "outputs": ["dimensional_clarity_map"],
+            "dimensions": ["1D", "2D", "3D"]
+          }
+        ],
+        "regime": [
+          {
+            "id": "regime_map",
+            "role": "regime-mapping",
+            "inputs": ["stability_index"],
+            "outputs": ["regime_profile"]
+          },
+          {
+            "id": "paradox_surface",
+            "role": "paradox-detection",
+            "inputs": ["regime_profile"],
+            "outputs": ["paradox_surface_map"]
+          }
+        ],
+        "drift": [
+          {
+            "id": "drift_trace",
+            "role": "drift-trajectory-trace",
+            "inputs": ["session_state"],
+            "outputs": ["drift_trajectory"]
+          },
+          {
+            "id": "drift_bounds",
+            "role": "drift-bounds-evaluation",
+            "inputs": ["drift_trajectory"],
+            "outputs": ["drift_bounds"]
+          }
+        ],
+        "coherence": [
+          {
+            "id": "coherence_trace",
+            "role": "coherence-trajectory-trace",
+            "inputs": ["session_state"],
+            "outputs": ["coherence_trajectory"]
+          },
+          {
+            "id": "coherence_bounds",
+            "role": "coherence-bounds-evaluation",
+            "inputs": ["coherence_trajectory"],
+            "outputs": ["coherence_bounds"]
+          }
+        ],
+        "cross_cutting": [
+          {
+            "id": "clarity_cross_section",
+            "role": "cross-sectional-clarity-scan",
+            "inputs": ["drift_trajectory", "coherence_trajectory"],
+            "outputs": ["clarity_cross_section"]
+          },
+          {
+            "id": "clarity_resonance_profile",
+            "role": "clarity-resonance-profile",
+            "inputs": ["triad_profile", "substrate_profile"],
+            "outputs": ["clarity_resonance_profile"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "clarity.map",
+      "category": "map",
+      "layers": {
+        "operator": [
+          {
+            "id": "triad",
+            "role": "triad-context-for-maps",
+            "inputs": ["structure", "resonance", "activation"],
+            "outputs": ["triad_profile"]
+          },
+          {
+            "id": "stability_index",
+            "role": "stability-on-mapped-paths",
+            "inputs": ["triad_profile", "path_profile"],
+            "outputs": ["path_stability_index"]
+          }
+        ],
+        "dimensional": [
+          {
+            "id": "clarity_map_dimensional_scan",
+            "role": "dimensional-map-scan",
+            "inputs": ["path_profile"],
+            "outputs": ["dimensional_map"],
+            "dimensions": ["1D", "2D", "3D"]
+          }
+        ],
+        "regime": [
+          {
+            "id": "regime_map",
+            "role": "regime-over-paths",
+            "inputs": ["path_stability_index"],
+            "outputs": ["path_regime_profile"]
+          }
+        ],
+        "drift": [
+          {
+            "id": "drift_path_trace",
+            "role": "drift-along-paths",
+            "inputs": ["session_state"],
+            "outputs": ["drift_path"]
+          }
+        ],
+        "coherence": [
+          {
+            "id": "coherence_path_trace",
+            "role": "coherence-along-paths",
+            "inputs": ["session_state"],
+            "outputs": ["coherence_path"]
+          }
+        ],
+        "cross_cutting": [
+          {
+            "id": "clarity_map_cross_section",
+            "role": "cross-sectional-map-clarity",
+            "inputs": ["drift_path", "coherence_path"],
+            "outputs": ["map_clarity_cross_section"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "clarity.signature",
+      "category": "signature",
+      "layers": {
+        "operator": [
+          {
+            "id": "triad",
+            "role": "triad-context-for-signatures",
+            "inputs": ["structure", "resonance", "activation"],
+            "outputs": ["triad_profile"]
+          },
+          {
+            "id": "signature_compare",
+            "role": "signature-comparison",
+            "inputs": ["signature_a", "signature_b"],
+            "outputs": ["signature_delta"]
+          }
+        ],
+        "dimensional": [
+          {
+            "id": "clarity_signature_dimensional_scan",
+            "role": "dimensional-signature-scan",
+            "inputs": ["signature_profile"],
+            "outputs": ["signature_dimensional_map"],
+            "dimensions": ["1D", "2D", "3D"]
+          }
+        ],
+        "regime": [
+          {
+            "id": "regime_signature_map",
+            "role": "regime-over-signatures",
+            "inputs": ["signature_profile"],
+            "outputs": ["signature_regime_profile"]
+          }
+        ],
+        "cross_cutting": [
+          {
+            "id": "clarity_signature_cross_section",
+            "role": "cross-sectional-signature-clarity",
+            "inputs": ["signature_profile"],
+            "outputs": ["signature_clarity_cross_section"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "clarity.diagnostic",
+      "category": "diagnostic",
+      "layers": {
+        "operator": [
+          {
+            "id": "triad",
+            "role": "triad-context-for-diagnostics",
+            "inputs": ["structure", "resonance", "activation"],
+            "outputs": ["triad_profile"]
+          },
+          {
+            "id": "diagnostic_packet",
+            "role": "diagnostic-aggregation",
+            "inputs": ["stability_index", "regime_profile"],
+            "outputs": ["diagnostic_packet"]
+          }
+        ],
+        "regime": [
+          {
+            "id": "regime_map",
+            "role": "regime-diagnostic",
+            "inputs": ["stability_index"],
+            "outputs": ["regime_profile"]
+          },
+          {
+            "id": "paradox_surface",
+            "role": "paradox-detection",
+            "inputs": ["regime_profile"],
+            "outputs": ["paradox_surface_map"]
+          }
+        ],
+        "cross_cutting": [
+          {
+            "id": "clarity_diagnostic_cross_section",
+            "role": "cross-sectional-diagnostic-clarity",
+            "inputs": ["diagnostic_packet"],
+            "outputs": ["diagnostic_clarity_cross_section"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "clarity.example",
+      "category": "example",
+      "layers": {
+        "operator": [
+          {
+            "id": "triad",
+            "role": "triad-context-for-examples",
+            "inputs": ["structure", "resonance", "activation"],
+            "outputs": ["triad_profile"]
+          }
+        ],
+        "cross_cutting": [
+          {
+            "id": "clarity_example_cross_section",
+            "role": "example-cross-sectional-clarity",
+            "inputs": ["example_state"],
+            "outputs": ["example_clarity_profile"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "clarity.extension",
+      "category": "extension",
+      "layers": {
+        "operator": [
+          {
+            "id": "triad",
+            "role": "triad-context-for-extensions",
+            "inputs": ["structure", "resonance", "activation"],
+            "outputs": ["triad_profile"]
+          }
+        ],
+        "cross_cutting": [
+          {
+            "id": "clarity_extension_cross_section",
+            "role": "extension-cross-sectional-clarity",
+            "inputs": ["extended_operator_state"],
+            "outputs": ["extension_clarity_profile"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "clarity.template",
+      "category": "template",
+      "layers": {
+        "operator": [
+          {
+            "id": "triad",
+            "role": "triad-context-for-templates",
+            "inputs": ["structure", "resonance", "activation"],
+            "outputs": ["triad_profile"]
+          }
+        ],
+        "cross_cutting": [
+          {
+            "id": "clarity_template_cross_section",
+            "role": "template-cross-sectional-clarity",
+            "inputs": ["template_instance_state"],
+            "outputs": ["template_clarity_profile"]
+          }
+        ]
+      }
+    }
+  ]
+}
