@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>Triadic Module Registry Diff Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              base: { 900: '#0d1117', 800: '#161b22', 700: '#21262d', 600: '#30363d', 500: '#484f58', 400: '#6e7681', 300: '#8b949e', 200: '#c9d1d9', 100: '#e6edf3', 50: '#f0f6fc' },
+              added: { 500: '#3fb950', 400: '#56d364', 300: '#7ee787', 200: '#aff5b4', 900: '#0a1f0d', 800: '#0f2d14' },
+              removed: { 500: '#f85149', 400: '#ff7b72', 300: '#ffa198', 200: '#ffc1bb', 900: '#200c0c', 800: '#2d1212' },
+              modified: { 500: '#d29922', 400: '#e3b341', 300: '#f0d15c', 200: '#f8e87b', 900: '#1f1806', 800: '#2d2209' },
+              info: { 500: '#58a6ff', 400: '#79c0ff', 300: '#a5d6ff', 200: '#cae8ff', 900: '#0a1929', 800: '#0d2240' },
+              purple: { 500: '#bc8cff', 400: '#d2a8ff', 300: '#e2c5ff' },
+              orange: { 500: '#f0883e', 400: '#f4a261', 300: '#f7c59f' },
+            },
+            fontFamily: {
+              sans: ['Inter', 'system-ui', 'sans-serif'],
+              mono: ["'JetBrains Mono'", "'Fira Code'", 'monospace'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      * { box-sizing: border-box; }
+      body { background: #0d1117; color: #c9d1d9; font-family: 'Inter', system-ui, sans-serif; margin: 0; }
+      .gradient-bar { height: 3px; background: linear-gradient(90deg, #58a6ff, #bc8cff, #58a6ff); background-size: 200% 100%; animation: shimmer 4s ease infinite; }
+      @keyframes shimmer { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+      @keyframes fadeSlideUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+      .anim-card { animation: fadeSlideUp .45s ease both; }
+      .anim-d1 { animation-delay: .05s } .anim-d2 { animation-delay: .1s } .anim-d3 { animation-delay: .15s } .anim-d4 { animation-delay: .2s }
+      .anim-d5 { animation-delay: .25s } .anim-d6 { animation-delay: .3s } .anim-d7 { animation-delay: .35s } .anim-d8 { animation-delay: .4s }
+      .tab-btn { position: relative; padding: 10px 16px; font-size: 13px; font-weight: 500; color: #8b949e; border: none; background: none; cursor: pointer; white-space: nowrap; transition: color .2s; }
+      .tab-btn:hover { color: #c9d1d9; }
+      .tab-btn.active { color: #58a6ff; }
+      .tab-btn.active::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:#58a6ff; border-radius:1px; }
+      .tab-panel { display: none; }
+      .tab-panel.active { display: block; }
+      th[data-sort] { cursor: pointer; user-select: none; }
+      th[data-sort]:hover { color: #e6edf3; }
+      .sort-arrow { display: inline-block; margin-left: 4px; font-size: 10px; opacity: .6; }
+      .expandable-row { cursor: pointer; }
+      .expandable-row:hover { background: rgba(88,166,255,.04); }
+      .detail-row { display: none; }
+      .detail-row.open { display: table-row; }
+      textarea { font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 12px; }
+      .tooltip-wrap { position: relative; }
+      .tooltip-wrap .tooltip-text { visibility: hidden; opacity: 0; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #21262d; color: #c9d1d9; padding: 6px 10px; border-radius: 6px; font-size: 11px; white-space: nowrap; z-index: 50; transition: opacity .15s; pointer-events: none; border: 1px solid #30363d; }
+      .tooltip-wrap:hover .tooltip-text { visibility: visible; opacity: 1; }
+      .pole-bar { height: 22px; border-radius: 4px; min-width: 2px; transition: width .3s ease; }
+      .no-changes-row { color: #3fb950; font-style: italic; opacity: .7; }
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: #0d1117; }
+      ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #484f58; }
+      .error-msg { color: #f85149; font-size: 12px; margin-top: 4px; min-height: 18px; font-family: 'Inter', sans-serif; }
+      .jump-link { color: #58a6ff; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+      .jump-link:hover { color: #79c0ff; }
+      @media (max-width: 767px) {
+        .input-grid { flex-direction: column !important; }
+        .stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        .tab-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      }
+    </style>
+</head>
+<body data-id="0">
+    <app-icon data-id="1" hidden data-icon="git-compare" data-palette="Dark"></app-icon>
+
+    <div data-id="2" class="gradient-bar" id="gradient-bar-e3f1"></div>
+
+    <!-- HEADER -->
+    <header data-id="3" class="px-4 md:px-8 py-6 border-b border-base-700" id="header-k4m2">
+        <div data-id="4" class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+            <div data-id="5">
+                <h1 data-id="6" class="text-xl md:text-2xl font-bold text-base-50 flex items-center gap-2" id="title-h8j3">
+                    <span data-id="7" class="text-info-500">⬡</span> Triadic Module Registry Diff Analyzer
+                </h1>
+                <p data-id="8" class="text-xs md:text-sm text-base-400 mt-1 font-mono" id="subtitle-r9w1">TriadicFrameworks · modules_group.json · Deep Diff Engine</p>
+            </div>
+            <div data-id="9" class="flex gap-2 mt-2 md:mt-0" id="export-btns-a2c4" style="display:none;">
+                <button data-id="10" id="copy-report-btn-x5z7" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium bg-base-700 hover:bg-base-600 text-base-200 rounded-lg transition-colors min-h-[36px]">
+                    <i data-id="11" data-lucide="clipboard-copy" class="w-3.5 h-3.5"></i> Copy Report
+                </button>
+                <button data-id="12" id="download-json-btn-m3n6" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium bg-base-700 hover:bg-base-600 text-base-200 rounded-lg transition-colors min-h-[36px]">
+                    <i data-id="13" data-lucide="download" class="w-3.5 h-3.5"></i> Download JSON Diff
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main data-id="14" class="max-w-7xl mx-auto px-4 md:px-8 py-6">
+
+        <!-- EMPTY STATE -->
+        <div data-id="15" id="empty-state-v7b9" class="flex flex-col items-center justify-center py-16 text-center">
+            <div data-id="16" class="w-20 h-20 rounded-2xl bg-base-800 border border-base-700 flex items-center justify-center mb-4">
+                <i data-id="17" data-lucide="git-compare" class="w-10 h-10 text-base-500"></i>
+            </div>
+            <h2 data-id="18" class="text-lg font-semibold text-base-300 mb-1">No JSON Loaded</h2>
+            <p data-id="19" class="text-sm text-base-400 max-w-md">Paste your <code data-id="20" class="font-mono text-info-500 text-xs">modules_group.json</code> files below or load sample data to begin diffing.</p>
+        </div>
+
+        <!-- INPUT SECTION -->
+        <section data-id="21" id="input-section-q2w4" class="mb-8">
+            <div data-id="22" class="flex flex-col md:flex-row gap-4 input-grid">
+                <!-- Version A -->
+                <div data-id="23" class="flex-1 min-w-0">
+                    <div data-id="24" class="flex items-center justify-between mb-2">
+                        <label data-id="25" class="text-sm font-medium text-base-200 flex items-center gap-1.5">
+                            <span data-id="26" class="inline-block w-2.5 h-2.5 rounded-full bg-removed-500"></span>
+                            Version A <span data-id="27" class="text-base-400 font-normal">(Before)</span>
+                        </label>
+                        <button data-id="28" id="load-sample-a-btn-j8k1" class="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium bg-base-700 hover:bg-base-600 text-base-300 rounded-md transition-colors min-h-[32px]">
+                            <i data-id="29" data-lucide="folder-open" class="w-3 h-3"></i> Load Sample A
+                        </button>
+                    </div>
+                    <textarea data-id="30" id="textarea-a-p5q8" class="w-full h-64 md:h-80 bg-base-800 border border-base-700 rounded-xl p-4 text-base-200 placeholder-base-500 resize-y focus:outline-none focus:border-info-500 focus:ring-1 focus:ring-info-500/30 transition-colors" placeholder="Paste modules_group.json — Version A (Before)"></textarea>
+                    <div data-id="31" id="error-a-s1t3" class="error-msg"></div>
+                </div>
+                <!-- Version B -->
+                <div data-id="32" class="flex-1 min-w-0">
+                    <div data-id="33" class="flex items-center justify-between mb-2">
+                        <label data-id="34" class="text-sm font-medium text-base-200 flex items-center gap-1.5">
+                            <span data-id="35" class="inline-block w-2.5 h-2.5 rounded-full bg-added-500"></span>
+                            Version B <span data-id="36" class="text-base-400 font-normal">(After)</span>
+                        </label>
+                        <button data-id="37" id="load-sample-b-btn-u3v6" class="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium bg-base-700 hover:bg-base-600 text-base-300 rounded-md transition-colors min-h-[32px]">
+                            <i data-id="38" data-lucide="folder-open" class="w-3 h-3"></i> Load Sample B
+                        </button>
+                    </div>
+                    <textarea data-id="39" id="textarea-b-w8x0" class="w-full h-64 md:h-80 bg-base-800 border border-base-700 rounded-xl p-4 text-base-200 placeholder-base-500 resize-y focus:outline-none focus:border-info-500 focus:ring-1 focus:ring-info-500/30 transition-colors" placeholder="Paste modules_group.json — Version B (After)"></textarea>
+                    <div data-id="40" id="error-b-y2z5" class="error-msg"></div>
+                </div>
+            </div>
+            <!-- Action buttons -->
+            <div data-id="41" class="flex items-center justify-center gap-3 mt-5">
+                <button data-id="42" id="run-diff-btn-a7b0" class="flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white rounded-xl transition-all min-h-[44px]" style="background: linear-gradient(135deg, #58a6ff, #bc8cff); box-shadow: 0 4px 16px rgba(88,166,255,.25);">
+                    <i data-id="43" data-lucide="settings" class="w-4 h-4"></i> Run Diff Analysis
+                </button>
+                <button data-id="44" id="clear-btn-c3d6" class="flex items-center gap-2 px-5 py-3 text-sm font-medium bg-base-700 hover:bg-base-600 text-base-300 rounded-xl transition-colors min-h-[44px]">
+                    <i data-id="45" data-lucide="trash-2" class="w-4 h-4"></i> Clear
+                </button>
+            </div>
+        </section>
+
+        <!-- RESULTS SECTION -->
+        <section data-id="46" id="results-section-e5f8" style="display:none;">
+
+            <!-- SUMMARY CARDS -->
+            <div data-id="47" id="summary-grid-g1h4" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 mb-6 stat-grid">
+            </div>
+
+            <!-- TAB BAR -->
+            <div data-id="48" class="sticky top-0 z-30 bg-base-900/95 backdrop-blur border-b border-base-700 mb-0 tab-scroll" id="tab-bar-i6j9">
+                <div data-id="49" class="flex overflow-x-auto" id="tab-container-k2l5">
+                    <button data-id="50" class="tab-btn active" data-tab="overview">Overview</button>
+                    <button data-id="51" class="tab-btn" data-tab="added">Added</button>
+                    <button data-id="52" class="tab-btn" data-tab="removed">Removed</button>
+                    <button data-id="53" class="tab-btn" data-tab="modified">Modified</button>
+                    <button data-id="54" class="tab-btn" data-tab="lineage">Lineage</button>
+                    <button data-id="55" class="tab-btn" data-tab="layer">Layers</button>
+                    <button data-id="56" class="tab-btn" data-tab="rtt">RTT</button>
+                    <button data-id="57" class="tab-btn" data-tab="phantom">Phantom</button>
+                    <button data-id="58" class="tab-btn" data-tab="audit">Audit</button>
+                    <button data-id="59" class="tab-btn" data-tab="stability">Stability</button>
+                </div>
+            </div>
+
+            <!-- TAB PANELS -->
+            <div data-id="60" class="bg-base-800 border border-base-700 rounded-b-xl rounded-t-none p-4 md:p-6" id="tab-panels-m8n1">
+                <div data-id="61" id="panel-overview" class="tab-panel active"></div>
+                <div data-id="62" id="panel-added" class="tab-panel"></div>
+                <div data-id="63" id="panel-removed" class="tab-panel"></div>
+                <div data-id="64" id="panel-modified" class="tab-panel"></div>
+                <div data-id="65" id="panel-lineage" class="tab-panel"></div>
+                <div data-id="66" id="panel-layer" class="tab-panel"></div>
+                <div data-id="67" id="panel-rtt" class="tab-panel"></div>
+                <div data-id="68" id="panel-phantom" class="tab-panel"></div>
+                <div data-id="69" id="panel-audit" class="tab-panel"></div>
+                <div data-id="70" id="panel-stability" class="tab-panel"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer data-id="71" class="py-8 mt-auto text-center border-t border-base-700">
+        <p data-id="72" class="text-xs text-base-500">Made by Copilot</p>
+    </footer>
+
+    <script>
+    // ========== ICONS ==========
+    if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
+        lucide.createIcons();
+    }
+
+    // ========== SAMPLE DATA ==========
+    const SAMPLE_A = {
+        "registry_version": "2.4.1",
+        "schema_version": "1.3.0",
+        "generated_at": "2026-09-28T14:30:00Z",
+        "author": "Nawder",
+        "modules": [
+            {
+                "id": "mod-alpha-001",
+                "name": "AlphaCapture",
+                "version": "1.2.0",
+                "lineage": { "parent": null, "ancestors": [], "generation": 0 },
+                "analyzer_layer": "capture",
+                "rtt_substrate": "ground",
+                "phantom": false,
+                "audit": { "created_at": "2026-06-10T08:00:00Z", "modified_at": "2026-09-01T12:00:00Z", "author": "Nawder", "hash": "a1b2c3d4" },
+                "triadic": { "pole": "thesis", "stability": 0.92, "paradox_index": 0.08 },
+                "tags": ["core", "input"]
+            },
+            {
+                "id": "mod-beta-002",
+                "name": "BetaSynth",
+                "version": "2.0.1",
+                "lineage": { "parent": "mod-alpha-001", "ancestors": ["mod-alpha-001"], "generation": 1 },
+                "analyzer_layer": "synthesis",
+                "rtt_substrate": "bridge",
+                "phantom": false,
+                "audit": { "created_at": "2026-07-01T09:00:00Z", "modified_at": "2026-09-10T11:00:00Z", "author": "Nawder", "hash": "e5f6g7h8" },
+                "triadic": { "pole": "synthesis", "stability": 0.85, "paradox_index": 0.12 },
+                "tags": ["processing", "synth"]
+            },
+            {
+                "id": "mod-gamma-003",
+                "name": "GammaRoute",
+                "version": "1.0.0",
+                "lineage": { "parent": "mod-alpha-001", "ancestors": ["mod-alpha-001"], "generation": 1 },
+                "analyzer_layer": "routing",
+                "rtt_substrate": "bridge",
+                "phantom": false,
+                "audit": { "created_at": "2026-07-15T10:00:00Z", "modified_at": "2026-08-20T14:00:00Z", "author": "Jordan", "hash": "i9j0k1l2" },
+                "triadic": { "pole": "antithesis", "stability": 0.78, "paradox_index": 0.22 },
+                "tags": ["routing", "network"]
+            },
+            {
+                "id": "mod-delta-004",
+                "name": "DeltaAnalyzer",
+                "version": "3.1.0",
+                "lineage": { "parent": "mod-beta-002", "ancestors": ["mod-alpha-001", "mod-beta-002"], "generation": 2 },
+                "analyzer_layer": "analysis",
+                "rtt_substrate": "apex",
+                "phantom": false,
+                "audit": { "created_at": "2026-08-01T07:00:00Z", "modified_at": "2026-09-15T09:30:00Z", "author": "Nawder", "hash": "m3n4o5p6" },
+                "triadic": { "pole": "thesis", "stability": 0.88, "paradox_index": 0.15 },
+                "tags": ["analysis", "deep"]
+            },
+            {
+                "id": "mod-epsilon-005",
+                "name": "EpsilonPhantom",
+                "version": "0.9.0",
+                "lineage": { "parent": "mod-gamma-003", "ancestors": ["mod-alpha-001", "mod-gamma-003"], "generation": 2 },
+                "analyzer_layer": "phantom",
+                "rtt_substrate": "void",
+                "phantom": true,
+                "audit": { "created_at": "2026-08-10T11:00:00Z", "modified_at": "2026-09-05T16:00:00Z", "author": "System", "hash": "q7r8s9t0" },
+                "triadic": { "pole": "antithesis", "stability": 0.35, "paradox_index": 0.65 },
+                "tags": ["phantom", "experimental"]
+            },
+            {
+                "id": "mod-zeta-006",
+                "name": "ZetaBridge",
+                "version": "1.1.0",
+                "lineage": { "parent": "mod-beta-002", "ancestors": ["mod-alpha-001", "mod-beta-002"], "generation": 2 },
+                "analyzer_layer": "capture",
+                "rtt_substrate": "ground",
+                "phantom": false,
+                "audit": { "created_at": "2026-08-20T13:00:00Z", "modified_at": "2026-09-12T10:00:00Z", "author": "Nawder", "hash": "u1v2w3x4" },
+                "triadic": { "pole": "synthesis", "stability": 0.90, "paradox_index": 0.10 },
+                "tags": ["bridge", "connector"]
+            },
+            {
+                "id": "mod-eta-007",
+                "name": "EtaCollector",
+                "version": "2.2.0",
+                "lineage": { "parent": null, "ancestors": [], "generation": 0 },
+                "analyzer_layer": "capture",
+                "rtt_substrate": "ground",
+                "phantom": false,
+                "audit": { "created_at": "2026-09-01T08:00:00Z", "modified_at": "2026-09-20T15:00:00Z", "author": "Jordan", "hash": "y5z6a7b8" },
+                "triadic": { "pole": "thesis", "stability": 0.82, "paradox_index": 0.18 },
+                "tags": ["collection", "input"]
+            },
+            {
+                "id": "mod-theta-008",
+                "name": "ThetaLens",
+                "version": "1.0.0",
+                "lineage": { "parent": "mod-delta-004", "ancestors": ["mod-alpha-001", "mod-beta-002", "mod-delta-004"], "generation": 3 },
+                "analyzer_layer": "analysis",
+                "rtt_substrate": "apex",
+                "phantom": false,
+                "audit": { "created_at": "2026-09-10T09:00:00Z", "modified_at": "2026-09-25T12:00:00Z", "author": "Nawder", "hash": "c9d0e1f2" },
+                "triadic": { "pole": "antithesis", "stability": 0.70, "paradox_index": 0.30 },
+                "tags": ["lens", "deep-analysis"]
+            }
+        ]
+    };
+
+    const SAMPLE_B = {
+        "registry_version": "2.5.0",
+        "schema_version": "1.3.0",
+        "generated_at": "2026-10-06T14:53:00Z",
+        "author": "Nawder",
+        "modules": [
+            {
+                "id": "mod-alpha-001",
+                "name": "AlphaCapture",
+                "version": "1.3.0",
+                "lineage": { "parent": null, "ancestors": [], "generation": 0 },
+                "analyzer_layer": "capture",
+                "rtt_substrate": "ground",
+                "phantom": false,
+                "audit": { "created_at": "2026-06-10T08:00:00Z", "modified_at": "2026-10-04T09:00:00Z", "author": "Nawder", "hash": "zz11yy22" },
+                "triadic": { "pole": "thesis", "stability": 0.95, "paradox_index": 0.05 },
+                "tags": ["core", "input", "stable"]
+            },
+            {
+                "id": "mod-beta-002",
+                "name": "BetaSynth",
+                "version": "2.1.0",
+                "lineage": { "parent": "mod-alpha-001", "ancestors": ["mod-alpha-001"], "generation": 1 },
+                "analyzer_layer": "analysis",
+                "rtt_substrate": "bridge",
+                "phantom": false,
+                "audit": { "created_at": "2026-07-01T09:00:00Z", "modified_at": "2026-10-02T14:00:00Z", "author": "Nawder", "hash": "nn33mm44" },
+                "triadic": { "pole": "synthesis", "stability": 0.80, "paradox_index": 0.25 },
+                "tags": ["processing", "synth", "upgraded"]
+            },
+            {
+                "id": "mod-gamma-003",
+                "name": "GammaRoute",
+                "version": "1.1.0",
+                "lineage": { "parent": "mod-beta-002", "ancestors": ["mod-alpha-001", "mod-beta-002"], "generation": 2 },
+                "analyzer_layer": "routing",
+                "rtt_substrate": "apex",
+                "phantom": false,
+                "audit": { "created_at": "2026-07-15T10:00:00Z", "modified_at": "2026-10-01T11:00:00Z", "author": "Jordan", "hash": "i9j0k1l2" },
+                "triadic": { "pole": "antithesis", "stability": 0.72, "paradox_index": 0.45 },
+                "tags": ["routing", "network"]
+            },
+            {
+                "id": "mod-delta-004",
+                "name": "DeltaAnalyzer",
+                "version": "3.1.0",
+                "lineage": { "parent": "mod-beta-002", "ancestors": ["mod-alpha-001", "mod-beta-002"], "generation": 2 },
+                "analyzer_layer": "analysis",
+                "rtt_substrate": "apex",
+                "phantom": false,
+                "audit": { "created_at": "2026-08-01T07:00:00Z", "modified_at": "2026-09-15T09:30:00Z", "author": "Nawder", "hash": "m3n4o5p6" },
+                "triadic": { "pole": "thesis", "stability": 0.88, "paradox_index": 0.15 },
+                "tags": ["analysis", "deep"]
+            },
+            {
+                "id": "mod-epsilon-005",
+                "name": "EpsilonPhantom",
+                "version": "1.0.0",
+                "lineage": { "parent": "mod-gamma-003", "ancestors": ["mod-alpha-001", "mod-gamma-003"], "generation": 2 },
+                "analyzer_layer": "phantom",
+                "rtt_substrate": "void",
+                "phantom": false,
+                "audit": { "created_at": "2026-08-10T11:00:00Z", "modified_at": "2026-10-03T08:00:00Z", "author": "System", "hash": "pp55qq66" },
+                "triadic": { "pole": "antithesis", "stability": 0.60, "paradox_index": 0.40 },
+                "tags": ["recovered", "stable"]
+            },
+            {
+                "id": "mod-zeta-006",
+                "name": "ZetaBridge",
+                "version": "1.1.0",
+                "lineage": { "parent": "mod-beta-002", "ancestors": ["mod-alpha-001", "mod-beta-002"], "generation": 2 },
+                "analyzer_layer": "synthesis",
+                "rtt_substrate": "bridge",
+                "phantom": true,
+                "audit": { "created_at": "2026-08-20T13:00:00Z", "modified_at": "2026-10-05T17:00:00Z", "author": "Nawder", "hash": "rr77ss88" },
+                "triadic": { "pole": "synthesis", "stability": 0.42, "paradox_index": 0.58 },
+                "tags": ["bridge", "ghosted"]
+            },
+            {
+                "id": "mod-theta-008",
+                "name": "ThetaLens",
+                "version": "1.1.0",
+                "lineage": { "parent": "mod-delta-004", "ancestors": ["mod-alpha-001", "mod-beta-002", "mod-delta-004"], "generation": 3 },
+                "analyzer_layer": "analysis",
+                "rtt_substrate": "apex",
+                "phantom": false,
+                "audit": { "created_at": "2026-09-10T09:00:00Z", "modified_at": "2026-10-05T14:00:00Z", "author": "Nawder", "hash": "tt99uu00" },
+                "triadic": { "pole": "synthesis", "stability": 0.75, "paradox_index": 0.28 },
+                "tags": ["lens", "deep-analysis"]
+            },
+            {
+                "id": "mod-iota-009",
+                "name": "IotaForge",
+                "version": "1.0.0",
+                "lineage": { "parent": "mod-delta-004", "ancestors": ["mod-alpha-001", "mod-beta-002", "mod-delta-004"], "generation": 3 },
+                "analyzer_layer": "synthesis",
+                "rtt_substrate": "bridge",
+                "phantom": false,
+                "audit": { "created_at": "2026-10-01T10:00:00Z", "modified_at": "2026-10-05T12:00:00Z", "author": "Nawder", "hash": "vv11ww22" },
+                "triadic": { "pole": "thesis", "stability": 0.88, "paradox_index": 0.09 },
+                "tags": ["new", "forge"]
+            },
+            {
+                "id": "mod-kappa-010",
+                "name": "KappaResonator",
+                "version": "0.5.0",
+                "lineage": { "parent": "mod-gamma-003", "ancestors": ["mod-alpha-001", "mod-beta-002", "mod-gamma-003"], "generation": 3 },
+                "analyzer_layer": "routing",
+                "rtt_substrate": "ground",
+                "phantom": false,
+                "audit": { "created_at": "2026-10-04T08:00:00Z", "modified_at": "2026-10-06T09:00:00Z", "author": "Jordan", "hash": "xx33yy44" },
+                "triadic": { "pole": "antithesis", "stability": 0.65, "paradox_index": 0.35 },
+                "tags": ["resonance", "experimental"]
+            }
+        ]
+    };
+
+    // ========== DIFF ENGINE ==========
+    class TriadicDiffEngine {
+        constructor(a, b) {
+            this.a = a;
+            this.b = b;
+            this.mapA = new Map();
+            this.mapB = new Map();
+            (a.modules || []).forEach(m => this.mapA.set(m.id, m));
+            (b.modules || []).forEach(m => this.mapB.set(m.id, m));
+            this.result = null;
+        }
+
+        run() {
+            const added = [], removed = [], modified = [], both = [];
+            for (const [id, mod] of this.mapB) {
+                if (!this.mapA.has(id)) added.push(mod);
+                else both.push(id);
+            }
+            for (const [id, mod] of this.mapA) {
+                if (!this.mapB.has(id)) removed.push(mod);
+            }
+            for (const id of both) {
+                const diffs = this.deepCompare(this.mapA.get(id), this.mapB.get(id));
+                if (diffs.length > 0) modified.push({ id, name: this.mapB.get(id).name, diffs, modA: this.mapA.get(id), modB: this.mapB.get(id) });
+            }
+            const lineageChanges = this.computeLineageChanges(both);
+            const layerChanges = this.computeLayerChanges(both);
+            const rttChanges = this.computeRTTChanges(both);
+            const phantomEntries = this.computePhantomEntries();
+            const auditChanges = this.computeAuditChanges(both);
+            const stabilityAnalysis = this.computeStability(both);
+
+            this.result = {
+                meta: {
+                    registryVersionA: this.a.registry_version || '—',
+                    registryVersionB: this.b.registry_version || '—',
+                    schemaVersionA: this.a.schema_version || '—',
+                    schemaVersionB: this.b.schema_version || '—',
+                    generatedAtA: this.a.generated_at || '—',
+                    generatedAtB: this.b.generated_at || '—',
+                    authorA: this.a.author || '—',
+                    authorB: this.b.author || '—',
+                },
+                totalA: this.mapA.size,
+                totalB: this.mapB.size,
+                added, removed, modified,
+                lineageChanges, layerChanges, rttChanges,
+                phantomEntries, auditChanges, stabilityAnalysis
+            };
+            return this.result;
+        }
+
+        deepCompare(objA, objB, prefix = '') {
+            const diffs = [];
+            const allKeys = new Set([...Object.keys(objA || {}), ...Object.keys(objB || {})]);
+            for (const key of allKeys) {
+                const path = prefix ? `${prefix}.${key}` : key;
+                const vA = objA ? objA[key] : undefined;
+                const vB = objB ? objB[key] : undefined;
+                if (vA === undefined && vB !== undefined) {
+                    diffs.push({ field: path, oldVal: '—', newVal: this.fmt(vB), type: 'added' });
+                } else if (vA !== undefined && vB === undefined) {
+                    diffs.push({ field: path, oldVal: this.fmt(vA), newVal: '—', type: 'removed' });
+                } else if (typeof vA === 'object' && vA !== null && typeof vB === 'object' && vB !== null) {
+                    if (Array.isArray(vA) && Array.isArray(vB)) {
+                        const sA = JSON.stringify([...vA].sort()), sB = JSON.stringify([...vB].sort());
+                        if (sA !== sB) diffs.push({ field: path, oldVal: this.fmt(vA), newVal: this.fmt(vB), type: 'modified' });
+                    } else {
+                        diffs.push(...this.deepCompare(vA, vB, path));
+                    }
+                } else if (vA !== vB) {
+                    diffs.push({ field: path, oldVal: this.fmt(vA), newVal: this.fmt(vB), type: 'modified' });
+                }
+            }
+            return diffs;
+        }
+
+        fmt(v) {
+            if (v === null || v === undefined) return '—';
+            if (Array.isArray(v)) return JSON.stringify(v);
+            if (typeof v === 'object') return JSON.stringify(v);
+            return String(v);
+        }
+
+        g(mod, path) {
+            return path.split('.').reduce((o, k) => (o && o[k] !== undefined) ? o[k] : undefined, mod);
+        }
+
+        computeLineageChanges(ids) {
+            const changes = [];
+            for (const id of ids) {
+                const a = this.mapA.get(id), b = this.mapB.get(id);
+                const pA = this.g(a,'lineage.parent'), pB = this.g(b,'lineage.parent');
+                const gA = this.g(a,'lineage.generation'), gB = this.g(b,'lineage.generation');
+                const ancA = JSON.stringify((this.g(a,'lineage.ancestors')||[]).sort());
+                const ancB = JSON.stringify((this.g(b,'lineage.ancestors')||[]).sort());
+                if (pA !== pB || gA !== gB || ancA !== ancB) {
+                    changes.push({ id, name: b.name, oldParent: pA||'null', newParent: pB||'null', oldGen: gA??'—', newGen: gB??'—', ancestorDelta: ancA !== ancB });
+                }
+            }
+            return changes;
+        }
+
+        computeLayerChanges(ids) {
+            const changes = [];
+            for (const id of ids) {
+                const a = this.mapA.get(id), b = this.mapB.get(id);
+                if (a.analyzer_layer !== b.analyzer_layer) {
+                    changes.push({ id, name: b.name, oldLayer: a.analyzer_layer, newLayer: b.analyzer_layer });
+                }
+            }
+            return changes;
+        }
+
+        computeRTTChanges(ids) {
+            const changes = [];
+            for (const id of ids) {
+                const a = this.mapA.get(id), b = this.mapB.get(id);
+                if (a.rtt_substrate !== b.rtt_substrate) {
+                    changes.push({ id, name: b.name, oldSubstrate: a.rtt_substrate, newSubstrate: b.rtt_substrate, isVoid: b.rtt_substrate === 'void' || a.rtt_substrate === 'void' });
+                }
+            }
+            return changes;
+        }
+
+        computePhantomEntries() {
+            const entries = [];
+            const allIds = new Set([...this.mapA.keys(), ...this.mapB.keys()]);
+            for (const id of allIds) {
+                const a = this.mapA.get(id), b = this.mapB.get(id);
+                const pA = a ? !!a.phantom : null;
+                const pB = b ? !!b.phantom : null;
+                if (pA === true || pB === true || (pA !== null && pB !== null && pA !== pB)) {
+                    let stateChange = '—';
+                    if (pA === false && pB === true) stateChange = 'Ghosted';
+                    else if (pA === true && pB === false) stateChange = 'Materialized';
+                    else if (pA === null && pB === true) stateChange = 'Added as Phantom';
+                    else if (pA === true && pB === null) stateChange = 'Removed (was Phantom)';
+                    const name = (b || a).name;
+                    entries.push({ id, name, phantomA: pA, phantomB: pB, stateChange });
+                }
+            }
+            return entries;
+        }
+
+        computeAuditChanges(ids) {
+            const changes = [];
+            const auditFields = ['audit.author','audit.hash','audit.created_at','audit.modified_at'];
+            for (const id of ids) {
+                const a = this.mapA.get(id), b = this.mapB.get(id);
+                for (const f of auditFields) {
+                    const vA = this.g(a, f), vB = this.g(b, f);
+                    if (this.fmt(vA) !== this.fmt(vB)) {
+                        changes.push({ id, name: b.name, field: f.replace('audit.',''), oldVal: this.fmt(vA), newVal: this.fmt(vB) });
+                    }
+                }
+            }
+            return changes;
+        }
+
+        computeStability(ids) {
+            const perModule = [];
+            let sumA = 0, cntA = 0, sumB = 0, cntB = 0;
+            const polesA = { thesis:0, antithesis:0, synthesis:0 };
+            const polesB = { thesis:0, antithesis:0, synthesis:0 };
+            const paradoxFlags = [];
+
+            for (const [, m] of this.mapA) {
+                const s = this.g(m,'triadic.stability') ?? 0;
+                sumA += s; cntA++;
+                const p = this.g(m,'triadic.pole');
+                if (p && polesA[p] !== undefined) polesA[p]++;
+            }
+            for (const [, m] of this.mapB) {
+                const s = this.g(m,'triadic.stability') ?? 0;
+                sumB += s; cntB++;
+                const p = this.g(m,'triadic.pole');
+                if (p && polesB[p] !== undefined) polesB[p]++;
+            }
+            for (const id of ids) {
+                const a = this.mapA.get(id), b = this.mapB.get(id);
+                const sA = this.g(a,'triadic.stability') ?? 0;
+                const sB = this.g(b,'triadic.stability') ?? 0;
+                const pA = this.g(a,'triadic.paradox_index') ?? 0;
+                const pB = this.g(b,'triadic.paradox_index') ?? 0;
+                perModule.push({ id, name: b.name, stabilityA: sA, stabilityB: sB, stabilityDelta: sB - sA, paradoxA: pA, paradoxB: pB, paradoxDelta: pB - pA });
+                if (pB > 0.5 || (pB - pA) > 0.2) {
+                    paradoxFlags.push({ id, name: b.name, paradoxB: pB, paradoxDelta: pB - pA, reason: pB > 0.5 ? 'paradox_index > 0.5' : 'increased by > 0.2' });
+                }
+            }
+            const avgStabA = cntA ? sumA / cntA : 0;
+            const avgStabB = cntB ? sumB / cntB : 0;
+
+            // Balance check
+            const totalA = Object.values(polesA).reduce((s,v)=>s+v,0) || 1;
+            const totalB = Object.values(polesB).reduce((s,v)=>s+v,0) || 1;
+            const balanceWarnings = [];
+            for (const pole of ['thesis','antithesis','synthesis']) {
+                const pctB = (polesB[pole] / totalB) * 100;
+                if (pctB < 15) balanceWarnings.push(`${pole} is underrepresented in B (${pctB.toFixed(1)}%)`);
+                if (pctB > 60) balanceWarnings.push(`${pole} is overrepresented in B (${pctB.toFixed(1)}%)`);
+            }
+
+            return { perModule, avgStabA, avgStabB, polesA, polesB, paradoxFlags, balanceWarnings };
+        }
+    }
+
+    // ========== UI HELPERS ==========
+    function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+    function badge(count, color) {
+        const colors = {
+            green: 'bg-added-900 text-added-500 border border-added-500/20',
+            red: 'bg-removed-900 text-removed-500 border border-removed-500/20',
+            amber: 'bg-modified-900 text-modified-500 border border-modified-500/20',
+            blue: 'bg-info-900 text-info-500 border border-info-500/20',
+            purple: 'bg-[#1c0f2e] text-purple-500 border border-purple-500/20',
+            orange: 'bg-[#1f1508] text-orange-500 border border-orange-500/20',
+            gray: 'bg-base-700 text-base-300 border border-base-600',
+        };
+        return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-mono font-semibold ${colors[color] || colors.gray}">${count}</span>`;
+    }
+
+    function noChangesRow(cols) {
+        return `<tr><td colspan="${cols}" class="px-4 py-4 text-center no-changes-row"><i data-lucide="check-circle" class="w-4 h-4 inline mr-1 align-text-bottom"></i> No changes detected</td></tr>`;
+    }
+
+    function sortIndicator(col, sortState) {
+        if (sortState.col === col) return `<span class="sort-arrow">${sortState.dir === 'asc' ? '▲' : '▼'}</span>`;
+        return `<span class="sort-arrow">⇅</span>`;
+    }
+
+    function makeTable(headers, rows, tableId, colCount) {
+        if (rows.length === 0) return `<div class="overflow-x-auto rounded-lg"><table class="w-full text-left text-sm font-mono"><thead class="text-xs uppercase tracking-wide text-base-400 bg-base-900/60"><tr>${headers}</tr></thead><tbody>${noChangesRow(colCount)}</tbody></table></div>`;
+        return `<div class="overflow-x-auto rounded-lg"><table id="${tableId}" class="w-full text-left text-sm font-mono"><thead class="text-xs uppercase tracking-wide text-base-400 bg-base-900/60"><tr>${headers}</tr></thead><tbody class="divide-y divide-base-700/50">${rows.join('')}</tbody></table></div>`;
+    }
+
+    // ========== RENDERERS ==========
+    let currentResult = null;
+    const sortStates = {};
+
+    function getSortState(tableId) {
+        if (!sortStates[tableId]) sortStates[tableId] = { col: null, dir: 'asc' };
+        return sortStates[tableId];
+    }
+
+    function sortArray(arr, col, dir) {
+        return [...arr].sort((a, b) => {
+            let vA = a[col], vB = b[col];
+            if (vA === undefined || vA === null) vA = '';
+            if (vB === undefined || vB === null) vB = '';
+            if (typeof vA === 'number' && typeof vB === 'number') return dir === 'asc' ? vA - vB : vB - vA;
+            return dir === 'asc' ? String(vA).localeCompare(String(vB)) : String(vB).localeCompare(String(vA));
+        });
+    }
+
+    function renderSummary(r) {
+        const grid = document.getElementById('summary-grid-g1h4');
+        const cards = [
+            { label: 'Total Modules', valA: r.totalA, valB: r.totalB, color: 'text-base-200', bg: 'bg-base-800 border border-base-700' },
+            { label: 'Added', val: r.added.length, color: 'text-added-500', bg: 'bg-added-900/40 border border-added-500/20' },
+            { label: 'Removed', val: r.removed.length, color: 'text-removed-500', bg: 'bg-removed-900/40 border border-removed-500/20' },
+            { label: 'Modified', val: r.modified.length, color: 'text-modified-500', bg: 'bg-modified-900/40 border border-modified-500/20' },
+            { label: 'Lineage Δ', val: r.lineageChanges.length, color: 'text-info-500', bg: 'bg-info-900/40 border border-info-500/20' },
+            { label: 'Layer Δ', val: r.layerChanges.length, color: 'text-purple-500', bg: 'bg-[#1c0f2e]/60 border border-purple-500/20' },
+            { label: 'RTT Δ', val: r.rttChanges.length, color: 'text-orange-500', bg: 'bg-[#1f1508]/60 border border-orange-500/20' },
+            { label: 'Phantom', val: r.phantomEntries.length, color: 'text-base-300', bg: 'bg-base-800 border border-base-600' },
+        ];
+        grid.innerHTML = cards.map((c, i) => {
+            const valHtml = c.valA !== undefined
+                ? `<span class="${c.color} text-2xl md:text-3xl font-bold font-mono tabular-nums">${c.valA}</span><span class="text-base-500 mx-1">/</span><span class="${c.color} text-2xl md:text-3xl font-bold font-mono tabular-nums">${c.valB}</span>`
+                : `<span class="${c.color} text-2xl md:text-3xl font-bold font-mono tabular-nums">${c.val}</span>`;
+            return `<div class="${c.bg} rounded-xl p-3 md:p-4 text-center anim-card anim-d${i+1}">
+                <div class="text-[10px] uppercase tracking-wider text-base-400 mb-1 font-sans">${c.label}</div>
+                <div>${valHtml}</div>
+            </div>`;
+        }).join('');
+    }
+
+    function renderOverview(r) {
+        const p = document.getElementById('panel-overview');
+        let html = `<div class="space-y-6">`;
+        // Meta diff
+        html += `<div><h3 class="text-sm font-semibold text-base-200 mb-3 font-sans uppercase tracking-wide">Registry Metadata</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="bg-base-900/60 rounded-lg p-4 text-xs font-mono space-y-2">
+                <div class="text-base-400 font-sans text-[10px] uppercase tracking-wider mb-2">Version A</div>
+                <div><span class="text-base-400">registry:</span> <span class="text-base-200">${esc(r.meta.registryVersionA)}</span></div>
+                <div><span class="text-base-400">schema:</span> <span class="text-base-200">${esc(r.meta.schemaVersionA)}</span></div>
+                <div><span class="text-base-400">generated:</span> <span class="text-base-200">${esc(r.meta.generatedAtA)}</span></div>
+                <div><span class="text-base-400">author:</span> <span class="text-base-200">${esc(r.meta.authorA)}</span></div>
+            </div>
+            <div class="bg-base-900/60 rounded-lg p-4 text-xs font-mono space-y-2">
+                <div class="text-base-400 font-sans text-[10px] uppercase tracking-wider mb-2">Version B</div>
+                <div><span class="text-base-400">registry:</span> <span class="text-info-400">${esc(r.meta.registryVersionB)}</span>${r.meta.registryVersionA !== r.meta.registryVersionB ? ' <span class="text-modified-500">Δ</span>' : ''}</div>
+                <div><span class="text-base-400">schema:</span> <span class="text-base-200">${esc(r.meta.schemaVersionB)}</span>${r.meta.schemaVersionA !== r.meta.schemaVersionB ? ' <span class="text-modified-500">Δ</span>' : ''}</div>
+                <div><span class="text-base-400">generated:</span> <span class="text-info-400">${esc(r.meta.generatedAtB)}</span></div>
+                <div><span class="text-base-400">author:</span> <span class="text-base-200">${esc(r.meta.authorB)}</span></div>
+            </div>
+        </div></div>`;
+
+        // Summary text
+        html += `<div><h3 class="text-sm font-semibold text-base-200 mb-3 font-sans uppercase tracking-wide">Summary</h3>
+        <div class="bg-base-900/60 rounded-lg p-4 text-sm text-base-300 space-y-1 font-sans leading-relaxed">
+            <p>Registry changed from <span class="text-info-400 font-mono">${esc(r.meta.registryVersionA)}</span> → <span class="text-info-400 font-mono">${esc(r.meta.registryVersionB)}</span>.</p>
+            <p>Module count: <span class="font-mono">${r.totalA}</span> → <span class="font-mono">${r.totalB}</span> (${r.totalB >= r.totalA ? '+' : ''}${r.totalB - r.totalA} net).</p>
+            <p>${badge(r.added.length,'green')} added, ${badge(r.removed.length,'red')} removed, ${badge(r.modified.length,'amber')} modified.</p>
+            <p>${badge(r.lineageChanges.length,'blue')} lineage changes, ${badge(r.layerChanges.length,'purple')} layer changes, ${badge(r.rttChanges.length,'orange')} RTT changes.</p>
+            <p>${badge(r.phantomEntries.length,'gray')} phantom entries tracked, ${badge(r.stabilityAnalysis.paradoxFlags.length,'red')} paradox flags.</p>
+        </div></div>`;
+
+        // Jump links
+        const cats = [
+            { tab: 'added', label: 'Added Modules', count: r.added.length, color: 'green' },
+            { tab: 'removed', label: 'Removed Modules', count: r.removed.length, color: 'red' },
+            { tab: 'modified', label: 'Modified Modules', count: r.modified.length, color: 'amber' },
+            { tab: 'lineage', label: 'Lineage Changes', count: r.lineageChanges.length, color: 'blue' },
+            { tab: 'layer', label: 'Layer Changes', count: r.layerChanges.length, color: 'purple' },
+            { tab: 'rtt', label: 'RTT Changes', count: r.rttChanges.length, color: 'orange' },
+            { tab: 'phantom', label: 'Phantom Entries', count: r.phantomEntries.length, color: 'gray' },
+            { tab: 'audit', label: 'Audit Changes', count: r.auditChanges.length, color: 'blue' },
+            { tab: 'stability', label: 'Triadic Stability', count: r.stabilityAnalysis.paradoxFlags.length, color: 'red' },
+        ];
+        html += `<div><h3 class="text-sm font-semibold text-base-200 mb-3 font-sans uppercase tracking-wide">Jump To</h3>
+        <div class="flex flex-wrap gap-2">
+            ${cats.map(c => `<span class="jump-link text-xs font-sans" data-jump="${c.tab}">${c.label} ${badge(c.count, c.color)}</span>`).join('')}
+        </div></div>`;
+
+        html += `</div>`;
+        p.innerHTML = html;
+
+        // attach jump handlers
+        p.querySelectorAll('[data-jump]').forEach(el => {
+            el.addEventListener('click', () => switchTab(el.dataset.jump));
+        });
+    }
+
+    function renderModuleTable(modules, panelId, highlight) {
+        const p = document.getElementById(panelId);
+        const tblId = panelId + '-tbl';
+        const ss = getSortState(tblId);
+        const sorted = ss.col ? sortArray(modules.map(m => ({
+            id: m.id, name: m.name, layer: m.analyzer_layer || '—', rtt: m.rtt_substrate || '—',
+            pole: (m.triadic||{}).pole || '—', phantom: m.phantom ? 'Yes' : 'No'
+        })), ss.col, ss.dir) : modules.map(m => ({
+            id: m.id, name: m.name, layer: m.analyzer_layer || '—', rtt: m.rtt_substrate || '—',
+            pole: (m.triadic||{}).pole || '—', phantom: m.phantom ? 'Yes' : 'No'
+        }));
+
+        const hc = highlight === 'added' ? 'text-added-500' : 'text-removed-500';
+        const bgRow = highlight === 'added' ? 'bg-added-900/10' : 'bg-removed-900/10';
+        const headers = `<th class="px-3 py-2.5" data-sort="id">ID ${sortIndicator('id',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="name">Name ${sortIndicator('name',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="layer">Layer ${sortIndicator('layer',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="rtt">RTT ${sortIndicator('rtt',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="pole">Pole ${sortIndicator('pole',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="phantom">Phantom ${sortIndicator('phantom',ss)}</th>`;
+        const rows = sorted.map(m => `<tr class="${bgRow}">
+            <td class="px-3 py-2 ${hc}">${esc(m.id)}</td>
+            <td class="px-3 py-2 text-base-200">${esc(m.name)}</td>
+            <td class="px-3 py-2 text-base-300">${esc(m.layer)}</td>
+            <td class="px-3 py-2 text-base-300">${esc(m.rtt)}</td>
+            <td class="px-3 py-2 text-base-300">${esc(m.pole)}</td>
+            <td class="px-3 py-2 text-base-300">${m.phantom === 'Yes' ? '<span class="text-modified-500">Yes</span>' : 'No'}</td>
+        </tr>`);
+
+        p.innerHTML = makeTable(headers, rows, tblId, 6);
+        attachSortHandlers(tblId, () => renderModuleTable(modules, panelId, highlight));
+    }
+
+    function renderModified(mods) {
+        const p = document.getElementById('panel-modified');
+        if (mods.length === 0) {
+            p.innerHTML = makeTable('', [], '', 6);
+            return;
+        }
+        let html = `<div class="space-y-2">`;
+        mods.forEach((m, idx) => {
+            const rowId = `mod-expand-${idx}`;
+            const diffTypeColor = { added: 'text-added-500', removed: 'text-removed-500', modified: 'text-modified-500' };
+            html += `<div class="border border-base-700 rounded-lg overflow-hidden">
+                <div class="expandable-row flex items-center justify-between px-4 py-3 bg-modified-900/10" data-expand="${rowId}">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <i data-lucide="chevron-right" class="w-4 h-4 text-base-400 flex-shrink-0 expand-icon" id="icon-${rowId}"></i>
+                        <span class="text-modified-500 font-mono text-xs truncate">${esc(m.id)}</span>
+                        <span class="text-base-200 text-sm font-medium truncate">${esc(m.name)}</span>
+                    </div>
+                    <span>${badge(m.diffs.length, 'amber')}</span>
+                </div>
+                <div id="${rowId}" class="hidden bg-base-900/40 px-4 py-3">
+                    <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono">
+                        <thead class="text-[10px] uppercase tracking-wide text-base-400"><tr>
+                            <th class="px-2 py-1.5">Field</th><th class="px-2 py-1.5">Old Value</th><th class="px-2 py-1.5">New Value</th><th class="px-2 py-1.5">Change</th>
+                        </tr></thead>
+                        <tbody class="divide-y divide-base-700/40">
+                            ${m.diffs.map(d => `<tr>
+                                <td class="px-2 py-1.5 text-info-400">${esc(d.field)}</td>
+                                <td class="px-2 py-1.5 text-removed-400 break-all max-w-[200px]">${esc(d.oldVal)}</td>
+                                <td class="px-2 py-1.5 text-added-400 break-all max-w-[200px]">${esc(d.newVal)}</td>
+                                <td class="px-2 py-1.5 ${diffTypeColor[d.type] || 'text-base-300'}">${esc(d.type)}</td>
+                            </tr>`).join('')}
+                        </tbody>
+                    </table></div>
+                </div>
+            </div>`;
+        });
+        html += `</div>`;
+        p.innerHTML = html;
+
+        p.querySelectorAll('.expandable-row').forEach(row => {
+            row.addEventListener('click', () => {
+                const target = document.getElementById(row.dataset.expand);
+                const icon = document.getElementById('icon-' + row.dataset.expand);
+                if (target) {
+                    target.classList.toggle('hidden');
+                    if (icon) icon.style.transform = target.classList.contains('hidden') ? '' : 'rotate(90deg)';
+                }
+            });
+        });
+    }
+
+    function renderLineage(changes) {
+        const p = document.getElementById('panel-lineage');
+        const tblId = 'lineage-tbl';
+        const ss = getSortState(tblId);
+        const sorted = ss.col ? sortArray(changes, ss.col, ss.dir) : changes;
+        const headers = `<th class="px-3 py-2.5" data-sort="id">Module ID ${sortIndicator('id',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="oldParent">Old Parent ${sortIndicator('oldParent',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="newParent">New Parent ${sortIndicator('newParent',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="oldGen">Old Gen ${sortIndicator('oldGen',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="newGen">New Gen ${sortIndicator('newGen',ss)}</th>
+            <th class="px-3 py-2.5">Ancestor Δ</th>`;
+        const rows = sorted.map(c => `<tr class="bg-info-900/10">
+            <td class="px-3 py-2 text-info-400">${esc(c.id)}</td>
+            <td class="px-3 py-2 text-removed-400">${esc(c.oldParent)}</td>
+            <td class="px-3 py-2 text-added-400">${esc(c.newParent)}</td>
+            <td class="px-3 py-2 text-base-300 tabular-nums">${c.oldGen}</td>
+            <td class="px-3 py-2 text-base-300 tabular-nums">${c.newGen}</td>
+            <td class="px-3 py-2 text-base-300">${c.ancestorDelta ? '<span class="text-modified-500">Changed</span>' : '—'}</td>
+        </tr>`);
+        p.innerHTML = makeTable(headers, rows, tblId, 6);
+        attachSortHandlers(tblId, () => renderLineage(changes));
+    }
+
+    function renderLayers(changes) {
+        const p = document.getElementById('panel-layer');
+        const tblId = 'layer-tbl';
+        const ss = getSortState(tblId);
+        const sorted = ss.col ? sortArray(changes, ss.col, ss.dir) : changes;
+        const headers = `<th class="px-3 py-2.5" data-sort="id">Module ID ${sortIndicator('id',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="name">Name ${sortIndicator('name',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="oldLayer">Old Layer ${sortIndicator('oldLayer',ss)}</th>
+            <th class="px-3 py-2.5"></th>
+            <th class="px-3 py-2.5" data-sort="newLayer">New Layer ${sortIndicator('newLayer',ss)}</th>`;
+        const rows = sorted.map(c => `<tr>
+            <td class="px-3 py-2 text-purple-500">${esc(c.id)}</td>
+            <td class="px-3 py-2 text-base-200">${esc(c.name)}</td>
+            <td class="px-3 py-2 text-removed-400">${esc(c.oldLayer)}</td>
+            <td class="px-3 py-2 text-base-500">→</td>
+            <td class="px-3 py-2 text-added-400">${esc(c.newLayer)}</td>
+        </tr>`);
+        p.innerHTML = makeTable(headers, rows, tblId, 5);
+        attachSortHandlers(tblId, () => renderLayers(changes));
+    }
+
+    function renderRTT(changes) {
+        const p = document.getElementById('panel-rtt');
+        const tblId = 'rtt-tbl';
+        const ss = getSortState(tblId);
+        const sorted = ss.col ? sortArray(changes, ss.col, ss.dir) : changes;
+        const headers = `<th class="px-3 py-2.5" data-sort="id">Module ID ${sortIndicator('id',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="name">Name ${sortIndicator('name',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="oldSubstrate">Old Substrate ${sortIndicator('oldSubstrate',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="newSubstrate">New Substrate ${sortIndicator('newSubstrate',ss)}</th>
+            <th class="px-3 py-2.5">Polarity</th>`;
+        const rows = sorted.map(c => `<tr>
+            <td class="px-3 py-2 text-orange-500">${esc(c.id)}</td>
+            <td class="px-3 py-2 text-base-200">${esc(c.name)}</td>
+            <td class="px-3 py-2 text-removed-400">${esc(c.oldSubstrate)}</td>
+            <td class="px-3 py-2 text-added-400">${esc(c.newSubstrate)}${c.isVoid ? ' <span class="text-removed-500 text-[10px]">⚠ VOID</span>' : ''}</td>
+            <td class="px-3 py-2 text-modified-400">${esc(c.oldSubstrate)} → ${esc(c.newSubstrate)}</td>
+        </tr>`);
+        p.innerHTML = makeTable(headers, rows, tblId, 5);
+        attachSortHandlers(tblId, () => renderRTT(changes));
+    }
+
+    function renderPhantom(entries) {
+        const p = document.getElementById('panel-phantom');
+        const tblId = 'phantom-tbl';
+        const ss = getSortState(tblId);
+        const sorted = ss.col ? sortArray(entries, ss.col, ss.dir) : entries;
+        const headers = `<th class="px-3 py-2.5" data-sort="id">Module ID ${sortIndicator('id',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="name">Name ${sortIndicator('name',ss)}</th>
+            <th class="px-3 py-2.5">In A</th>
+            <th class="px-3 py-2.5">In B</th>
+            <th class="px-3 py-2.5" data-sort="stateChange">State Change ${sortIndicator('stateChange',ss)}</th>`;
+        const rows = sorted.map(c => {
+            const isWarning = c.stateChange === 'Ghosted' || c.stateChange === 'Materialized';
+            const scColor = c.stateChange === 'Ghosted' ? 'text-removed-500' : c.stateChange === 'Materialized' ? 'text-added-500' : 'text-base-300';
+            return `<tr>
+                <td class="px-3 py-2 text-base-300">${esc(c.id)}</td>
+                <td class="px-3 py-2 text-base-200">${esc(c.name)}</td>
+                <td class="px-3 py-2 text-base-300">${c.phantomA === null ? '—' : c.phantomA ? 'Yes' : 'No'}</td>
+                <td class="px-3 py-2 text-base-300">${c.phantomB === null ? '—' : c.phantomB ? 'Yes' : 'No'}</td>
+                <td class="px-3 py-2 ${scColor}">${isWarning ? '⚠ ' : ''}${esc(c.stateChange)}</td>
+            </tr>`;
+        });
+        p.innerHTML = makeTable(headers, rows, tblId, 5);
+        attachSortHandlers(tblId, () => renderPhantom(entries));
+    }
+
+    function renderAudit(changes) {
+        const p = document.getElementById('panel-audit');
+        const tblId = 'audit-tbl';
+        const ss = getSortState(tblId);
+        const sorted = ss.col ? sortArray(changes, ss.col, ss.dir) : changes;
+        const headers = `<th class="px-3 py-2.5" data-sort="id">Module ID ${sortIndicator('id',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="name">Name ${sortIndicator('name',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="field">Field ${sortIndicator('field',ss)}</th>
+            <th class="px-3 py-2.5">Old Value</th>
+            <th class="px-3 py-2.5">New Value</th>`;
+        const rows = sorted.map(c => `<tr>
+            <td class="px-3 py-2 text-info-400">${esc(c.id)}</td>
+            <td class="px-3 py-2 text-base-200">${esc(c.name)}</td>
+            <td class="px-3 py-2 text-modified-400">${esc(c.field)}</td>
+            <td class="px-3 py-2 text-removed-400 break-all max-w-[180px] text-xs">${esc(c.oldVal)}</td>
+            <td class="px-3 py-2 text-added-400 break-all max-w-[180px] text-xs">${esc(c.newVal)}</td>
+        </tr>`);
+        p.innerHTML = makeTable(headers, rows, tblId, 5);
+        attachSortHandlers(tblId, () => renderAudit(changes));
+    }
+
+    function renderStability(sa) {
+        const p = document.getElementById('panel-stability');
+        let html = `<div class="space-y-6">`;
+
+        // Registry stability score
+        html += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-base-900/60 rounded-lg p-4 text-center">
+                <div class="text-[10px] uppercase tracking-wider text-base-400 mb-2 font-sans">Registry Stability (A)</div>
+                <div class="tooltip-wrap inline-block">
+                    <span class="text-3xl font-bold font-mono tabular-nums ${sa.avgStabA >= 0.7 ? 'text-added-500' : sa.avgStabA >= 0.4 ? 'text-modified-500' : 'text-removed-500'}">${sa.avgStabA.toFixed(3)}</span>
+                    <span class="tooltip-text">Average triadic stability across all modules in Version A. Range: 0 (unstable) to 1 (perfectly stable).</span>
+                </div>
+            </div>
+            <div class="bg-base-900/60 rounded-lg p-4 text-center">
+                <div class="text-[10px] uppercase tracking-wider text-base-400 mb-2 font-sans">Registry Stability (B)</div>
+                <div class="tooltip-wrap inline-block">
+                    <span class="text-3xl font-bold font-mono tabular-nums ${sa.avgStabB >= 0.7 ? 'text-added-500' : sa.avgStabB >= 0.4 ? 'text-modified-500' : 'text-removed-500'}">${sa.avgStabB.toFixed(3)}</span>
+                    <span class="tooltip-text">Average triadic stability across all modules in Version B. Range: 0 (unstable) to 1 (perfectly stable).</span>
+                </div>
+                <div class="text-xs mt-1 ${sa.avgStabB >= sa.avgStabA ? 'text-added-400' : 'text-removed-400'}">${sa.avgStabB >= sa.avgStabA ? '▲' : '▼'} ${((sa.avgStabB - sa.avgStabA)*100).toFixed(1)}%</div>
+            </div>
+        </div>`;
+
+        // Pole distribution
+        const totalA = Object.values(sa.polesA).reduce((s,v)=>s+v,0) || 1;
+        const totalB = Object.values(sa.polesB).reduce((s,v)=>s+v,0) || 1;
+        const poleColors = { thesis: '#58a6ff', antithesis: '#f85149', synthesis: '#3fb950' };
+        html += `<div><h3 class="text-sm font-semibold text-base-200 mb-3 font-sans uppercase tracking-wide">Pole Distribution</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+        for (const label of ['Version A', 'Version B']) {
+            const poles = label === 'Version A' ? sa.polesA : sa.polesB;
+            const total = label === 'Version A' ? totalA : totalB;
+            html += `<div class="bg-base-900/60 rounded-lg p-4">
+                <div class="text-[10px] uppercase tracking-wider text-base-400 mb-3 font-sans">${label}</div>
+                <div class="space-y-2">`;
+            for (const pole of ['thesis','antithesis','synthesis']) {
+                const pct = ((poles[pole] / total) * 100);
+                html += `<div class="flex items-center gap-2">
+                    <span class="text-xs font-mono w-20 text-base-300">${pole}</span>
+                    <div class="flex-1 bg-base-700 rounded h-[22px] overflow-hidden">
+                        <div class="pole-bar" style="width:${pct}%; background:${poleColors[pole]};"></div>
+                    </div>
+                    <span class="text-xs font-mono tabular-nums text-base-400 w-16 text-right">${poles[pole]} (${pct.toFixed(0)}%)</span>
+                </div>`;
+            }
+            html += `</div></div>`;
+        }
+        html += `</div></div>`;
+
+        // Balance warnings
+        if (sa.balanceWarnings.length > 0) {
+            html += `<div class="bg-modified-900/30 border border-modified-500/20 rounded-lg p-4">
+                <h4 class="text-sm font-semibold text-modified-400 mb-2 font-sans flex items-center gap-1.5"><i data-lucide="alert-triangle" class="w-4 h-4"></i> Balance Warnings</h4>
+                <ul class="text-xs text-modified-300 space-y-1 font-mono">${sa.balanceWarnings.map(w => `<li>• ${esc(w)}</li>`).join('')}</ul>
+            </div>`;
+        }
+
+        // Per-module stability table
+        html += `<div><h3 class="text-sm font-semibold text-base-200 mb-3 font-sans uppercase tracking-wide">Per-Module Stability</h3>`;
+        const tblId = 'stability-tbl';
+        const ss = getSortState(tblId);
+        const sorted = ss.col ? sortArray(sa.perModule, ss.col, ss.dir) : sa.perModule;
+        const headers = `<th class="px-3 py-2.5" data-sort="id">ID ${sortIndicator('id',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="name">Name ${sortIndicator('name',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="stabilityA">Stab A ${sortIndicator('stabilityA',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="stabilityB">Stab B ${sortIndicator('stabilityB',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="stabilityDelta">Δ Stab ${sortIndicator('stabilityDelta',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="paradoxA">Pdx A ${sortIndicator('paradoxA',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="paradoxB">Pdx B ${sortIndicator('paradoxB',ss)}</th>
+            <th class="px-3 py-2.5" data-sort="paradoxDelta">Δ Pdx ${sortIndicator('paradoxDelta',ss)}</th>`;
+        const rows = sorted.map(m => {
+            const stabCol = m.stabilityDelta >= 0 ? 'text-added-400' : 'text-removed-400';
+            const pdxCol = m.paradoxDelta <= 0 ? 'text-added-400' : 'text-removed-400';
+            return `<tr>
+                <td class="px-3 py-2 text-base-300">${esc(m.id)}</td>
+                <td class="px-3 py-2 text-base-200">${esc(m.name)}</td>
+                <td class="px-3 py-2 text-base-300 tabular-nums tooltip-wrap">${m.stabilityA.toFixed(2)}<span class="tooltip-text">Stability measures module coherence (0=unstable, 1=stable)</span></td>
+                <td class="px-3 py-2 text-base-300 tabular-nums">${m.stabilityB.toFixed(2)}</td>
+                <td class="px-3 py-2 ${stabCol} tabular-nums">${m.stabilityDelta >= 0 ? '+' : ''}${m.stabilityDelta.toFixed(2)}</td>
+                <td class="px-3 py-2 text-base-300 tabular-nums tooltip-wrap">${m.paradoxA.toFixed(2)}<span class="tooltip-text">Paradox index: 0=no contradiction, 1=full paradox. Values >0.5 are flagged.</span></td>
+                <td class="px-3 py-2 text-base-300 tabular-nums">${m.paradoxB.toFixed(2)}</td>
+                <td class="px-3 py-2 ${pdxCol} tabular-nums">${m.paradoxDelta >= 0 ? '+' : ''}${m.paradoxDelta.toFixed(2)}</td>
+            </tr>`;
+        });
+        html += makeTable(headers, rows, tblId, 8);
+        html += `</div>`;
+
+        // Paradox flags
+        html += `<div><h3 class="text-sm font-semibold text-base-200 mb-3 font-sans uppercase tracking-wide flex items-center gap-2">Paradox Flags ${badge(sa.paradoxFlags.length,'red')}</h3>`;
+        if (sa.paradoxFlags.length === 0) {
+            html += `<div class="text-sm no-changes-row py-3"><i data-lucide="check-circle" class="w-4 h-4 inline mr-1 align-text-bottom"></i> No paradox flags</div>`;
+        } else {
+            html += `<div class="space-y-2">${sa.paradoxFlags.map(f => `<div class="bg-removed-900/20 border border-removed-500/20 rounded-lg px-4 py-3 flex items-start gap-3">
+                <span class="text-removed-500 text-lg mt-0.5">⚠</span>
+                <div>
+                    <div class="text-sm text-base-200 font-medium">${esc(f.name)} <span class="text-base-400 font-mono text-xs">${esc(f.id)}</span></div>
+                    <div class="text-xs text-base-400 mt-0.5">paradox_index: <span class="text-removed-400 font-mono">${f.paradoxB.toFixed(2)}</span> (Δ ${f.paradoxDelta >= 0 ? '+' : ''}${f.paradoxDelta.toFixed(2)}) — <span class="text-removed-300">${esc(f.reason)}</span></div>
+                </div>
+            </div>`).join('')}</div>`;
+        }
+        html += `</div>`;
+
+        html += `</div>`;
+        p.innerHTML = html;
+        attachSortHandlers(tblId, () => renderStability(sa));
+        reInitIcons();
+    }
+
+    function attachSortHandlers(tblId, renderFn) {
+        const tbl = document.getElementById(tblId);
+        if (!tbl) return;
+        tbl.querySelectorAll('th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const ss = getSortState(tblId);
+                if (ss.col === th.dataset.sort) ss.dir = ss.dir === 'asc' ? 'desc' : 'asc';
+                else { ss.col = th.dataset.sort; ss.dir = 'asc'; }
+                renderFn();
+            });
+        });
+    }
+
+    function reInitIcons() {
+        if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
+            lucide.createIcons();
+        }
+    }
+
+    // ========== TAB SWITCHING ==========
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + tabName));
+    }
+
+    // ========== EXPORT FUNCTIONS ==========
+    function generateMarkdownReport(r) {
+        let md = `# Triadic Module Registry Diff Report\n`;
+        md += `Generated: 2026-10-06T10:53:00-04:00 (EDT)\n\n`;
+        md += `## Registry Metadata\n`;
+        md += `| Field | Version A | Version B |\n|---|---|---|\n`;
+        md += `| Registry Version | ${r.meta.registryVersionA} | ${r.meta.registryVersionB} |\n`;
+        md += `| Schema Version | ${r.meta.schemaVersionA} | ${r.meta.schemaVersionB} |\n`;
+        md += `| Generated At | ${r.meta.generatedAtA} | ${r.meta.generatedAtB} |\n`;
+        md += `| Author | ${r.meta.authorA} | ${r.meta.authorB} |\n\n`;
+        md += `## Summary\n`;
+        md += `- Total Modules: ${r.totalA} → ${r.totalB}\n`;
+        md += `- Added: ${r.added.length}\n`;
+        md += `- Removed: ${r.removed.length}\n`;
+        md += `- Modified: ${r.modified.length}\n`;
+        md += `- Lineage Changes: ${r.lineageChanges.length}\n`;
+        md += `- Layer Changes: ${r.layerChanges.length}\n`;
+        md += `- RTT Changes: ${r.rttChanges.length}\n`;
+        md += `- Phantom Entries: ${r.phantomEntries.length}\n`;
+        md += `- Audit Changes: ${r.auditChanges.length}\n`;
+        md += `- Paradox Flags: ${r.stabilityAnalysis.paradoxFlags.length}\n\n`;
+        if (r.added.length) {
+            md += `## Added Modules\n`;
+            r.added.forEach(m => { md += `- **${m.name}** (${m.id}) — layer: ${m.analyzer_layer}, pole: ${(m.triadic||{}).pole||'—'}\n`; });
+            md += `\n`;
+        }
+        if (r.removed.length) {
+            md += `## Removed Modules\n`;
+            r.removed.forEach(m => { md += `- **${m.name}** (${m.id})\n`; });
+            md += `\n`;
+        }
+        if (r.modified.length) {
+            md += `## Modified Modules\n`;
+            r.modified.forEach(m => {
+                md += `### ${m.name} (${m.id})\n`;
+                md += `| Field | Old | New | Change |\n|---|---|---|---|\n`;
+                m.diffs.forEach(d => { md += `| ${d.field} | ${d.oldVal} | ${d.newVal} | ${d.type} |\n`; });
+                md += `\n`;
+            });
+        }
+        md += `## Stability\n`;
+        md += `- Avg Stability A: ${r.stabilityAnalysis.avgStabA.toFixed(3)}\n`;
+        md += `- Avg Stability B: ${r.stabilityAnalysis.avgStabB.toFixed(3)}\n`;
+        if (r.stabilityAnalysis.paradoxFlags.length) {
+            md += `### Paradox Flags\n`;
+            r.stabilityAnalysis.paradoxFlags.forEach(f => { md += `- **${f.name}** (${f.id}): paradox=${f.paradoxB.toFixed(2)}, reason: ${f.reason}\n`; });
+        }
+        return md;
+    }
+
+    function generateJSONDiff(r) {
+        return JSON.stringify({
+            generated: '2026-10-06T10:53:00-04:00',
+            meta: r.meta,
+            summary: { totalA: r.totalA, totalB: r.totalB, addedCount: r.added.length, removedCount: r.removed.length, modifiedCount: r.modified.length },
+            added: r.added.map(m => ({ id: m.id, name: m.name })),
+            removed: r.removed.map(m => ({ id: m.id, name: m.name })),
+            modified: r.modified.map(m => ({ id: m.id, name: m.name, diffs: m.diffs })),
+            lineageChanges: r.lineageChanges,
+            layerChanges: r.layerChanges,
+            rttChanges: r.rttChanges,
+            phantomEntries: r.phantomEntries,
+            auditChanges: r.auditChanges,
+            stability: {
+                avgStabilityA: r.stabilityAnalysis.avgStabA,
+                avgStabilityB: r.stabilityAnalysis.avgStabB,
+                paradoxFlags: r.stabilityAnalysis.paradoxFlags,
+                polesA: r.stabilityAnalysis.polesA,
+                polesB: r.stabilityAnalysis.polesB
+            }
+        }, null, 2);
+    }
+
+    // ========== MAIN EVENT HANDLERS ==========
+    document.getElementById('load-sample-a-btn-j8k1').addEventListener('click', () => {
+        document.getElementById('textarea-a-p5q8').value = JSON.stringify(SAMPLE_A, null, 2);
+        document.getElementById('error-a-s1t3').textContent = '';
+    });
+
+    document.getElementById('load-sample-b-btn-u3v6').addEventListener('click', () => {
+        document.getElementById('textarea-b-w8x0').value = JSON.stringify(SAMPLE_B, null, 2);
+        document.getElementById('error-b-y2z5').textContent = '';
+    });
+
+    document.getElementById('clear-btn-c3d6').addEventListener('click', () => {
+        document.getElementById('textarea-a-p5q8').value = '';
+        document.getElementById('textarea-b-w8x0').value = '';
+        document.getElementById('error-a-s1t3').textContent = '';
+        document.getElementById('error-b-y2z5').textContent = '';
+        document.getElementById('results-section-e5f8').style.display = 'none';
+        document.getElementById('export-btns-a2c4').style.display = 'none';
+        document.getElementById('empty-state-v7b9').style.display = 'flex';
+        currentResult = null;
+    });
+
+    document.getElementById('run-diff-btn-a7b0').addEventListener('click', () => {
+        const errA = document.getElementById('error-a-s1t3');
+        const errB = document.getElementById('error-b-y2z5');
+        errA.textContent = '';
+        errB.textContent = '';
+        let jsonA, jsonB;
+        try {
+            jsonA = JSON.parse(document.getElementById('textarea-a-p5q8').value);
+        } catch (e) {
+            errA.textContent = '✕ Invalid JSON: ' + e.message;
+            return;
+        }
+        try {
+            jsonB = JSON.parse(document.getElementById('textarea-b-w8x0').value);
+        } catch (e) {
+            errB.textContent = '✕ Invalid JSON: ' + e.message;
+            return;
+        }
+        // Validate structure
+        if (!jsonA.modules || !Array.isArray(jsonA.modules)) { errA.textContent = '✕ Missing "modules" array in JSON'; return; }
+        if (!jsonB.modules || !Array.isArray(jsonB.modules)) { errB.textContent = '✕ Missing "modules" array in JSON'; return; }
+
+        const engine = new TriadicDiffEngine(jsonA, jsonB);
+        currentResult = engine.run();
+
+        document.getElementById('empty-state-v7b9').style.display = 'none';
+        document.getElementById('results-section-e5f8').style.display = 'block';
+        document.getElementById('export-btns-a2c4').style.display = 'flex';
+
+        // Reset to overview tab
+        switchTab('overview');
+
+        // Render all panels
+        renderSummary(currentResult);
+        renderOverview(currentResult);
+        renderModuleTable(currentResult.added, 'panel-added', 'added');
+        renderModuleTable(currentResult.removed, 'panel-removed', 'removed');
+        renderModified(currentResult.modified);
+        renderLineage(currentResult.lineageChanges);
+        renderLayers(currentResult.layerChanges);
+        renderRTT(currentResult.rttChanges);
+        renderPhantom(currentResult.phantomEntries);
+        renderAudit(currentResult.auditChanges);
+        renderStability(currentResult.stabilityAnalysis);
+
+        reInitIcons();
+
+        // Scroll to results
+        document.getElementById('results-section-e5f8').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // Tab switching
+    document.getElementById('tab-container-k2l5').addEventListener('click', (e) => {
+        const btn = e.target.closest('.tab-btn');
+        if (btn && btn.dataset.tab) switchTab(btn.dataset.tab);
+    });
+
+    // Copy report
+    document.getElementById('copy-report-btn-x5z7').addEventListener('click', () => {
+        if (!currentResult) return;
+        const md = generateMarkdownReport(currentResult);
+        navigator.clipboard.writeText(md).then(() => {
+            const btn = document.getElementById('copy-report-btn-x5z7');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5"></i> Copied!';
+            reInitIcons();
+            setTimeout(() => { btn.innerHTML = orig; reInitIcons(); }, 2000);
+        });
+    });
+
+    // Download JSON
+    document.getElementById('download-json-btn-m3n6').addEventListener('click', () => {
+        if (!currentResult) return;
+        const json = generateJSONDiff(currentResult);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'triadic-diff-result.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+    </script>
+</body>
+</html>
