@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Triadic Modules Registry — Graph Explorer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root {
+      --bg-base: #0a0a0f;
+      --bg-panel: #12121a;
+      --bg-panel-border: #1e1e2e;
+      --bg-hover: #1a1a2a;
+      --text-primary: #e2e2ea;
+      --text-secondary: #9393a8;
+      --text-dim: #5e5e74;
+      --triad-color: #7c3aed;
+      --al-color: #0891b2;
+      --rtt-color: #059669;
+      --cat-color: #d97706;
+      --mod-alpha: #ef4444;
+      --mod-beta: #3b82f6;
+      --mod-gamma: #a855f7;
+      --edge-contains: #6b7280;
+      --edge-bound: #0891b2;
+      --edge-anchors: #059669;
+      --edge-lineage: #f59e0b;
+      --edge-depends: #ef4444;
+      --edge-cross: #a855f7;
+      --edge-participates: #64748b;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3a3a4a; }
+
+    #app-layout {
+      display: grid;
+      grid-template-rows: 48px 1fr 42px;
+      grid-template-columns: 260px 1fr 0px;
+      height: 100vh;
+      width: 100vw;
+      transition: grid-template-columns 0.3s ease;
+    }
+    #app-layout.panel-open {
+      grid-template-columns: 260px 1fr 320px;
+    }
+    #header-bar {
+      grid-column: 1 / -1;
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--bg-panel-border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 16px;
+      z-index: 50;
+    }
+    #left-panel {
+      background: var(--bg-panel);
+      border-right: 1px solid var(--bg-panel-border);
+      overflow-y: auto;
+      padding: 12px;
+      z-index: 40;
+    }
+    #graph-container {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-base);
+    }
+    #graph-container svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    #right-panel {
+      background: var(--bg-panel);
+      border-left: 1px solid var(--bg-panel-border);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0;
+      z-index: 40;
+    }
+    #bottom-bar {
+      grid-column: 1 / -1;
+      background: var(--bg-panel);
+      border-top: 1px solid var(--bg-panel-border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 20px;
+      overflow-x: auto;
+      z-index: 50;
+      white-space: nowrap;
+    }
+    .filter-group { margin-bottom: 14px; }
+    .filter-group-title {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+    .filter-cb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 0;
+      font-size: 12px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      user-select: none;
+    }
+    .filter-cb input[type="checkbox"] {
+      appearance: none;
+      width: 14px; height: 14px;
+      border: 1.5px solid #3a3a4a;
+      border-radius: 3px;
+      background: transparent;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .filter-cb input[type="checkbox"]:checked {
+      background: #7c3aed;
+      border-color: #7c3aed;
+    }
+    .filter-cb input[type="checkbox"]:checked::after {
+      content: '✓';
+      position: absolute;
+      top: -1px; left: 2px;
+      font-size: 10px;
+      color: white;
+      font-weight: 700;
+    }
+    .filter-cb .swatch {
+      width: 10px; height: 10px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .search-input {
+      width: 100%;
+      background: #1a1a2a;
+      border: 1px solid #2a2a3a;
+      border-radius: 8px;
+      padding: 7px 10px 7px 30px;
+      color: var(--text-primary);
+      font-size: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: #7c3aed; }
+    .search-wrapper { position: relative; margin-bottom: 14px; }
+    .search-wrapper i {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+    }
+    .stat-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 14px;
+      font-size: 11px;
+    }
+    .stat-item {
+      background: #1a1a2a;
+      border-radius: 6px;
+      padding: 6px 10px;
+      flex: 1;
+      text-align: center;
+    }
+    .stat-item .val { font-weight: 700; font-size: 16px; color: #e2e2ea; font-family: 'JetBrains Mono', monospace; }
+    .stat-item .lbl { color: var(--text-dim); font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .reset-btn {
+      width: 100%;
+      background: #1a1a2a;
+      border: 1px solid #2a2a3a;
+      border-radius: 8px;
+      padding: 7px;
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .reset-btn:hover { background: #252538; border-color: #7c3aed; color: #e2e2ea; }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      color: var(--text-secondary);
+    }
+    .legend-shape {
+      width: 12px; height: 12px;
+      flex-shrink: 0;
+    }
+    .legend-line {
+      width: 24px; height: 2px;
+      flex-shrink: 0;
+      border-radius: 1px;
+    }
+
+    .detail-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--bg-panel-border);
+      position: sticky;
+      top: 0;
+      background: var(--bg-panel);
+      z-index: 10;
+    }
+    .detail-body { padding: 14px 16px; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .prop-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+    .prop-key {
+      color: var(--text-dim);
+      min-width: 70px;
+      flex-shrink: 0;
+      font-weight: 500;
+    }
+    .prop-val { color: var(--text-primary); word-break: break-word; }
+    .grammar-chip {
+      display: inline-block;
+      padding: 2px 7px;
+      background: #1a1a2a;
+      border: 1px solid #2a2a3a;
+      border-radius: 4px;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-secondary);
+      margin: 2px;
+    }
+    .edge-group-title {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+    .edge-item {
+      font-size: 11px;
+      color: var(--text-secondary);
+      padding: 3px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .edge-item .arrow { color: var(--text-dim); font-size: 10px; }
+    .close-panel-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: color 0.2s;
+    }
+    .close-panel-btn:hover { color: var(--text-primary); }
+    @media (max-width: 767px) {
+      #app-layout {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: 48px 1fr 42px;
+      }
+      #left-panel, #right-panel { display: none; }
+    }
+  </style>
+</head>
+<body data-id="0">
+  <app-icon data-id="1" hidden data-icon="hexagon" data-palette="Dark"></app-icon>
+  <div data-id="2" id="app-layout">
+    <!-- HEADER -->
+    <div data-id="3" id="header-bar">
+      <div data-id="4" style="display:flex;align-items:center;gap:10px;">
+        <svg data-id="5" width="24" height="24" viewBox="0 0 24 24" fill="none"><polygon data-id="6" points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5" stroke="#7c3aed" stroke-width="2" fill="#7c3aed" fill-opacity="0.15"/><text data-id="7" x="12" y="15" text-anchor="middle" fill="#c4b5fd" font-size="8" font-weight="700" font-family="Inter">TF</text></svg>
+        <div data-id="8">
+          <div data-id="9" style="font-weight:700;font-size:14px;color:#e2e2ea;line-height:1.1;">Triadic Modules Registry</div>
+          <div data-id="10" style="font-size:10px;color:#5e5e74;">RTT Graph Explorer • 45 nodes • 141 edges</div>
+        </div>
+      </div>
+      <div data-id="11" style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+        <div data-id="12" style="background:#7c3aed22;border:1px solid #7c3aed44;border-radius:6px;padding:3px 10px;font-size:10px;color:#c4b5fd;font-weight:600;font-family:'JetBrains Mono',monospace;">TriadicFrameworks</div>
+      </div>
+    </div>
+
+    <!-- LEFT PANEL -->
+    <div data-id="13" id="left-panel">
+      <div data-id="14" class="search-wrapper">
+        <i data-id="15" data-lucide="search" class="w-3.5 h-3.5"></i>
+        <input data-id="16" type="text" class="search-input" id="search-input" placeholder="Search nodes…" />
+      </div>
+      <div data-id="17" class="stat-bar">
+        <div data-id="18" class="stat-item"><div data-id="19" class="val" id="node-count">45</div><div data-id="20" class="lbl">Nodes</div></div>
+        <div data-id="21" class="stat-item"><div data-id="22" class="val" id="edge-count">141</div><div data-id="23" class="lbl">Edges</div></div>
+      </div>
+
+      <!-- Node Type Filters -->
+      <div data-id="24" class="filter-group">
+        <div data-id="25" class="filter-group-title">Node Types</div>
+        <label data-id="26" class="filter-cb"><input data-id="27" type="checkbox" checked data-filter="nodeType" data-val="TRIAD" /><span data-id="28" class="swatch" style="background:#7c3aed;"></span>Triad</label>
+        <label data-id="29" class="filter-cb"><input data-id="30" type="checkbox" checked data-filter="nodeType" data-val="ANALYZER_LAYER" /><span data-id="31" class="swatch" style="background:#0891b2;"></span>Analyzer Layer</label>
+        <label data-id="32" class="filter-cb"><input data-id="33" type="checkbox" checked data-filter="nodeType" data-val="RTT_SUBSTRATE" /><span data-id="34" class="swatch" style="background:#059669;"></span>RTT Substrate</label>
+        <label data-id="35" class="filter-cb"><input data-id="36" type="checkbox" checked data-filter="nodeType" data-val="CATEGORY" /><span data-id="37" class="swatch" style="background:#d97706;"></span>Category</label>
+        <label data-id="38" class="filter-cb"><input data-id="39" type="checkbox" checked data-filter="nodeType" data-val="MODULE" /><span data-id="40" class="swatch" style="background:#9ca3af;"></span>Module</label>
+      </div>
+
+      <!-- Edge Type Filters -->
+      <div data-id="41" class="filter-group">
+        <div data-id="42" class="filter-group-title">Edge Types</div>
+        <label data-id="43" class="filter-cb"><input data-id="44" type="checkbox" checked data-filter="edgeType" data-val="CONTAINS" /><span data-id="45" class="swatch" style="background:#6b7280;"></span>Contains</label>
+        <label data-id="46" class="filter-cb"><input data-id="47" type="checkbox" checked data-filter="edgeType" data-val="BOUND_TO" /><span data-id="48" class="swatch" style="background:#0891b2;"></span>Bound To</label>
+        <label data-id="49" class="filter-cb"><input data-id="50" type="checkbox" checked data-filter="edgeType" data-val="ANCHORS" /><span data-id="51" class="swatch" style="background:#059669;"></span>Anchors</label>
+        <label data-id="52" class="filter-cb"><input data-id="53" type="checkbox" checked data-filter="edgeType" data-val="LINEAGE" /><span data-id="54" class="swatch" style="background:#f59e0b;"></span>Lineage</label>
+        <label data-id="55" class="filter-cb"><input data-id="56" type="checkbox" checked data-filter="edgeType" data-val="DEPENDS_ON" /><span data-id="57" class="swatch" style="background:#ef4444;"></span>Depends On</label>
+        <label data-id="58" class="filter-cb"><input data-id="59" type="checkbox" checked data-filter="edgeType" data-val="CROSS_TRIAD_LINK" /><span data-id="60" class="swatch" style="background:#a855f7;"></span>Cross-Triad Link</label>
+        <label data-id="61" class="filter-cb"><input data-id="62" type="checkbox" checked data-filter="edgeType" data-val="PARTICIPATES_IN" /><span data-id="63" class="swatch" style="background:#64748b;"></span>Participates In</label>
+      </div>
+
+      <!-- Triad Filters -->
+      <div data-id="64" class="filter-group">
+        <div data-id="65" class="filter-group-title">Triads</div>
+        <label data-id="66" class="filter-cb"><input data-id="67" type="checkbox" checked data-filter="triad" data-val="Ω" /><span data-id="68" class="swatch" style="background:#7c3aed;"></span>Ω Ontological</label>
+        <label data-id="69" class="filter-cb"><input data-id="70" type="checkbox" checked data-filter="triad" data-val="Λ" /><span data-id="71" class="swatch" style="background:#7c3aed;"></span>Λ Logical</label>
+        <label data-id="72" class="filter-cb"><input data-id="73" type="checkbox" checked data-filter="triad" data-val="Ψ" /><span data-id="74" class="swatch" style="background:#7c3aed;"></span>Ψ Processual</label>
+        <label data-id="75" class="filter-cb"><input data-id="76" type="checkbox" checked data-filter="triad" data-val="_none" />None</label>
+      </div>
+
+      <!-- Analyzer Layer Filters -->
+      <div data-id="77" class="filter-group">
+        <div data-id="78" class="filter-group-title">Analyzer Layers</div>
+        <label data-id="79" class="filter-cb"><input data-id="80" type="checkbox" checked data-filter="al" data-val="AL1" /><span data-id="81" class="swatch" style="background:#0891b2;"></span>AL-1 Perceptual</label>
+        <label data-id="82" class="filter-cb"><input data-id="83" type="checkbox" checked data-filter="al" data-val="AL2" /><span data-id="84" class="swatch" style="background:#0891b2;"></span>AL-2 Structural</label>
+        <label data-id="85" class="filter-cb"><input data-id="86" type="checkbox" checked data-filter="al" data-val="AL3" /><span data-id="87" class="swatch" style="background:#0891b2;"></span>AL-3 Temporal</label>
+        <label data-id="88" class="filter-cb"><input data-id="89" type="checkbox" checked data-filter="al" data-val="_none" />None</label>
+      </div>
+
+      <!-- RTT Substrate Flags -->
+      <div data-id="90" class="filter-group">
+        <div data-id="91" class="filter-group-title">RTT Substrate Flag</div>
+        <label data-id="92" class="filter-cb"><input data-id="93" type="checkbox" checked data-filter="flag" data-val="α" /><span data-id="94" class="swatch" style="background:#ef4444;"></span>α Active</label>
+        <label data-id="95" class="filter-cb"><input data-id="96" type="checkbox" checked data-filter="flag" data-val="β" /><span data-id="97" class="swatch" style="background:#3b82f6;"></span>β Passive</label>
+        <label data-id="98" class="filter-cb"><input data-id="99" type="checkbox" checked data-filter="flag" data-val="γ" /><span data-id="100" class="swatch" style="background:#a855f7;"></span>γ Meta</label>
+        <label data-id="101" class="filter-cb"><input data-id="102" type="checkbox" checked data-filter="flag" data-val="_none" />None</label>
+      </div>
+
+      <!-- Status Filters -->
+      <div data-id="103" class="filter-group">
+        <div data-id="104" class="filter-group-title">Status</div>
+        <label data-id="105" class="filter-cb"><input data-id="106" type="checkbox" checked data-filter="status" data-val="stable" />Stable</label>
+        <label data-id="107" class="filter-cb"><input data-id="108" type="checkbox" checked data-filter="status" data-val="experimental" />Experimental</label>
+        <label data-id="109" class="filter-cb"><input data-id="110" type="checkbox" checked data-filter="status" data-val="_none" />N/A</label>
+      </div>
+
+      <button data-id="111" class="reset-btn" id="reset-filters-btn"><i data-id="112" data-lucide="rotate-ccw" class="w-3 h-3" style="display:inline-block;vertical-align:middle;margin-right:4px;"></i>Reset Filters</button>
+    </div>
+
+    <!-- GRAPH -->
+    <div data-id="113" id="graph-container">
+      <svg data-id="114" id="graph-svg"></svg>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div data-id="115" id="right-panel">
+      <div data-id="116" id="detail-content">
+        <div data-id="117" style="padding:40px 16px;text-align:center;color:var(--text-dim);font-size:12px;">
+          <i data-id="118" data-lucide="mouse-pointer-click" class="w-8 h-8" style="margin:0 auto 10px;display:block;opacity:0.3;"></i>
+          Click a node to inspect
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM BAR -->
+    <div data-id="119" id="bottom-bar">
+      <span data-id="120" style="font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-right:4px;">Nodes:</span>
+      <span data-id="121" class="legend-item"><svg data-id="122" class="legend-shape" viewBox="0 0 12 12"><polygon data-id="123" points="6,1 11,4 11,8 6,11 1,8 1,4" fill="#7c3aed" stroke="#fff" stroke-width="0.5"/></svg>Triad</span>
+      <span data-id="124" class="legend-item"><svg data-id="125" class="legend-shape" viewBox="0 0 12 12"><rect data-id="126" x="2" y="2" width="8" height="8" rx="0" transform="rotate(45 6 6)" fill="#0891b2" stroke="#fff" stroke-width="0.5"/></svg>Analyzer</span>
+      <span data-id="127" class="legend-item"><svg data-id="128" class="legend-shape" viewBox="0 0 12 12"><circle data-id="129" cx="6" cy="6" r="4" fill="none" stroke="#059669" stroke-width="2.5"/></svg>Substrate</span>
+      <span data-id="130" class="legend-item"><svg data-id="131" class="legend-shape" viewBox="0 0 14 12"><rect data-id="132" x="1" y="2" width="12" height="8" rx="2" fill="#d97706" stroke="#fff" stroke-width="0.5"/></svg>Category</span>
+      <span data-id="133" class="legend-item"><svg data-id="134" class="legend-shape" viewBox="0 0 12 12"><circle data-id="135" cx="6" cy="6" r="4" fill="#ef4444"/></svg>α Mod</span>
+      <span data-id="136" class="legend-item"><svg data-id="137" class="legend-shape" viewBox="0 0 12 12"><circle data-id="138" cx="6" cy="6" r="4" fill="#3b82f6"/></svg>β Mod</span>
+      <span data-id="139" class="legend-item"><svg data-id="140" class="legend-shape" viewBox="0 0 12 12"><circle data-id="141" cx="6" cy="6" r="4" fill="#a855f7"/></svg>γ Mod</span>
+      <span data-id="142" style="color:#2a2a3a;margin:0 4px;">│</span>
+      <span data-id="143" style="font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-right:4px;">Edges:</span>
+      <span data-id="144" class="legend-item"><span data-id="145" class="legend-line" style="background:#6b7280;border-top:2px dashed #6b7280;background:none;height:0;"></span>Contains</span>
+      <span data-id="146" class="legend-item"><span data-id="147" class="legend-line" style="background:#0891b2;"></span>Bound To</span>
+      <span data-id="148" class="legend-item"><span data-id="149" class="legend-line" style="border-top:2px dotted #059669;background:none;height:0;"></span>Anchors</span>
+      <span data-id="150" class="legend-item"><span data-id="151" class="legend-line" style="background:#f59e0b;"></span>Lineage</span>
+      <span data-id="152" class="legend-item"><span data-id="153" class="legend-line" style="border-top:2px dashed #ef4444;background:none;height:0;"></span>Depends</span>
+      <span data-id="154" class="legend-item"><span data-id="155" class="legend-line" style="background:#a855f7;height:3px;"></span>Cross-Triad</span>
+      <span data-id="156" class="legend-item"><span data-id="157" class="legend-line" style="border-top:1px dashed #64748b;background:none;height:0;"></span>Participates</span>
+      <span data-id="158" style="margin-left:auto;font-size:9px;color:var(--text-dim);">Made by Copilot</span>
+    </div>
+  </div>
+
+  <script>
+  // === Guard lucide icons ===
+  if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
+    lucide.createIcons();
+  }
+
+  // ===================== DATA =====================
+  const NODES = [
+    {id:"OMEGA",type:"TRIAD",label:"Ω Ontological",desc:"Governs being, substrate, and existential ground. Root of all perception grammar.",triad:"Ω"},
+    {id:"LAMBDA",type:"TRIAD",label:"Λ Logical",desc:"Governs structure, inference, and cross-domain mapping. Root of all alignment grammar.",triad:"Λ"},
+    {id:"PSI",type:"TRIAD",label:"Ψ Processual",desc:"Governs dynamics, transformation, and recursion. Root of all flow-time grammar.",triad:"Ψ"},
+    {id:"AL1",type:"ANALYZER_LAYER",label:"AL-1 Perceptual",desc:"Signal/noise discrimination and observer-stance analysis. First-order RTT lens."},
+    {id:"AL2",type:"ANALYZER_LAYER",label:"AL-2 Structural",desc:"Pattern recognition, regime mapping, and coherence tracking. Second-order RTT lens."},
+    {id:"AL3",type:"ANALYZER_LAYER",label:"AL-3 Temporal",desc:"Time-regime analysis, drift detection, and deep-time memory. Third-order RTT lens."},
+    {id:"ALPHA",type:"RTT_SUBSTRATE",label:"α Active Substrate",desc:"Primary signal carriers. Drives observation and dynamic output. High-energy node class.",flag:"α"},
+    {id:"BETA",type:"RTT_SUBSTRATE",label:"β Passive Substrate",desc:"Stabilizing grounds. Maintains coherence under drift pressure. Low-energy node class.",flag:"β"},
+    {id:"GAMMA",type:"RTT_SUBSTRATE",label:"γ Meta Substrate",desc:"Recursive self-reference layer. Enables canon anchoring and grammar reflection.",flag:"γ"},
+    {id:"CAT01",type:"CATEGORY",label:"Perception",desc:"Modules governing how observers detect and discriminate signal from noise.",triad:"Ω"},
+    {id:"CAT02",type:"CATEGORY",label:"Ground",desc:"Modules governing substrate stability, noise floors, and resonance anchoring.",triad:"Ω"},
+    {id:"CAT03",type:"CATEGORY",label:"Boundary",desc:"Modules governing interface detection, permeability, and role edges.",triad:"Ω"},
+    {id:"CAT04",type:"CATEGORY",label:"Coherence",desc:"Modules governing alignment maintenance, drift detection, and structural integrity.",triad:"Λ"},
+    {id:"CAT05",type:"CATEGORY",label:"Mapping",desc:"Modules governing regime topology, flow charting, and pattern extraction.",triad:"Λ"},
+    {id:"CAT06",type:"CATEGORY",label:"Inference",desc:"Modules governing causal, structural, and cross-domain projection logic.",triad:"Λ"},
+    {id:"CAT07",type:"CATEGORY",label:"Dynamics",desc:"Modules governing system flow, regime change, and feedback analysis.",triad:"Ψ"},
+    {id:"CAT08",type:"CATEGORY",label:"Transformation",desc:"Modules governing temporal structure, phase transitions, and deep-time memory.",triad:"Ψ"},
+    {id:"CAT09",type:"CATEGORY",label:"Recursion",desc:"Modules governing meta-grammar, self-reference, and canon anchoring.",triad:"Ψ"},
+    {id:"MOD001",type:"MODULE",label:"Awareness",category:"CAT01",triad:"Ω",al:"AL1",flag:"α",grammar:["observer","object","boundary","signal","noise","resonance"],desc:"Core perceptual module. Structures how observers relate to objects across boundaries.",version:"1.4",status:"stable"},
+    {id:"MOD002",type:"MODULE",label:"Signal Discrimination",category:"CAT01",triad:"Ω",al:"AL1",flag:"α",grammar:["signal","noise","filter","threshold","stance"],desc:"Partitions incoming data into signal vs noise using observer-defined thresholds.",version:"1.1",status:"stable"},
+    {id:"MOD003",type:"MODULE",label:"Observer Stance",category:"CAT01",triad:"Ω",al:"AL1",flag:"β",grammar:["stance","posture","attentional-frame","bias-map"],desc:"Encodes and tracks the epistemic posture of the observer across analysis sessions.",version:"1.0",status:"stable"},
+    {id:"MOD004",type:"MODULE",label:"Substrate Analysis",category:"CAT02",triad:"Ω",al:"AL2",flag:"β",grammar:["substrate","carrier","capacity","load","saturation"],desc:"Evaluates the load-bearing capacity of a substrate.",version:"1.2",status:"stable"},
+    {id:"MOD005",type:"MODULE",label:"Noise Floor Mapping",category:"CAT02",triad:"Ω",al:"AL1",flag:"β",grammar:["noise-floor","baseline","ambient","background-drift"],desc:"Establishes the ambient noise baseline against which signal is discriminated.",version:"1.0",status:"stable"},
+    {id:"MOD006",type:"MODULE",label:"Resonance",category:"CAT02",triad:"Ω",al:"AL3",flag:"γ",grammar:["pattern","substrate","match","mismatch","amplification","damping"],desc:"Analyzes pattern-substrate fit. Determines why some structures take hold and others dissolve.",version:"1.3",status:"stable"},
+    {id:"MOD007",type:"MODULE",label:"Boundary Detection",category:"CAT03",triad:"Ω",al:"AL1",flag:"α",grammar:["boundary","edge","interface","role-separation","permeability"],desc:"Identifies and formalizes the boundaries between observer and object.",version:"1.2",status:"stable"},
+    {id:"MOD008",type:"MODULE",label:"Interface Mapping",category:"CAT03",triad:"Ω",al:"AL2",flag:"β",grammar:["interface","coupling","handoff","translation","protocol"],desc:"Maps the translation layer between two systems at a shared boundary.",version:"1.0",status:"stable"},
+    {id:"MOD009",type:"MODULE",label:"Permeability Assessment",category:"CAT03",triad:"Ω",al:"AL2",flag:"γ",grammar:["permeability","porosity","openness","closure","semi-permeable"],desc:"Assesses the degree to which boundaries allow flow.",version:"0.9",status:"experimental"},
+    {id:"MOD010",type:"MODULE",label:"Alignment",category:"CAT04",triad:"Λ",al:"AL2",flag:"α",grammar:["intent","constraints","resonance","misalignment","required-shift"],desc:"Core structural module. Analyzes fit between system intent and environmental constraints.",version:"1.5",status:"stable"},
+    {id:"MOD011",type:"MODULE",label:"Coherence Tracking",category:"CAT04",triad:"Λ",al:"AL2",flag:"β",grammar:["coherence","stability","drift-pressure","structural-integrity","anchors"],desc:"Monitors whether a system maintains structural coherence under drift pressure.",version:"1.1",status:"stable"},
+    {id:"MOD012",type:"MODULE",label:"Drift Detection",category:"CAT04",triad:"Λ",al:"AL3",flag:"γ",grammar:["drift","erosion","coherence-loss","entropy","re-anchoring"],desc:"Identifies when a system is losing structural coherence over time.",version:"1.2",status:"stable"},
+    {id:"MOD013",type:"MODULE",label:"Regime Mapping",category:"CAT05",triad:"Λ",al:"AL2",flag:"α",grammar:["core","wrap","flows","feedback","coherence","drift"],desc:"Core structural module. Maps stable regime patterns — core, wrap, flows, feedbacks.",version:"1.6",status:"stable"},
+    {id:"MOD014",type:"MODULE",label:"Flow Topology",category:"CAT05",triad:"Λ",al:"AL2",flag:"α",grammar:["material-flows","information-flows","trust-flows","capital-flows","leakage"],desc:"Maps directional flows through a system. Identifies blockages and leakage points.",version:"1.3",status:"stable"},
+    {id:"MOD015",type:"MODULE",label:"Pattern Extraction",category:"CAT05",triad:"Λ",al:"AL2",flag:"β",grammar:["pattern","recurrence","signature","fingerprint","abstraction"],desc:"Extracts recurring structural patterns from regime data.",version:"1.1",status:"stable"},
+    {id:"MOD016",type:"MODULE",label:"Causal Inference",category:"CAT06",triad:"Λ",al:"AL2",flag:"α",grammar:["cause","effect","mechanism","counterfactual","directionality"],desc:"Identifies causal chains within a mapped system.",version:"1.2",status:"stable"},
+    {id:"MOD017",type:"MODULE",label:"Structural Inference",category:"CAT06",triad:"Λ",al:"AL2",flag:"β",grammar:["structure","scaffold","load-bearing","inferred-topology","hidden-constraint"],desc:"Infers underlying structural scaffolds from observable patterns.",version:"1.0",status:"stable"},
+    {id:"MOD018",type:"MODULE",label:"Cross-Domain Projection",category:"CAT06",triad:"Λ",al:"AL3",flag:"γ",grammar:["projection","analogy","transfer","domain-bridge","isomorphism"],desc:"Projects RTT grammar patterns across domains.",version:"1.1",status:"experimental"},
+    {id:"MOD019",type:"MODULE",label:"Flow",category:"CAT07",triad:"Ψ",al:"AL2",flag:"α",grammar:["material-flows","information-flows","trust-flows","energy-flows","capital-flows","leakage"],desc:"Core dynamics module. Tracks all categories of flow through a system.",version:"1.4",status:"stable"},
+    {id:"MOD020",type:"MODULE",label:"Regime Dynamics",category:"CAT07",triad:"Ψ",al:"AL2",flag:"α",grammar:["regime-shift","tipping-point","phase-change","destabilization","recovery"],desc:"Models the dynamics of regime change — tipping points and recovery arcs.",version:"1.2",status:"stable"},
+    {id:"MOD021",type:"MODULE",label:"Feedback Analysis",category:"CAT07",triad:"Ψ",al:"AL3",flag:"β",grammar:["positive-feedback","negative-feedback","loop","amplifier","dampener","delay"],desc:"Analyzes feedback loop structures.",version:"1.1",status:"stable"},
+    {id:"MOD022",type:"MODULE",label:"Time",category:"CAT08",triad:"Ψ",al:"AL3",flag:"α",grammar:["crisis-time","negotiation-time","deep-time","drift-time","memory","horizon"],desc:"Core temporal module. Structures time-regime analysis.",version:"1.5",status:"stable"},
+    {id:"MOD023",type:"MODULE",label:"Temporal Regime Analysis",category:"CAT08",triad:"Ψ",al:"AL3",flag:"β",grammar:["crisis-time","negotiation-time","deep-time","clock-mismatch","temporal-horizon"],desc:"Applies the Time module grammar to identify time-regime mismatches.",version:"1.1",status:"stable"},
+    {id:"MOD024",type:"MODULE",label:"Phase Transition",category:"CAT08",triad:"Ψ",al:"AL3",flag:"γ",grammar:["phase","threshold","criticality","bifurcation","emergence","collapse"],desc:"Models system transitions between qualitatively distinct states.",version:"1.0",status:"experimental"},
+    {id:"MOD025",type:"MODULE",label:"Meta-Grammar",category:"CAT09",triad:"Ψ",al:"AL3",flag:"γ",grammar:["grammar-of-grammars","module-selection","stacking-rules","blending-prohibition","canon"],desc:"Governs which RTT grammar applies in a given analysis context.",version:"1.3",status:"stable"},
+    {id:"MOD026",type:"MODULE",label:"Self-Reference Tracking",category:"CAT09",triad:"Ψ",al:"AL3",flag:"γ",grammar:["self-reference","reflexivity","observer-observing","recursion","strange-loop"],desc:"Tracks when a system observes itself.",version:"1.0",status:"experimental"},
+    {id:"MOD027",type:"MODULE",label:"Canon Anchoring",category:"CAT09",triad:"Ψ",al:"AL3",flag:"γ",grammar:["canon","anchor","root","authoritative-source","versioning","lineage"],desc:"Anchors all module definitions to the canonical TriadicFrameworks source.",version:"1.2",status:"stable"}
+  ];
+
+  const EDGES_RAW = [];
+  // CONTAINS: triad→category
+  [["OMEGA","CAT01"],["OMEGA","CAT02"],["OMEGA","CAT03"],["LAMBDA","CAT04"],["LAMBDA","CAT05"],["LAMBDA","CAT06"],["PSI","CAT07"],["PSI","CAT08"],["PSI","CAT09"]].forEach(([s,t])=>EDGES_RAW.push({source:s,target:t,type:"CONTAINS"}));
+  // CONTAINS: category→module
+  [["CAT01","MOD001"],["CAT01","MOD002"],["CAT01","MOD003"],["CAT02","MOD004"],["CAT02","MOD005"],["CAT02","MOD006"],["CAT03","MOD007"],["CAT03","MOD008"],["CAT03","MOD009"],["CAT04","MOD010"],["CAT04","MOD011"],["CAT04","MOD012"],["CAT05","MOD013"],["CAT05","MOD014"],["CAT05","MOD015"],["CAT06","MOD016"],["CAT06","MOD017"],["CAT06","MOD018"],["CAT07","MOD019"],["CAT07","MOD020"],["CAT07","MOD021"],["CAT08","MOD022"],["CAT08","MOD023"],["CAT08","MOD024"],["CAT09","MOD025"],["CAT09","MOD026"],["CAT09","MOD027"]].forEach(([s,t])=>EDGES_RAW.push({source:s,target:t,type:"CONTAINS"}));
+  // BOUND_TO
+  [["MOD001","AL1"],["MOD002","AL1"],["MOD003","AL1"],["MOD004","AL2"],["MOD005","AL1"],["MOD006","AL3"],["MOD007","AL1"],["MOD008","AL2"],["MOD009","AL2"],["MOD010","AL2"],["MOD011","AL2"],["MOD012","AL3"],["MOD013","AL2"],["MOD014","AL2"],["MOD015","AL2"],["MOD016","AL2"],["MOD017","AL2"],["MOD018","AL3"],["MOD019","AL2"],["MOD020","AL2"],["MOD021","AL3"],["MOD022","AL3"],["MOD023","AL3"],["MOD024","AL3"],["MOD025","AL3"],["MOD026","AL3"],["MOD027","AL3"]].forEach(([s,t])=>EDGES_RAW.push({source:s,target:t,type:"BOUND_TO"}));
+  // ANCHORS
+  [["MOD001","ALPHA"],["MOD002","ALPHA"],["MOD003","BETA"],["MOD004","BETA"],["MOD005","BETA"],["MOD006","GAMMA"],["MOD007","ALPHA"],["MOD008","BETA"],["MOD009","GAMMA"],["MOD010","ALPHA"],["MOD011","BETA"],["MOD012","GAMMA"],["MOD013","ALPHA"],["MOD014","ALPHA"],["MOD015","BETA"],["MOD016","ALPHA"],["MOD017","BETA"],["MOD018","GAMMA"],["MOD019","ALPHA"],["MOD020","ALPHA"],["MOD021","BETA"],["MOD022","ALPHA"],["MOD023","BETA"],["MOD024","GAMMA"],["MOD025","GAMMA"],["MOD026","GAMMA"],["MOD027","GAMMA"]].forEach(([s,t])=>EDGES_RAW.push({source:s,target:t,type:"ANCHORS"}));
+  // LINEAGE
+  [["MOD001","MOD002"],["MOD001","MOD003"],["MOD005","MOD004"],["MOD004","MOD006"],["MOD007","MOD008"],["MOD008","MOD009"],["MOD013","MOD010"],["MOD010","MOD011"],["MOD011","MOD012"],["MOD013","MOD014"],["MOD014","MOD015"],["MOD016","MOD017"],["MOD017","MOD018"],["MOD019","MOD020"],["MOD021","MOD020"],["MOD022","MOD023"],["MOD023","MOD024"],["MOD025","MOD026"],["MOD025","MOD027"]].forEach(([s,t])=>EDGES_RAW.push({source:s,target:t,type:"LINEAGE"}));
+  // DEPENDS_ON
+  [["MOD002","MOD005"],["MOD003","MOD001"],["MOD006","MOD002"],["MOD009","MOD004"],["MOD010","MOD006"],["MOD012","MOD022"],["MOD014","MOD019"],["MOD015","MOD013"],["MOD016","MOD013"],["MOD018","MOD006"],["MOD020","MOD013"],["MOD021","MOD019"],["MOD023","MOD022"],["MOD024","MOD020"],["MOD024","MOD012"]].forEach(([s,t])=>EDGES_RAW.push({source:s,target:t,type:"DEPENDS_ON"}));
+  // CROSS_TRIAD_LINK
+  [["MOD006","MOD010"],["MOD001","MOD013"],["MOD007","MOD016"],["MOD013","MOD019"],["MOD010","MOD022"],["MOD018","MOD025"],["MOD012","MOD024"],["MOD001","MOD019"],["MOD006","MOD025"]].forEach(([s,t])=>EDGES_RAW.push({source:s,target:t,type:"CROSS_TRIAD_LINK"}));
+  // PARTICIPATES_IN
+  [["MOD006","LAMBDA"],["MOD013","PSI"],["MOD022","LAMBDA"],["MOD025","OMEGA"],["MOD010","PSI"]].forEach(([s,t])=>EDGES_RAW.push({source:s,target:t,type:"PARTICIPATES_IN"}));
+
+  // ===================== COLOR / STYLE MAPS =====================
+  const NODE_COLORS = {
+    TRIAD: "#7c3aed",
+    ANALYZER_LAYER: "#0891b2",
+    RTT_SUBSTRATE: "#059669",
+    CATEGORY: "#d97706"
+  };
+  const MOD_FLAG_COLORS = { "α": "#ef4444", "β": "#3b82f6", "γ": "#a855f7" };
+
+  function getNodeColor(n) {
+    if (n.type === "MODULE") return MOD_FLAG_COLORS[n.flag] || "#9ca3af";
+    return NODE_COLORS[n.type] || "#9ca3af";
+  }
+
+  const EDGE_COLORS = {
+    CONTAINS: "#6b7280", BOUND_TO: "#0891b2", ANCHORS: "#059669",
+    LINEAGE: "#f59e0b", DEPENDS_ON: "#ef4444", CROSS_TRIAD_LINK: "#a855f7",
+    PARTICIPATES_IN: "#64748b"
+  };
+  const EDGE_DASH = {
+    CONTAINS: "6,4", BOUND_TO: null, ANCHORS: "2,4", LINEAGE: null,
+    DEPENDS_ON: "8,4", CROSS_TRIAD_LINK: null, PARTICIPATES_IN: "4,3"
+  };
+  const EDGE_WIDTH = {
+    CONTAINS: 1.2, BOUND_TO: 1.2, ANCHORS: 1.2, LINEAGE: 1.4,
+    DEPENDS_ON: 1.2, CROSS_TRIAD_LINK: 2.5, PARTICIPATES_IN: 0.8
+  };
+  const LINK_DISTANCE = {
+    CONTAINS: 80, BOUND_TO: 120, ANCHORS: 150, LINEAGE: 100,
+    DEPENDS_ON: 140, CROSS_TRIAD_LINK: 200, PARTICIPATES_IN: 180
+  };
+  const BODY_STRENGTH = {
+    TRIAD: -800, ANALYZER_LAYER: -600, RTT_SUBSTRATE: -600,
+    CATEGORY: -300, MODULE: -150
+  };
+
+  // ===================== SVG SETUP =====================
+  const container = document.getElementById("graph-container");
+  const svg = d3.select("#graph-svg");
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+
+  // Defs for glow filter and arrowheads
+  const defs = svg.append("defs");
+
+  // Glow filter
+  const glowFilter = defs.append("filter").attr("id","glow").attr("x","-50%").attr("y","-50%").attr("width","200%").attr("height","200%");
+  glowFilter.append("feGaussianBlur").attr("stdDeviation","6").attr("result","blur");
+  glowFilter.append("feComposite").attr("in","SourceGraphic").attr("in2","blur").attr("operator","over");
+
+  // Arrowhead markers for each edge type
+  Object.entries(EDGE_COLORS).forEach(([type, color]) => {
+    defs.append("marker")
+      .attr("id", "arrow-" + type)
+      .attr("viewBox", "0 0 10 6")
+      .attr("refX", 10).attr("refY", 3)
+      .attr("markerWidth", 8).attr("markerHeight", 6)
+      .attr("orient", "auto")
+      .append("path")
+      .attr("d", "M0,0 L10,3 L0,6 Z")
+      .attr("fill", color);
+  });
+
+  const g = svg.append("g");
+
+  // Zoom
+  const zoom = d3.zoom()
+    .scaleExtent([0.15, 4])
+    .on("zoom", (e) => g.attr("transform", e.transform));
+  svg.call(zoom);
+
+  // ===================== SIMULATION =====================
+  const nodes = NODES.map(d => ({ ...d }));
+  const nodeMap = {};
+  nodes.forEach(n => nodeMap[n.id] = n);
+  const edges = EDGES_RAW.map(d => ({ ...d, sourceId: d.source, targetId: d.target }));
+
+  const simulation = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(edges).id(d => d.id).distance(d => LINK_DISTANCE[d.type] || 120))
+    .force("charge", d3.forceManyBody().strength(d => BODY_STRENGTH[d.type] || -200))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("collide", d3.forceCollide().radius(d => {
+      if (d.type === "TRIAD") return 42;
+      if (d.type === "ANALYZER_LAYER") return 36;
+      if (d.type === "RTT_SUBSTRATE") return 34;
+      if (d.type === "CATEGORY") return 52;
+      return 24;
+    }))
+    .alphaDecay(0.02)
+    .velocityDecay(0.3);
+
+  // ===================== DRAW EDGES =====================
+  const linkGroup = g.append("g").attr("class", "links");
+  const linkElements = linkGroup.selectAll("line")
+    .data(edges)
+    .join("line")
+    .attr("stroke", d => EDGE_COLORS[d.type])
+    .attr("stroke-width", d => EDGE_WIDTH[d.type])
+    .attr("stroke-dasharray", d => EDGE_DASH[d.type])
+    .attr("stroke-opacity", 0.5)
+    .attr("marker-end", d => `url(#arrow-${d.type})`)
+    .style("transition", "stroke-opacity 0.3s");
+
+  // ===================== DRAW NODES =====================
+  const nodeGroup = g.append("g").attr("class", "nodes");
+  const nodeElements = nodeGroup.selectAll("g")
+    .data(nodes)
+    .join("g")
+    .attr("cursor", "pointer")
+    .call(d3.drag()
+      .on("start", dragStarted)
+      .on("drag", dragged)
+      .on("end", dragEnded));
+
+  // Draw shape per type
+  nodeElements.each(function(d) {
+    const el = d3.select(this);
+    const color = getNodeColor(d);
+
+    if (d.type === "TRIAD") {
+      // Hexagon
+      const r = 32;
+      const pts = d3.range(6).map(i => {
+        const a = (Math.PI / 3) * i - Math.PI / 2;
+        return [r * Math.cos(a), r * Math.sin(a)];
+      });
+      el.append("polygon")
+        .attr("points", pts.map(p => p.join(",")).join(" "))
+        .attr("fill", color).attr("fill-opacity", 0.2)
+        .attr("stroke", color).attr("stroke-width", 3);
+      el.append("polygon")
+        .attr("class", "glow-ring")
+        .attr("points", pts.map(p => p.join(",")).join(" "))
+        .attr("fill", "none").attr("stroke", color).attr("stroke-width", 6)
+        .attr("stroke-opacity", 0).attr("filter", "url(#glow)");
+    } else if (d.type === "ANALYZER_LAYER") {
+      // Diamond
+      const s = 28;
+      el.append("rect")
+        .attr("x", -s/2).attr("y", -s/2).attr("width", s).attr("height", s)
+        .attr("transform", "rotate(45)")
+        .attr("fill", color).attr("fill-opacity", 0.2)
+        .attr("stroke", color).attr("stroke-width", 2);
+      el.append("rect")
+        .attr("class", "glow-ring")
+        .attr("x", -s/2).attr("y", -s/2).attr("width", s).attr("height", s)
+        .attr("transform", "rotate(45)")
+        .attr("fill", "none").attr("stroke", color).attr("stroke-width", 5)
+        .attr("stroke-opacity", 0).attr("filter", "url(#glow)");
+    } else if (d.type === "RTT_SUBSTRATE") {
+      // Double circle (ring)
+      el.append("circle").attr("r", 26)
+        .attr("fill", color).attr("fill-opacity", 0.1)
+        .attr("stroke", color).attr("stroke-width", 4);
+      el.append("circle").attr("r", 18)
+        .attr("fill", "none").attr("stroke", color).attr("stroke-width", 1.5).attr("stroke-opacity", 0.4);
+      el.append("circle")
+        .attr("class", "glow-ring").attr("r", 30)
+        .attr("fill", "none").attr("stroke", color).attr("stroke-width", 6)
+        .attr("stroke-opacity", 0).attr("filter", "url(#glow)");
+    } else if (d.type === "CATEGORY") {
+      // Rounded rect
+      const w = 90, h = 30;
+      el.append("rect")
+        .attr("x", -w/2).attr("y", -h/2).attr("width", w).attr("height", h)
+        .attr("rx", 6).attr("ry", 6)
+        .attr("fill", color).attr("fill-opacity", 0.15)
+        .attr("stroke", color).attr("stroke-width", 1.5);
+      el.append("rect")
+        .attr("class", "glow-ring")
+        .attr("x", -w/2).attr("y", -h/2).attr("width", w).attr("height", h)
+        .attr("rx", 6).attr("ry", 6)
+        .attr("fill", "none").attr("stroke", color).attr("stroke-width", 4)
+        .attr("stroke-opacity", 0).attr("filter", "url(#glow)");
+    } else {
+      // MODULE: circle
+      el.append("circle").attr("r", 16)
+        .attr("fill", color).attr("fill-opacity", 0.2)
+        .attr("stroke", color).attr("stroke-width", 2);
+      el.append("circle")
+        .attr("class", "glow-ring").attr("r", 20)
+        .attr("fill", "none").attr("stroke", color).attr("stroke-width", 5)
+        .attr("stroke-opacity", 0).attr("filter", "url(#glow)");
+    }
+
+    // Label
+    let labelText = d.label;
+    if (d.type === "MODULE" && labelText.length > 14) labelText = labelText.slice(0, 13) + "…";
+    const ly = d.type === "TRIAD" ? 44 : d.type === "ANALYZER_LAYER" ? 32 : d.type === "RTT_SUBSTRATE" ? 38 : d.type === "CATEGORY" ? 26 : 26;
+    el.append("text")
+      .attr("text-anchor", "middle")
+      .attr("y", ly)
+      .attr("fill", "#c8c8d6")
+      .attr("font-size", d.type === "MODULE" ? "9px" : "10px")
+      .attr("font-weight", d.type === "TRIAD" ? 600 : 400)
+      .attr("font-family", "Inter, sans-serif")
+      .text(labelText);
+  });
+
+  // ===================== TICK =====================
+  simulation.on("tick", () => {
+    linkElements
+      .attr("x1", d => d.source.x)
+      .attr("y1", d => d.source.y)
+      .attr("x2", d => {
+        const dx = d.target.x - d.source.x;
+        const dy = d.target.y - d.source.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const offset = getNodeRadius(d.target);
+        return dist > 0 ? d.target.x - (dx/dist)*offset : d.target.x;
+      })
+      .attr("y2", d => {
+        const dx = d.target.x - d.source.x;
+        const dy = d.target.y - d.source.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const offset = getNodeRadius(d.target);
+        return dist > 0 ? d.target.y - (dy/dist)*offset : d.target.y;
+      });
+
+    nodeElements.attr("transform", d => `translate(${d.x},${d.y})`);
+  });
+
+  function getNodeRadius(n) {
+    if (n.type === "TRIAD") return 34;
+    if (n.type === "ANALYZER_LAYER") return 22;
+    if (n.type === "RTT_SUBSTRATE") return 28;
+    if (n.type === "CATEGORY") return 20;
+    return 18;
+  }
+
+  // ===================== DRAG =====================
+  function dragStarted(event, d) {
+    if (!event.active) simulation.alphaTarget(0.15).restart();
+    d.fx = d.x; d.fy = d.y;
+  }
+  function dragged(event, d) { d.fx = event.x; d.fy = event.y; }
+  function dragEnded(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null; d.fy = null;
+  }
+
+  // ===================== FIT VIEW =====================
+  simulation.on("end", fitView);
+  setTimeout(fitView, 2500);
+
+  function fitView() {
+    const bounds = g.node().getBBox();
+    if (bounds.width === 0 || bounds.height === 0) return;
+    const cw = container.clientWidth;
+    const ch = container.clientHeight;
+    const pad = 60;
+    const scale = Math.min((cw - pad*2) / bounds.width, (ch - pad*2) / bounds.height, 1.5);
+    const tx = cw/2 - scale * (bounds.x + bounds.width/2);
+    const ty = ch/2 - scale * (bounds.y + bounds.height/2);
+    svg.transition().duration(800).call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+  }
+
+  // ===================== SELECTION =====================
+  let selectedNode = null;
+
+  nodeElements.on("click", function(event, d) {
+    event.stopPropagation();
+    selectNode(d);
+  });
+
+  svg.on("click", () => deselectNode());
+
+  function selectNode(d) {
+    selectedNode = d;
+    const connectedIds = new Set([d.id]);
+    const connectedEdges = new Set();
+    edges.forEach((e, i) => {
+      const sid = typeof e.source === "object" ? e.source.id : e.source;
+      const tid = typeof e.target === "object" ? e.target.id : e.target;
+      if (sid === d.id || tid === d.id) {
+        connectedIds.add(sid);
+        connectedIds.add(tid);
+        connectedEdges.add(i);
+      }
+    });
+
+    nodeElements.transition().duration(300)
+      .style("opacity", n => connectedIds.has(n.id) ? 1 : 0.12);
+    linkElements.transition().duration(300)
+      .attr("stroke-opacity", (e, i) => connectedEdges.has(i) ? 0.9 : 0.04);
+
+    // Glow selected
+    nodeElements.selectAll(".glow-ring").attr("stroke-opacity", 0);
+    d3.select(nodeElements.nodes().find(el => d3.select(el).datum().id === d.id))
+      .select(".glow-ring").transition().duration(300).attr("stroke-opacity", 0.7);
+
+    // Open detail panel
+    document.getElementById("app-layout").classList.add("panel-open");
+    renderDetail(d, connectedEdges);
+  }
+
+  function deselectNode() {
+    selectedNode = null;
+    nodeElements.transition().duration(300).style("opacity", 1);
+    linkElements.transition().duration(300).attr("stroke-opacity", 0.5);
+    nodeElements.selectAll(".glow-ring").transition().duration(300).attr("stroke-opacity", 0);
+    document.getElementById("app-layout").classList.remove("panel-open");
+  }
+
+  // Escape key
+  document.addEventListener("keydown", e => { if (e.key === "Escape") deselectNode(); });
+
+  // ===================== DETAIL PANEL =====================
+  function renderDetail(d) {
+    const color = getNodeColor(d);
+    const typeLabels = { TRIAD: "Triad", ANALYZER_LAYER: "Analyzer Layer", RTT_SUBSTRATE: "RTT Substrate", CATEGORY: "Category", MODULE: "Module" };
+
+    let html = `<div class="detail-header" style="display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <span class="badge" style="background:${color}22;color:${color};border:1px solid ${color}44;">${d.id}</span>
+        <span class="badge" style="background:#1a1a2a;color:var(--text-secondary);margin-left:4px;">${typeLabels[d.type]}</span>
+      </div>
+      <button class="close-panel-btn" id="close-detail"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>`;
+
+    html += `<div class="detail-body">`;
+    html += `<h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#e2e2ea;">${d.label}</h3>`;
+    html += `<div class="prop-row"><span class="prop-key">Desc</span><span class="prop-val" style="font-size:11px;line-height:1.5;">${d.desc || "—"}</span></div>`;
+
+    if (d.triad) html += `<div class="prop-row"><span class="prop-key">Triad</span><span class="prop-val">${d.triad}</span></div>`;
+    if (d.al) html += `<div class="prop-row"><span class="prop-key">Analyzer</span><span class="prop-val">${d.al}</span></div>`;
+    if (d.flag) html += `<div class="prop-row"><span class="prop-key">Substrate</span><span class="prop-val" style="color:${MOD_FLAG_COLORS[d.flag] || '#fff'}">${d.flag} ${d.flag==="α"?"Active":d.flag==="β"?"Passive":"Meta"}</span></div>`;
+    if (d.category) html += `<div class="prop-row"><span class="prop-key">Category</span><span class="prop-val">${d.category}</span></div>`;
+    if (d.version) html += `<div class="prop-row"><span class="prop-key">Version</span><span class="prop-val" style="font-family:'JetBrains Mono',monospace;">v${d.version}</span></div>`;
+    if (d.status) {
+      const sc = d.status === "stable" ? "#059669" : "#f59e0b";
+      html += `<div class="prop-row"><span class="prop-key">Status</span><span class="prop-val"><span class="badge" style="background:${sc}22;color:${sc};border:1px solid ${sc}44;">${d.status}</span></span></div>`;
+    }
+
+    if (d.grammar && d.grammar.length) {
+      html += `<div class="prop-row" style="flex-wrap:wrap;"><span class="prop-key">Grammar</span><span class="prop-val" style="display:flex;flex-wrap:wrap;gap:0;">${d.grammar.map(g=>`<span class="grammar-chip">${g}</span>`).join("")}</span></div>`;
+    }
+
+    // Connected edges
+    const grouped = {};
+    edges.forEach(e => {
+      const sid = typeof e.source === "object" ? e.source.id : e.source;
+      const tid = typeof e.target === "object" ? e.target.id : e.target;
+      if (sid === d.id || tid === d.id) {
+        if (!grouped[e.type]) grouped[e.type] = [];
+        const neighborId = sid === d.id ? tid : sid;
+        const direction = sid === d.id ? "→" : "←";
+        const neighbor = nodeMap[neighborId];
+        grouped[e.type].push({ neighborId, direction, neighborLabel: neighbor ? neighbor.label : neighborId });
+      }
+    });
+
+    html += `<div style="margin-top:16px;border-top:1px solid var(--bg-panel-border);padding-top:12px;">`;
+    html += `<div style="font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Connected Edges</div>`;
+    Object.entries(grouped).forEach(([type, items]) => {
+      html += `<div class="edge-group-title" style="color:${EDGE_COLORS[type]}">${type.replace(/_/g," ")} (${items.length})</div>`;
+      items.forEach(item => {
+        html += `<div class="edge-item"><span class="arrow">${item.direction}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);min-width:52px;">${item.neighborId}</span><span>${item.neighborLabel}</span></div>`;
+      });
+    });
+    html += `</div></div>`;
+
+    document.getElementById("detail-content").innerHTML = html;
+    // Re-init icons in panel
+    if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
+      lucide.createIcons();
+    }
+    // Bind close button
+    const closeBtn = document.getElementById("close-detail");
+    if (closeBtn) closeBtn.addEventListener("click", deselectNode);
+  }
+
+  // ===================== EDGE HOVER =====================
+  linkElements
+    .on("mouseenter", function(event, d) {
+      d3.select(this).attr("stroke-opacity", 1).attr("stroke-width", (EDGE_WIDTH[d.type] || 1.2) + 1.5);
+    })
+    .on("mouseleave", function(event, d) {
+      const isConnected = selectedNode && (() => {
+        const sid = typeof d.source === "object" ? d.source.id : d.source;
+        const tid = typeof d.target === "object" ? d.target.id : d.target;
+        return sid === selectedNode.id || tid === selectedNode.id;
+      })();
+      d3.select(this)
+        .attr("stroke-opacity", selectedNode ? (isConnected ? 0.9 : 0.04) : 0.5)
+        .attr("stroke-width", EDGE_WIDTH[d.type] || 1.2);
+    });
+
+  // ===================== FILTERS =====================
+  function getActiveFilters() {
+    const filters = {};
+    document.querySelectorAll("[data-filter]").forEach(cb => {
+      const key = cb.dataset.filter;
+      if (!filters[key]) filters[key] = new Set();
+      if (cb.checked) filters[key].add(cb.dataset.val);
+    });
+    return filters;
+  }
+
+  function applyFilters() {
+    const f = getActiveFilters();
+    const searchVal = document.getElementById("search-input").value.toLowerCase().trim();
+
+    const visibleNodes = new Set();
+    nodes.forEach(n => {
+      let show = true;
+      // nodeType
+      if (!f.nodeType.has(n.type)) show = false;
+      // triad
+      const nt = n.triad || "_none";
+      if (!f.triad.has(nt)) show = false;
+      // al
+      const na = n.al || "_none";
+      if (!f.al.has(na)) show = false;
+      // flag
+      const nf = n.flag || "_none";
+      if (!f.flag.has(nf)) show = false;
+      // status
+      const ns = n.status || "_none";
+      if (!f.status.has(ns)) show = false;
+
+      if (show) visibleNodes.add(n.id);
+    });
+
+    // Search highlight
+    const searchMatches = new Set();
+    if (searchVal) {
+      nodes.forEach(n => {
+        if (n.label.toLowerCase().includes(searchVal) || n.id.toLowerCase().includes(searchVal)) {
+          searchMatches.add(n.id);
+        }
+      });
+    }
+
+    nodeElements.each(function(d) {
+      const vis = visibleNodes.has(d.id);
+      d3.select(this).style("display", vis ? null : "none");
+      // search highlight
+      if (searchVal && vis) {
+        const match = searchMatches.has(d.id);
+        d3.select(this).style("opacity", match ? 1 : 0.2);
+        if (match) {
+          d3.select(this).select(".glow-ring").attr("stroke-opacity", 0.5);
+        } else {
+          d3.select(this).select(".glow-ring").attr("stroke-opacity", 0);
+        }
+      } else if (!selectedNode && vis) {
+        d3.select(this).style("opacity", 1);
+        d3.select(this).select(".glow-ring").attr("stroke-opacity", 0);
+      }
+    });
+
+    const visibleEdges = new Set();
+    linkElements.each(function(d, i) {
+      const sid = typeof d.source === "object" ? d.source.id : d.source;
+      const tid = typeof d.target === "object" ? d.target.id : d.target;
+      const sVis = visibleNodes.has(sid);
+      const tVis = visibleNodes.has(tid);
+      const eType = f.edgeType.has(d.type);
+      const show = sVis && tVis && eType;
+      d3.select(this).style("display", show ? null : "none");
+      if (show) visibleEdges.add(i);
+    });
+
+    // Update counts
+    document.getElementById("node-count").textContent = visibleNodes.size;
+    let eCount = 0;
+    linkElements.each(function() { if (d3.select(this).style("display") !== "none") eCount++; });
+    document.getElementById("edge-count").textContent = eCount;
+  }
+
+  document.querySelectorAll("[data-filter]").forEach(cb => {
+    cb.addEventListener("change", applyFilters);
+  });
+  document.getElementById("search-input").addEventListener("input", () => {
+    if (selectedNode) deselectNode();
+    applyFilters();
+  });
+
+  document.getElementById("reset-filters-btn").addEventListener("click", () => {
+    document.querySelectorAll("[data-filter]").forEach(cb => { cb.checked = true; });
+    document.getElementById("search-input").value = "";
+    if (selectedNode) deselectNode();
+    applyFilters();
+  });
+
+  // ===================== RESIZE =====================
+  window.addEventListener("resize", () => {
+    // Let D3 handle; fitView on demand
+  });
+  </script>
+</body>
+</html>
