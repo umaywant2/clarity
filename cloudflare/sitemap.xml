@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TriadicSitemap canonVersion="R5">
+
+  <!-- Core RTT Engine Family -->
+  <module id="rtt.core.engine" category="engine">
+    <role>core</role>
+    <child id="rtt.drift.engine" />
+    <child id="rtt.coherence.engine" />
+    <child id="rtt.clarity.engine" />
+  </module>
+
+  <module id="rtt.drift.engine" category="engine">
+    <role>engine</role>
+    <role>drift</role>
+    <child id="rtt.drift.map" />
+    <child id="rtt.drift.signature" />
+  </module>
+
+  <module id="rtt.coherence.engine" category="engine">
+    <role>engine</role>
+    <role>coherence</role>
+    <child id="rtt.coherence.map" />
+    <child id="rtt.coherence.signature" />
+  </module>
+
+  <module id="rtt.clarity.engine" category="engine">
+    <role>engine</role>
+    <role>clarity</role>
+    <child id="rtt.clarity.map" />
+    <child id="rtt.clarity.signature" />
+  </module>
+
+  <!-- RTT Signatures -->
+  <module id="rtt.drift.signature" category="signature">
+    <role>signature</role>
+    <parent id="rtt.drift.engine" />
+  </module>
+
+  <module id="rtt.coherence.signature" category="signature">
+    <role>signature</role>
+    <parent id="rtt.coherence.engine" />
+  </module>
+
+  <module id="rtt.clarity.signature" category="signature">
+    <role>signature</role>
+    <parent id="rtt.clarity.engine" />
+  </module>
+
+  <!-- RTT Maps -->
+  <module id="rtt.drift.map" category="map">
+    <role>map</role>
+    <parent id="rtt.drift.engine" />
+  </module>
+
+  <module id="rtt.coherence.map" category="map">
+    <role>map</role>
+    <parent id="rtt.coherence.engine" />
+  </module>
+
+  <module id="rtt.clarity.map" category="map">
+    <role>map</role>
+    <parent id="rtt.clarity.engine" />
+  </module>
+
+  <module id="rtt.regime.map" category="map">
+    <role>map</role>
+    <parent id="rtt.core.engine" />
+  </module>
+
+  <!-- RTT Diagnostics -->
+  <module id="rtt.diagnostic.packet" category="diagnostic">
+    <role>diagnostic</role>
+    <parent id="rtt.core.engine" />
+  </module>
+
+  <module id="rtt.paradox.surface" category="diagnostic">
+    <role>diagnostic</role>
+    <parent id="rtt.core.engine" />
+  </module>
+
+  <!-- RTT Examples -->
+  <module id="rtt.example.basic" category="example">
+    <role>example</role>
+    <parent id="rtt.core.engine" />
+  </module>
+
+  <module id="rtt.example.sequence" category="example">
+    <role>example</role>
+    <parent id="rtt.core.engine" />
+  </module>
+
+  <!-- RTT Extensions -->
+  <module id="rtt.extension.phase" category="extension">
+    <role>extension</role>
+    <parent id="rtt.core.engine" />
+  </module>
+
+  <module id="rtt.extension.resonance" category="extension">
+    <role>extension</role>
+    <parent id="rtt.core.engine" />
+  </module>
+
+  <!-- RTT Templates -->
+  <module id="rtt.template.module" category="template">
+    <role>template</role>
+    <parent id="rtt.core.engine" />
+  </module>
+
+  <module id="rtt.template.signature" category="template">
+    <role>template</role>
+    <parent id="rtt.core.engine" />
+  </module>
+
+  <!-- Clarity Cloudflare Family Root -->
+  <module id="clarity" category="rtt">
+    <role>clarity-root</role>
+    <child id="clarity.engine" />
+    <child id="clarity.map" />
+    <child id="clarity.signature" />
+    <child id="clarity.diagnostic" />
+    <child id="clarity.example" />
+    <child id="clarity.extension" />
+    <child id="clarity.template" />
+  </module>
+
+  <!-- Clarity Cloudflare Submodules -->
+  <module id="clarity.engine" category="engine">
+    <role>engine</role>
+    <role>clarity</role>
+    <parent id="clarity" />
+    <parent id="rtt.clarity.engine" />
+  </module>
+
+  <module id="clarity.map" category="map">
+    <role>map</role>
+    <role>clarity</role>
+    <parent id="clarity" />
+    <parent id="rtt.clarity.map" />
+  </module>
+
+  <module id="clarity.signature" category="signature">
+    <role>signature</role>
+    <role>clarity</role>
+    <parent id="clarity" />
+    <parent id="rtt.clarity.signature" />
+  </module>
+
+  <module id="clarity.diagnostic" category="diagnostic">
+    <role>diagnostic</role>
+    <role>clarity</role>
+    <parent id="clarity" />
+    <parent id="rtt.diagnostic.packet" />
+  </module>
+
+  <module id="clarity.example" category="example">
+    <role>example</role>
+    <role>clarity</role>
+    <parent id="clarity" />
+    <parent id="rtt.example.basic" />
+  </module>
+
+  <module id="clarity.extension" category="extension">
+    <role>extension</role>
+    <role>clarity</role>
+    <parent id="clarity" />
+    <parent id="rtt.extension.phase" />
+  </module>
+
+  <module id="clarity.template" category="template">
+    <role>template</role>
+    <role>clarity</role>
+    <parent id="clarity" />
+    <parent id="rtt.template.module" />
+  </module>
+
+</TriadicSitemap>
