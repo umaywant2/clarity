@@ -1,8 +1,55 @@
 {
   "module": "RTT Store",
   "version": "1.0",
-  "category": "rtt-storage",
-  "summary": "RTT/1 persistence and storage engine — branding, bundles, canon documents, community, future roadmap, tiered offerings (Aeonic, Foundations, Intelligence, Systems), and training. Parent: RTT/1. Siblings: RTT/Micro_Core, RTT/SDK, RTT/App.",
+  "category": "rtt-store",
+  "summary": "Presentation, reference, education, packaging, and engagement layer for Resonance-Time Technology artifacts. Organizes Store materials across Foundations, Systems, Intelligence, Aeonic, Bundles, Canon, Community, Branding, Training, and Future while preserving lineage to the RTT Spine, canon, and source modules.",
+  "status": "under-construction",
+  "mode": [
+    "catalog",
+    "reference",
+    "engagement"
+  ],
+  "context": {
+    "rtt": 1,
+    "coherence": "declared",
+    "drift": "bounded",
+    "paradox": "structural"
+  },
+  "provenance": {
+    "authority": "external-to-store",
+    "lineage": [
+      "RTT Spine",
+      "Canon / Module Source",
+      "Supporting Material",
+      "Store Representation"
+    ],
+    "rule": "Store artifacts may package and present RTT-aligned work but must not silently redefine or extend their underlying canonical or module sources."
+  },
+  "status_model": [
+    "reference",
+    "engagement",
+    "proposed-future"
+  ],
+  "tiers": [
+    "foundations",
+    "systems",
+    "intelligence",
+    "aeonic"
+  ],
+  "sections": [
+    "branding",
+    "bundles",
+    "canon",
+    "community",
+    "future",
+    "training"
+  ],
+  "parent": "RTT/1",
+  "siblings": [
+    "RTT/Micro_Core",
+    "RTT/SDK",
+    "RTT/App"
+  ],
   "files": [
     {
       "path": "README.md",
