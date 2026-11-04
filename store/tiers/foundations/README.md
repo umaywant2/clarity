@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_tiers_foundations_README_" src="https://github.com/user-attachments/assets/31f7ae5e-c0e7-4cae-a521-2b778044b7d4" />
+
 # RTT/Store — Foundations
 
 **Entry-level reference, orientation, and standards for Resonance-Time Technology**
