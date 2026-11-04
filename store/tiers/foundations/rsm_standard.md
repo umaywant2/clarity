@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_tiers_foundations_rsm_standard_" src="https://github.com/user-attachments/assets/8e584439-b892-4f3d-8f17-9cb4b457998f" />
+
 # RSM Standard
 
 **Resonance Substrate Model • Foundations Reference**
