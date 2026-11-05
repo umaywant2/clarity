@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_tiers_systems_README_" src="https://github.com/user-attachments/assets/c7ef020d-e5d2-47ad-9ab6-dae01900266e" />
+
 # RTT/Store — Systems
 
 **Operational architectures, engines, and composed capabilities for Resonance-Time Technology**
