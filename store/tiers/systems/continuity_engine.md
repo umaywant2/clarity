@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_tiers_systems_continuity_engine_" src="https://github.com/user-attachments/assets/80789333-27c1-4968-bac4-705771dea943" />
+
 # Continuity Engine
 
 **Continuity Kernel • Coherence-Oriented Systems Architecture**
