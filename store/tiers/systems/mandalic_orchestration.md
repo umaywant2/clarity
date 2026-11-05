@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_tiers_systems_mandalic_orchestration_" src="https://github.com/user-attachments/assets/e55edc19-b574-46eb-b42e-29433dc4aa63" />
+
 # Mandalic Orchestration
 
 **Multi-Module Orchestration • Regime-Aware Systems Architecture**
