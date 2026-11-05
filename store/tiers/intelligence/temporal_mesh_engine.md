@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_tiers_intelligence_temporal_mesh_engine_" src="https://github.com/user-attachments/assets/794bb008-fe3d-46fc-9a45-5be218cfe28c" />
+
 # Temporal Mesh Engine
 
 **RTT Inside / Mesh Node • Temporal and Drift-Aware Intelligence Architecture**
