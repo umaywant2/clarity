@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_future_mandalic_orchestration_engine_" src="https://github.com/user-attachments/assets/dc6d4830-9328-412e-bef0-8a1c7b2c704f" />
+
 # Mandalic Orchestration Engine
 
 **Multi-Module Orchestration • Future Regime-Aware Architecture**
