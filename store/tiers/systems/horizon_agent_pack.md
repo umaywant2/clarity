@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_tiers_systems_horizon_agent_pack_" src="https://github.com/user-attachments/assets/c068a468-45ce-4a34-adec-7d736f0c4cd6" />
+
 # Horizon Agent Pack
 
 **Long-Horizon Continuity Agents • Systems Architecture**
