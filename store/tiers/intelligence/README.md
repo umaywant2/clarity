@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_tiers_intelligence_README_" src="https://github.com/user-attachments/assets/71c3a304-586c-4eaf-b7d7-dd5ba22998e8" />
+
 # RTT/Store — Intelligence
 
 **Pattern • Temporal • Language • Integration • Coherence-Aware Architecture**
