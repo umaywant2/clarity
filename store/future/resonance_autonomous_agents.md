@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_future_resonance_autonomous_agents_" src="https://github.com/user-attachments/assets/c1588cbb-3bb3-42c8-9890-bb9b404d6357" />
+
 # Resonance Autonomous Agents
 
 **Resonance • Autonomy • Observer-Aware Future Agent Architecture**
