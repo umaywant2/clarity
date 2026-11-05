@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_tiers_intelligence_coeus_pattern_engine_" src="https://github.com/user-attachments/assets/3a5487aa-27d1-4df1-8c47-ee37cc06343c" />
+
 # Coeus Pattern Engine
 
 **Coeus • Pattern-Oriented Intelligence Architecture**
