@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_future_README_" src="https://github.com/user-attachments/assets/566a3eea-ca32-442d-9e14-e7b569a39a8e" />
+
 # RTT/Store — Future
 
 **Forward-Looking • Exploratory • Architecture Beyond the Current Boundary**
