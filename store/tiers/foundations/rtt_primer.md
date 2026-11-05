@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_tiers_foundations_rtt_primer_" src="https://github.com/user-attachments/assets/e49ace8e-9586-42c4-b3bf-de51e0c3e027" />
+
 # RTT Primer
 
 **Resonance-Time Theory • Foundations Orientation**
