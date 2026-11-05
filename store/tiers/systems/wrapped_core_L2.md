@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_tiers_systems_wrapped_core_L2_" src="https://github.com/user-attachments/assets/7cd73648-c4ba-4bf4-b07a-b209abe2999e" />
+
 # Wrapped Core L2
 
 **Wrapped Resonance Structural-Aware Dimensional Cores • Systems Architecture**
