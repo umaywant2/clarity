@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_tiers_intelligence_rtt_inside_adapter_" src="https://github.com/user-attachments/assets/9dfe7188-1da4-4eea-af19-cda519a57749" />
+
 # RTT Inside Adapter
 
 **RTT Inside • Integration-Oriented Intelligence Architecture**
