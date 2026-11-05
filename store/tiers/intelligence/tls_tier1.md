@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_tiers_intelligence_tls_tier1_" src="https://github.com/user-attachments/assets/2e438824-ad84-4299-b648-a5144ce4d21f" />
+
 # TLS Tier1
 
 **Triadic Language Stack • Coherence-Oriented Intelligence Architecture**
