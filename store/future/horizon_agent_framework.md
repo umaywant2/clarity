@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_future_horizon_agent_framework_" src="https://github.com/user-attachments/assets/b3351362-3311-4531-85c3-d4c93ff4e804" />
+
 # Horizon Agent Framework
 
 **Long-Horizon Continuity • Future Agent Architecture**
