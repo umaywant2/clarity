@@ -1,3 +1,5 @@
+<img width="1194" height="672" alt="store_tiers_systems_adaptive_resonance_engine_" src="https://github.com/user-attachments/assets/ef069292-778c-4cd8-8ee5-d66e2509126d" />
+
 # Adaptive Resonance Engine
 
 **Adaptive Capability • Regime-Aware Systems Architecture**
