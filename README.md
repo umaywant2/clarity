@@ -183,7 +183,7 @@ It is the **canonical source** for TriadicFrameworks.
 </div>
 
 <div style="position: relative; width: 100%; padding-bottom: 56.25%">
-<iframe src="https://www.youtube.com/embed/3CM1_Ji6fJ8?list=PLKu76yrrG-_E&pp=sAgC&autoplay=1&mute=1&loop=1" 
+<iframe src="https://www.youtube.com/embed/PLKu76yrrG-_E&pp=sAgC&autoplay=1&mute=1&loop=1" 
         title="TriadicFrameworks Agent‑Ready Series" frameborder="0" allowfullscreen
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
         style="position: absolute; width: 100%; height: 100%;">
