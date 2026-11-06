@@ -182,4 +182,4 @@ It is the **canonical source** for TriadicFrameworks.
 
 </div>
 
-<div align="center"><iframe width="963" height="639" src="https://www.youtube.com/embed/6Z0AklQbP8U?list=PLF1bJ3hRlgKQ&pp=sAgC&autoplay=1&mute=1&loop=1" title="TriadicFrameworks Books Playlist" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+<div align="center"><iframe width="963" height="639" src="https://www.youtube.com/embed/6Z0AklQbP8U?list=PLKu76yrrG-_E&pp=sAgC&autoplay=1&mute=1&loop=1" title="TriadicFrameworks Agent‑Ready Series" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
