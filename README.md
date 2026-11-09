@@ -1,4 +1,4 @@
-<img width="999" height="999" alt="triadicframeworks_com_logo" src="https://github.com/user-attachments/assets/fd5f8b37-d166-48fd-aa7f-4c2fad1d9c5f" />
+<img width="666" height="666" alt="triadicframeworks_com_logo" src="https://github.com/user-attachments/assets/fd5f8b37-d166-48fd-aa7f-4c2fad1d9c5f" />
 
 - [`module_registry.json`](https://raw.githubusercontent.com/umaywant2/clarity/refs/heads/main/module_registry.json) — Agentic module schema role assignments
 
